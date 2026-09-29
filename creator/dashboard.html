@@ -1,1 +1,275 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Creator Dashboard — KaroPays</title><link rel="stylesheet" href="../assets/css/pro.css"></head><body><header class="site-header"><a class="logo" href="../index.html"><span class="logo-mark">K</span>KaroPays</a><nav class="desktop-nav"><a href="../payout-rates.html">Payout Rates</a><a href="../payment-proof.html">Payment Proof</a><a href="../premium.html">Premium</a><a href="../login.html">Sign out</a></nav></header><main class="legal-page"><div class="section-label">Creator dashboard</div><h1>Welcome back.</h1><div class="rule-grid"><div><small>Estimated earnings</small><h2>₹0.00</h2></div><div><small>Total downloads</small><h2>0</h2></div><div><small>Available balance</small><h2>₹0.00</h2></div></div><div class="table-card"><h2>Your files</h2><p class="lead">No files yet. Upload your first file to start building your library.</p><a class="primary" href="../upload.html">Upload file</a></div></main></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Creator Dashboard — KaroPays</title>
+
+  <link rel="stylesheet" href="../assets/css/pro.css">
+</head>
+
+<body>
+
+<header class="site-header">
+
+  <a class="logo" href="../index.html">
+    <span class="logo-mark">K</span>
+    KaroPays
+  </a>
+
+  <nav class="desktop-nav">
+    <a href="../payout-rates.html">Payout Rates</a>
+    <a href="../payment-proof.html">Payment Proof</a>
+    <a href="../premium.html">Premium</a>
+    <a href="#" id="signOut">Sign out</a>
+  </nav>
+
+</header>
+
+<main class="legal-page">
+
+  <div class="section-label">CREATOR DASHBOARD</div>
+
+  <h1 id="welcomeTitle">Welcome back.</h1>
+
+  <p class="lead" id="creatorEmail"></p>
+
+  <div class="rule-grid">
+
+    <div>
+      <small>Estimated earnings</small>
+      <h2 id="totalEarnings">₹0.00</h2>
+    </div>
+
+    <div>
+      <small>Total downloads</small>
+      <h2 id="totalDownloads">0</h2>
+    </div>
+
+    <div>
+      <small>Available balance</small>
+      <h2 id="availableBalance">₹0.00</h2>
+    </div>
+
+  </div>
+
+  <div class="table-card">
+
+    <h2>Your files</h2>
+
+    <p class="lead" id="fileMessage">
+      Loading your files...
+    </p>
+
+    <div id="fileList"></div>
+
+    <a class="primary" href="../upload.html">
+      Upload file
+    </a>
+
+  </div>
+
+</main>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../assets/js/supabase-config.js"></script>
+
+
+<script>
+
+async function loadDashboard() {
+
+  /*
+   * Check whether the creator is logged in.
+   */
+
+  const {
+    data: { user },
+    error: sessionError
+  } = await supabaseClient.auth.getUser();
+
+
+  if (sessionError || !user) {
+
+    window.location.href = "../login.html";
+
+    return;
+  }
+
+
+  /*
+   * Load creator profile.
+   */
+
+  const {
+    data: profile,
+    error: profileError
+  } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+
+  if (profileError) {
+
+    console.error(profileError);
+
+    document.getElementById("creatorEmail").textContent =
+      user.email || "";
+
+  } else {
+
+    const name =
+      profile.display_name ||
+      profile.username ||
+      "Creator";
+
+    document.getElementById("welcomeTitle").textContent =
+      "Welcome back, " + name + ".";
+
+    document.getElementById("creatorEmail").textContent =
+      profile.email || user.email || "";
+
+    document.getElementById("totalEarnings").textContent =
+      "₹" + Number(profile.total_earnings || 0).toFixed(2);
+
+    document.getElementById("totalDownloads").textContent =
+      Number(profile.total_downloads || 0).toLocaleString();
+
+    document.getElementById("availableBalance").textContent =
+      "₹" + Number(profile.balance || 0).toFixed(2);
+  }
+
+
+  /*
+   * Load creator files.
+   */
+
+  const {
+    data: files,
+    error: filesError
+  } = await supabaseClient
+    .from("files")
+    .select("*")
+    .eq("creator_id", user.id)
+    .order("created_at", { ascending: false });
+
+
+  const fileMessage =
+    document.getElementById("fileMessage");
+
+  const fileList =
+    document.getElementById("fileList");
+
+
+  if (filesError) {
+
+    console.error(filesError);
+
+    fileMessage.textContent =
+      "Unable to load your files.";
+
+    return;
+  }
+
+
+  if (!files || files.length === 0) {
+
+    fileMessage.textContent =
+      "No files yet. Upload your first file to start building your library.";
+
+    return;
+  }
+
+
+  /*
+   * Display files.
+   */
+
+  fileMessage.textContent = "";
+
+  fileList.innerHTML = files.map(file => {
+
+    return `
+      <div class="table-row" style="
+        display:flex;
+        justify-content:space-between;
+        gap:20px;
+        padding:18px 0;
+        border-bottom:1px solid var(--line);
+        flex-wrap:wrap;
+      ">
+
+        <div>
+
+          <strong>
+            ${escapeHTML(file.file_name)}
+          </strong>
+
+          <small style="display:block;margin-top:5px;">
+            ${Number(file.downloads || 0).toLocaleString()} downloads
+            · Ad Level ${file.ad_level}
+          </small>
+
+        </div>
+
+        <div>
+
+          <strong>
+            ₹${Number(file.earnings || 0).toFixed(2)}
+          </strong>
+
+        </div>
+
+      </div>
+    `;
+
+  }).join("");
+
+}
+
+
+/*
+ * Simple HTML escaping.
+ */
+
+function escapeHTML(value) {
+
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+
+}
+
+
+/*
+ * Sign out.
+ */
+
+document
+  .getElementById("signOut")
+  .addEventListener("click", async (event) => {
+
+    event.preventDefault();
+
+    await supabaseClient.auth.signOut();
+
+    window.location.href = "../login.html";
+
+  });
+
+
+loadDashboard();
+
+</script>
+
+</body>
+</html>
