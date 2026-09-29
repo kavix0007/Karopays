@@ -278,6 +278,103 @@ async function loadFile() {
 async function downloadFile(file) {
 
   downloadButton.disabled = true;
+  downloadButton.textContent = "Preparing download...";
+  downloadMessage.textContent = "";
+
+  try {
+
+    // Create temporary download URL
+    const {
+      data,
+      error
+    } = await supabaseClient.storage
+      .from("files")
+      .createSignedUrl(
+        file.storage_path,
+        600
+      );
+
+    if (error || !data?.signedUrl) {
+      throw new Error("Could not create download link.");
+    }
+
+    downloadButton.textContent = "Downloading...";
+
+    // Download the complete file
+    const response = await fetch(data.signedUrl);
+
+    if (!response.ok) {
+      throw new Error("Download failed.");
+    }
+
+    // Wait until the complete file is received
+    const blob = await response.blob();
+
+    // Create a local browser download
+    const blobUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+
+    link.href = blobUrl;
+    link.download = file.file_name;
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+    URL.revokeObjectURL(blobUrl);
+
+    // ---------------------------------
+    // File completely received
+    // Count the download now
+    // ---------------------------------
+
+    const {
+      error: countError
+    } = await supabaseClient.rpc(
+      "record_download",
+      {
+        p_file_id: file.id
+      }
+    );
+
+    if (countError) {
+      console.error(
+        "Download count error:",
+        countError
+      );
+    }
+
+    // Update displayed count
+    downloadsElement.textContent =
+      (Number(file.downloads || 0) + 1)
+        .toLocaleString();
+
+    downloadButton.textContent =
+      "Download Complete";
+
+    downloadMessage.textContent =
+      "Your download has started.";
+
+  } catch (error) {
+
+    console.error(error);
+
+    downloadMessage.textContent =
+      error.message ||
+      "Unable to download this file.";
+
+    downloadButton.disabled = false;
+
+    downloadButton.textContent =
+      "Try again";
+  }
+
+}
+
+  downloadButton.disabled = true;
 
   downloadButton.textContent =
     "Preparing download...";
