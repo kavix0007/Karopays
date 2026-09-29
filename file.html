@@ -77,7 +77,7 @@
   </div>
 
 
-  <!-- Advertisement area -->
+  <!-- Advertisement -->
 
   <div
     class="table-card"
@@ -109,7 +109,7 @@
   </div>
 
 
-  <!-- Download section -->
+  <!-- Download -->
 
   <div
     class="table-card"
@@ -174,7 +174,7 @@ const downloadMessage =
 
 
 /*
- * Get file ID from URL.
+ * Get file ID from URL
  *
  * Example:
  *
@@ -182,15 +182,23 @@ const downloadMessage =
  */
 
 const params =
-  new URLSearchParams(window.location.search);
+  new URLSearchParams(
+    window.location.search
+  );
 
 const fileId =
   params.get("id");
 
 
+/*
+ * Start loading the file
+ */
+
 if (!fileId) {
 
-  showError("No file was specified.");
+  showError(
+    "No file was specified."
+  );
 
 } else {
 
@@ -200,136 +208,286 @@ if (!fileId) {
 
 
 /*
- * Load file information.
+ * Load file information
  */
 
 async function loadFile() {
 
-  const {
-    data: file,
-    error
-  } = await supabaseClient
+  try {
 
-    .from("files")
+    const {
+      data: file,
+      error
+    } = await supabaseClient
 
-    .select(
-      "id,file_name,file_size,description,category,downloads,status,storage_path"
-    )
+      .from("files")
 
-    .eq("id", fileId)
+      .select(
+        "id,file_name,file_size,description,category,downloads,status,storage_path"
+      )
 
-    .eq("status", "active")
+      .eq("id", fileId)
 
-    .single();
+      .eq("status", "active")
+
+      .single();
 
 
-  if (error || !file) {
+    if (error) {
 
-    console.error(error);
+      console.error(
+        "Supabase file error:",
+        error
+      );
 
-    showError(
-      "This file does not exist or is no longer available."
+      showError(
+        "This file does not exist or is no longer available."
+      );
+
+      return;
+    }
+
+
+    if (!file) {
+
+      showError(
+        "This file does not exist or is no longer available."
+      );
+
+      return;
+    }
+
+
+    /*
+     * Display file information
+     */
+
+    fileNameElement.textContent =
+      file.file_name ||
+      "Unnamed file";
+
+
+    descriptionElement.textContent =
+      file.description ||
+      "No description provided.";
+
+
+    categoryElement.textContent =
+      file.category ||
+      "FILE";
+
+
+    fileCategoryElement.textContent =
+      file.category ||
+      "—";
+
+
+    downloadsElement.textContent =
+      Number(
+        file.downloads || 0
+      ).toLocaleString();
+
+
+    fileSizeElement.textContent =
+      formatFileSize(
+        file.file_size
+      );
+
+
+    /*
+     * Enable download button
+     */
+
+    downloadButton.disabled =
+      false;
+
+    downloadButton.textContent =
+      "Download File";
+
+
+    downloadButton.onclick =
+      function () {
+
+        downloadFile(file);
+
+      };
+
+
+  } catch (error) {
+
+    console.error(
+      "Load file error:",
+      error
     );
 
-    return;
+    showError(
+      "Unable to load this file."
+    );
+
   }
-
-
-  fileNameElement.textContent =
-    file.file_name;
-
-  descriptionElement.textContent =
-    file.description ||
-    "No description provided.";
-
-  categoryElement.textContent =
-    file.category || "FILE";
-
-  fileCategoryElement.textContent =
-    file.category || "—";
-
-  downloadsElement.textContent =
-    Number(file.downloads || 0)
-      .toLocaleString();
-
-  fileSizeElement.textContent =
-    formatFileSize(file.file_size);
-
-
-  downloadButton.disabled = false;
-
-  downloadButton.textContent =
-    "Download File";
-
-
-  downloadButton.onclick = () => {
-
-    downloadFile(file);
-
-  };
 
 }
 
 
 /*
- * Download file.
+ * Download file
+ *
+ * The download is counted only
+ * after the complete file has
+ * been received by the browser.
  */
 
 async function downloadFile(file) {
 
-  downloadButton.disabled = true;
-  downloadButton.textContent = "Preparing download...";
-  downloadMessage.textContent = "";
+  downloadButton.disabled =
+    true;
+
+  downloadButton.textContent =
+    "Preparing download...";
+
+  downloadMessage.textContent =
+    "";
+
 
   try {
 
-    // Create temporary download URL
+    /*
+     * Create temporary signed URL
+     */
+
     const {
       data,
       error
     } = await supabaseClient.storage
+
       .from("files")
+
       .createSignedUrl(
         file.storage_path,
         600
       );
 
-    if (error || !data?.signedUrl) {
-      throw new Error("Could not create download link.");
+
+    if (
+      error ||
+      !data ||
+      !data.signedUrl
+    ) {
+
+      console.error(
+        "Signed URL error:",
+        error
+      );
+
+      throw new Error(
+        "Could not create download link."
+      );
+
     }
 
-    downloadButton.textContent = "Downloading...";
 
-    // Download the complete file
-    const response = await fetch(data.signedUrl);
+    /*
+     * Start downloading
+     */
+
+    downloadButton.textContent =
+      "Downloading...";
+
+
+    const response =
+      await fetch(
+        data.signedUrl
+      );
+
 
     if (!response.ok) {
-      throw new Error("Download failed.");
+
+      throw new Error(
+        "Download failed."
+      );
+
     }
 
-    // Wait until the complete file is received
-    const blob = await response.blob();
 
-    // Create a local browser download
-    const blobUrl = URL.createObjectURL(blob);
+    /*
+     * Wait until the complete
+     * file has been received.
+     */
 
-    const link = document.createElement("a");
+    const blob =
+      await response.blob();
 
-    link.href = blobUrl;
-    link.download = file.file_name;
 
-    document.body.appendChild(link);
+    /*
+     * Create local browser URL
+     */
+
+    const blobUrl =
+      URL.createObjectURL(
+        blob
+      );
+
+
+    /*
+     * Create download link
+     */
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+
+    link.href =
+      blobUrl;
+
+
+    link.download =
+      file.file_name ||
+      "download";
+
+
+    document.body.appendChild(
+      link
+    );
+
+
+    /*
+     * Start browser download
+     */
 
     link.click();
 
+
     link.remove();
 
-    URL.revokeObjectURL(blobUrl);
 
-    // ---------------------------------
-    // File completely received
-    // Count the download now
-    // ---------------------------------
+    /*
+     * Give the browser time to
+     * start the download before
+     * removing the temporary URL.
+     */
+
+    setTimeout(
+      function () {
+
+        URL.revokeObjectURL(
+          blobUrl
+        );
+
+      },
+      1000
+    );
+
+
+    /*
+     * IMPORTANT:
+     *
+     * The complete file has now
+     * been received.
+     *
+     * Record the download.
+     */
 
     const {
       error: countError
@@ -340,107 +498,106 @@ async function downloadFile(file) {
       }
     );
 
+
     if (countError) {
+
       console.error(
         "Download count error:",
         countError
       );
+
     }
 
-    // Update displayed count
+
+    /*
+     * Update the number shown
+     * on the page.
+     */
+
+    const currentDownloads =
+      Number(
+        file.downloads || 0
+      );
+
+
     downloadsElement.textContent =
-      (Number(file.downloads || 0) + 1)
-        .toLocaleString();
+      (
+        currentDownloads + 1
+      ).toLocaleString();
+
+
+    /*
+     * Success message
+     */
 
     downloadButton.textContent =
       "Download Complete";
 
+
     downloadMessage.textContent =
-      "Your download has started.";
+      "Your file has been downloaded successfully.";
+
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Download error:",
+      error
+    );
+
 
     downloadMessage.textContent =
       error.message ||
       "Unable to download this file.";
 
-    downloadButton.disabled = false;
+
+    downloadButton.disabled =
+      false;
+
 
     downloadButton.textContent =
-      "Try again";
+      "Try Again";
+
   }
-
-}
-
-  downloadButton.disabled = true;
-
-  downloadButton.textContent =
-    "Preparing download...";
-
-
-  /*
-   * Create temporary signed URL.
-   */
-
-  const {
-    data,
-    error
-  } = await supabaseClient.storage
-
-    .from("files")
-
-    .createSignedUrl(
-      file.storage_path,
-      300
-    );
-
-
-  if (error || !data?.signedUrl) {
-
-    console.error(error);
-
-    downloadMessage.textContent =
-      "Unable to prepare the download.";
-
-    downloadButton.disabled = false;
-
-    downloadButton.textContent =
-      "Try again";
-
-    return;
-  }
-
-
-  /*
-   * Open download.
-   */
-
-  window.location.href =
-    data.signedUrl;
 
 }
 
 
 /*
- * File size formatter.
+ * Format file size
  */
 
-function formatFileSize(bytes) {
+function formatFileSize(
+  bytes
+) {
 
-  if (!bytes) return "—";
+  if (
+    bytes === null ||
+    bytes === undefined ||
+    bytes === "" ||
+    Number(bytes) <= 0
+  ) {
+
+    return "—";
+
+  }
+
 
   const units = [
     "B",
     "KB",
     "MB",
-    "GB"
+    "GB",
+    "TB"
   ];
 
-  let size = Number(bytes);
 
-  let unit = 0;
+  let size =
+    Number(bytes);
+
+
+  let unit =
+    0;
 
 
   while (
@@ -448,33 +605,58 @@ function formatFileSize(bytes) {
     unit < units.length - 1
   ) {
 
-    size /= 1024;
+    size =
+      size / 1024;
 
     unit++;
 
   }
 
 
-  return size.toFixed(
-    size >= 10 || unit === 0
-      ? 0
-      : 1
-  ) + " " + units[unit];
+  return (
+    size.toFixed(
+      size >= 10 || unit === 0
+        ? 0
+        : 1
+    )
+    + " "
+    + units[unit]
+  );
 
 }
 
 
 /*
- * Error screen.
+ * Show error
  */
 
-function showError(message) {
+function showError(
+  message
+) {
 
   fileNameElement.textContent =
     "File unavailable";
 
+
   descriptionElement.textContent =
     message;
+
+
+  categoryElement.textContent =
+    "FILE";
+
+
+  fileCategoryElement.textContent =
+    "—";
+
+
+  fileSizeElement.textContent =
+    "—";
+
+
+  downloadsElement.textContent =
+    "0";
+
 
   downloadButton.style.display =
     "none";
@@ -484,4 +666,5 @@ function showError(message) {
 </script>
 
 </body>
+
 </html>
