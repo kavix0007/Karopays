@@ -1,1 +1,100 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign In — KaroPays</title><link rel="stylesheet" href="assets/css/pro.css"></head><body><main class="auth-wrap"><a class="logo" href="index.html"><span class="logo-mark">K</span>KaroPays</a><form class="auth-card"><div class="section-label">WELCOME BACK</div><h1>Sign in to KaroPays.</h1><label>Email<input type="email" required></label><label>Password<input type="password" required></label><button class="primary full">Sign in</button><p>New creator? <a href="register.html">Create an account</a></p></form></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sign In — KaroPays</title>
+  <link rel="stylesheet" href="assets/css/pro.css">
+</head>
+
+<body>
+
+<main class="auth-wrap">
+
+  <a class="logo" href="index.html">
+    <span class="logo-mark">K</span>
+    KaroPays
+  </a>
+
+  <form class="auth-card" id="loginForm">
+
+    <div class="section-label">WELCOME BACK</div>
+
+    <h1>Sign in to KaroPays.</h1>
+
+    <label>
+      Email
+      <input
+        id="email"
+        type="email"
+        required
+        autocomplete="email"
+      >
+    </label>
+
+    <label>
+      Password
+      <input
+        id="password"
+        type="password"
+        required
+        autocomplete="current-password"
+      >
+    </label>
+
+    <p id="loginMessage"></p>
+
+    <button class="primary full" type="submit">
+      Sign in
+    </button>
+
+    <p>
+      New creator?
+      <a href="register.html">Create an account</a>
+    </p>
+
+  </form>
+
+</main>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+
+<!-- KaroPays login -->
+<script>
+const loginForm = document.getElementById("loginForm");
+const loginMessage = document.getElementById("loginMessage");
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  loginMessage.textContent = "Signing in...";
+
+  const { data, error } =
+    await supabaseClient.auth.signInWithPassword({
+      email: email,
+      password: password
+    });
+
+  if (error) {
+    loginMessage.textContent = error.message;
+    return;
+  }
+
+  if (data.user) {
+    loginMessage.textContent = "Login successful. Redirecting...";
+
+    window.location.href = "creator/dashboard.html";
+  }
+});
+</script>
+
+</body>
+</html>
