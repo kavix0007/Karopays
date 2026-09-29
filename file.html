@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <title>Download File — KaroPays</title>
+
+  <link
+    rel="stylesheet"
+    href="assets/css/pro.css"
+  >
+
+</head>
+
+<body>
+
+<header class="site-header">
+
+  <a class="logo" href="index.html">
+    <span class="logo-mark">K</span>
+    KaroPays
+  </a>
+
+</header>
+
+
+<main class="legal-page">
+
+  <div
+    class="section-label"
+    id="category"
+  >
+    FILE
+  </div>
+
+
+  <h1 id="fileName">
+    Loading file...
+  </h1>
+
+
+  <p
+    class="lead"
+    id="description"
+  >
+    Please wait...
+  </p>
+
+
+  <div
+    class="rule-grid"
+    id="fileInfo"
+  >
+
+    <div>
+      <small>Downloads</small>
+      <h2 id="downloads">0</h2>
+    </div>
+
+    <div>
+      <small>File size</small>
+      <h2 id="fileSize">—</h2>
+    </div>
+
+    <div>
+      <small>Category</small>
+      <h2 id="fileCategory">—</h2>
+    </div>
+
+  </div>
+
+
+  <!-- Advertisement area -->
+
+  <div
+    class="table-card"
+    style="text-align:center;margin-top:30px;"
+  >
+
+    <div class="section-label">
+      ADVERTISEMENT
+    </div>
+
+    <div
+      id="adArea"
+      style="
+        min-height:180px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border:1px dashed #ccc;
+        margin:20px 0;
+      "
+    >
+
+      <span>
+        Advertisement
+      </span>
+
+    </div>
+
+  </div>
+
+
+  <!-- Download section -->
+
+  <div
+    class="table-card"
+    style="text-align:center;margin-top:25px;"
+  >
+
+    <h2>Ready to download?</h2>
+
+    <p class="lead">
+      Your download will start after the advertisement step.
+    </p>
+
+
+    <button
+      class="primary"
+      id="downloadButton"
+      disabled
+    >
+      Loading...
+    </button>
+
+
+    <p id="downloadMessage"></p>
+
+  </div>
+
+</main>
+
+
+<!-- Supabase -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase-config.js"></script>
+
+
+<script>
+
+const fileNameElement =
+  document.getElementById("fileName");
+
+const descriptionElement =
+  document.getElementById("description");
+
+const categoryElement =
+  document.getElementById("category");
+
+const fileCategoryElement =
+  document.getElementById("fileCategory");
+
+const downloadsElement =
+  document.getElementById("downloads");
+
+const fileSizeElement =
+  document.getElementById("fileSize");
+
+const downloadButton =
+  document.getElementById("downloadButton");
+
+const downloadMessage =
+  document.getElementById("downloadMessage");
+
+
+/*
+ * Get file ID from URL.
+ *
+ * Example:
+ *
+ * file.html?id=UUID
+ */
+
+const params =
+  new URLSearchParams(window.location.search);
+
+const fileId =
+  params.get("id");
+
+
+if (!fileId) {
+
+  showError("No file was specified.");
+
+} else {
+
+  loadFile();
+
+}
+
+
+/*
+ * Load file information.
+ */
+
+async function loadFile() {
+
+  const {
+    data: file,
+    error
+  } = await supabaseClient
+
+    .from("files")
+
+    .select(
+      "id,file_name,file_size,description,category,downloads,status,storage_path"
+    )
+
+    .eq("id", fileId)
+
+    .eq("status", "active")
+
+    .single();
+
+
+  if (error || !file) {
+
+    console.error(error);
+
+    showError(
+      "This file does not exist or is no longer available."
+    );
+
+    return;
+  }
+
+
+  fileNameElement.textContent =
+    file.file_name;
+
+  descriptionElement.textContent =
+    file.description ||
+    "No description provided.";
+
+  categoryElement.textContent =
+    file.category || "FILE";
+
+  fileCategoryElement.textContent =
+    file.category || "—";
+
+  downloadsElement.textContent =
+    Number(file.downloads || 0)
+      .toLocaleString();
+
+  fileSizeElement.textContent =
+    formatFileSize(file.file_size);
+
+
+  downloadButton.disabled = false;
+
+  downloadButton.textContent =
+    "Download File";
+
+
+  downloadButton.onclick = () => {
+
+    downloadFile(file);
+
+  };
+
+}
+
+
+/*
+ * Download file.
+ */
+
+async function downloadFile(file) {
+
+  downloadButton.disabled = true;
+
+  downloadButton.textContent =
+    "Preparing download...";
+
+
+  /*
+   * Create temporary signed URL.
+   */
+
+  const {
+    data,
+    error
+  } = await supabaseClient.storage
+
+    .from("files")
+
+    .createSignedUrl(
+      file.storage_path,
+      300
+    );
+
+
+  if (error || !data?.signedUrl) {
+
+    console.error(error);
+
+    downloadMessage.textContent =
+      "Unable to prepare the download.";
+
+    downloadButton.disabled = false;
+
+    downloadButton.textContent =
+      "Try again";
+
+    return;
+  }
+
+
+  /*
+   * Open download.
+   */
+
+  window.location.href =
+    data.signedUrl;
+
+}
+
+
+/*
+ * File size formatter.
+ */
+
+function formatFileSize(bytes) {
+
+  if (!bytes) return "—";
+
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB"
+  ];
+
+  let size = Number(bytes);
+
+  let unit = 0;
+
+
+  while (
+    size >= 1024 &&
+    unit < units.length - 1
+  ) {
+
+    size /= 1024;
+
+    unit++;
+
+  }
+
+
+  return size.toFixed(
+    size >= 10 || unit === 0
+      ? 0
+      : 1
+  ) + " " + units[unit];
+
+}
+
+
+/*
+ * Error screen.
+ */
+
+function showError(message) {
+
+  fileNameElement.textContent =
+    "File unavailable";
+
+  descriptionElement.textContent =
+    message;
+
+  downloadButton.style.display =
+    "none";
+
+}
+
+</script>
+
+</body>
+</html>
