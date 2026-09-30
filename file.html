@@ -54,6 +54,8 @@
   </p>
 
 
+  <!-- File information -->
+
   <div
     class="rule-grid"
     id="fileInfo"
@@ -77,49 +79,27 @@
   </div>
 
 
-<!-- Advertisement system -->
+  <!-- Advertisement system -->
 
-<div
-  class="table-card"
-  style="text-align:center;margin-top:30px;"
->
-
-  <div class="section-label">
-    ADVERTISEMENT
-  </div>
-
-  <p
-    id="adLevelText"
-    class="lead"
+  <div
+    class="table-card"
+    style="text-align:center;margin-top:30px;"
   >
-    Preparing advertisement...
-  </p>
-
-  <div id="adContainer"></div>
-
-</div>
 
     <div class="section-label">
       ADVERTISEMENT
     </div>
 
-    <div
-      id="adArea"
-      style="
-        min-height:180px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        border:1px dashed #ccc;
-        margin:20px 0;
-      "
+
+    <p
+      id="adLevelText"
+      class="lead"
     >
+      Preparing advertisement...
+    </p>
 
-      <span>
-        Advertisement
-      </span>
 
-    </div>
+    <div id="adContainer"></div>
 
   </div>
 
@@ -131,7 +111,10 @@
     style="text-align:center;margin-top:25px;"
   >
 
-    <h2>Ready to download?</h2>
+    <h2>
+      Ready to download?
+    </h2>
+
 
     <p class="lead">
       Your download will start after the advertisement step.
@@ -163,6 +146,10 @@
 
 <script>
 
+/*
+ * Page elements
+ */
+
 const fileNameElement =
   document.getElementById("fileName");
 
@@ -186,6 +173,12 @@ const downloadButton =
 
 const downloadMessage =
   document.getElementById("downloadMessage");
+
+const adLevelText =
+  document.getElementById("adLevelText");
+
+const adContainer =
+  document.getElementById("adContainer");
 
 
 /*
@@ -238,7 +231,7 @@ async function loadFile() {
       .from("files")
 
       .select(
-        "id,file_name,file_size,description,category,downloads,status,storage_path"
+        "id,file_name,file_size,description,category,downloads,status,storage_path,ad_level"
       )
 
       .eq("id", fileId)
@@ -247,6 +240,10 @@ async function loadFile() {
 
       .single();
 
+
+    /*
+     * Database error
+     */
 
     if (error) {
 
@@ -260,8 +257,13 @@ async function loadFile() {
       );
 
       return;
+
     }
 
+
+    /*
+     * No file
+     */
 
     if (!file) {
 
@@ -270,6 +272,7 @@ async function loadFile() {
       );
 
       return;
+
     }
 
 
@@ -310,11 +313,21 @@ async function loadFile() {
 
 
     /*
+     * Setup advertisements
+     */
+
+    setupAds(
+      file.ad_level
+    );
+
+
+    /*
      * Enable download button
      */
 
     downloadButton.disabled =
       false;
+
 
     downloadButton.textContent =
       "Download File";
@@ -345,6 +358,144 @@ async function loadFile() {
 
 
 /*
+ * Advertisement system
+ *
+ * 1 = Low
+ * 2 = Medium
+ * 3 = High
+ * 4 = Ultra
+ */
+
+function setupAds(
+  adLevel
+) {
+
+  let level =
+    Number(adLevel || 1);
+
+
+  /*
+   * Keep level between 1 and 4
+   */
+
+  if (level < 1) {
+    level = 1;
+  }
+
+  if (level > 4) {
+    level = 4;
+  }
+
+
+  /*
+   * Names
+   */
+
+  const levelNames = {
+
+    1: "Low",
+
+    2: "Medium",
+
+    3: "High",
+
+    4: "Ultra"
+
+  };
+
+
+  const levelName =
+    levelNames[level];
+
+
+  adLevelText.textContent =
+    levelName +
+    " advertisement level";
+
+
+  /*
+   * Clear old ads
+   */
+
+  adContainer.innerHTML =
+    "";
+
+
+  /*
+   * Number of placeholder ad slots
+   *
+   * These are NOT real ads yet.
+   */
+
+  const adCount =
+    level;
+
+
+  /*
+   * Create ad slots
+   */
+
+  for (
+    let i = 1;
+    i <= adCount;
+    i++
+  ) {
+
+    const ad =
+      document.createElement(
+        "div"
+      );
+
+
+    ad.style.minHeight =
+      "120px";
+
+
+    ad.style.margin =
+      "16px 0";
+
+
+    ad.style.display =
+      "flex";
+
+
+    ad.style.alignItems =
+      "center";
+
+
+    ad.style.justifyContent =
+      "center";
+
+
+    ad.style.border =
+      "1px dashed #ccc";
+
+
+    ad.style.borderRadius =
+      "8px";
+
+
+    ad.style.padding =
+      "20px";
+
+
+    ad.innerHTML =
+      "<span>" +
+      "Advertisement " +
+      i +
+      "</span>";
+
+
+    adContainer.appendChild(
+      ad
+    );
+
+  }
+
+}
+
+
+/*
  * Download file
  *
  * The download is counted only
@@ -352,13 +503,17 @@ async function loadFile() {
  * been received by the browser.
  */
 
-async function downloadFile(file) {
+async function downloadFile(
+  file
+) {
 
   downloadButton.disabled =
     true;
 
+
   downloadButton.textContent =
     "Preparing download...";
+
 
   downloadMessage.textContent =
     "";
@@ -402,7 +557,7 @@ async function downloadFile(file) {
 
 
     /*
-     * Start downloading
+     * Download the complete file
      */
 
     downloadButton.textContent =
@@ -425,8 +580,7 @@ async function downloadFile(file) {
 
 
     /*
-     * Wait until the complete
-     * file has been received.
+     * Wait for complete file
      */
 
     const blob =
@@ -434,7 +588,7 @@ async function downloadFile(file) {
 
 
     /*
-     * Create local browser URL
+     * Create browser download
      */
 
     const blobUrl =
@@ -442,10 +596,6 @@ async function downloadFile(file) {
         blob
       );
 
-
-    /*
-     * Create download link
-     */
 
     const link =
       document.createElement(
@@ -467,10 +617,6 @@ async function downloadFile(file) {
     );
 
 
-    /*
-     * Start browser download
-     */
-
     link.click();
 
 
@@ -478,9 +624,8 @@ async function downloadFile(file) {
 
 
     /*
-     * Give the browser time to
-     * start the download before
-     * removing the temporary URL.
+     * Remove temporary URL
+     * after browser starts download
      */
 
     setTimeout(
@@ -496,12 +641,9 @@ async function downloadFile(file) {
 
 
     /*
-     * IMPORTANT:
+     * Complete download received.
      *
-     * The complete file has now
-     * been received.
-     *
-     * Record the download.
+     * Now record the download.
      */
 
     const {
@@ -525,8 +667,7 @@ async function downloadFile(file) {
 
 
     /*
-     * Update the number shown
-     * on the page.
+     * Update displayed count
      */
 
     const currentDownloads =
@@ -542,7 +683,8 @@ async function downloadFile(file) {
 
 
     /*
-     * Success message
+     * Success
+
      */
 
     downloadButton.textContent =
@@ -634,15 +776,16 @@ function formatFileSize(
         ? 0
         : 1
     )
-    + " "
-    + units[unit]
+    +
+    " " +
+    units[unit]
   );
 
 }
 
 
 /*
- * Show error
+ * Error screen
  */
 
 function showError(
@@ -671,6 +814,14 @@ function showError(
 
   downloadsElement.textContent =
     "0";
+
+
+  adLevelText.textContent =
+    "Advertisement unavailable";
+
+
+  adContainer.innerHTML =
+    "";
 
 
   downloadButton.style.display =
