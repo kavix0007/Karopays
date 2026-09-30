@@ -2,78 +2,163 @@
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
 
   <title>Creator Dashboard — KaroPays</title>
 
-  <link rel="stylesheet" href="../assets/css/pro.css">
+  <link
+    rel="stylesheet"
+    href="../assets/css/pro.css"
+  >
+
 </head>
 
 <body>
 
 <header class="site-header">
 
-  <a class="logo" href="../index.html">
+  <a
+    class="logo"
+    href="../index.html"
+  >
     <span class="logo-mark">K</span>
     KaroPays
   </a>
 
   <nav class="desktop-nav">
-    <a href="../payout-rates.html">Payout Rates</a>
-    <a href="../payment-proof.html">Payment Proof</a>
-    <a href="../premium.html">Premium</a>
-    <a href="#" id="signOut">Sign out</a>
+
+    <a href="../payout-rates.html">
+      Payout Rates
+    </a>
+
+    <a href="../payment-proof.html">
+      Payment Proof
+    </a>
+
+    <a href="../premium.html">
+      Premium
+    </a>
+
+    <a href="#"
+       id="signOut">
+      Sign out
+    </a>
+
   </nav>
 
 </header>
 
+
 <main class="legal-page">
 
-  <div class="section-label">CREATOR DASHBOARD</div>
+  <div class="section-label">
+    CREATOR DASHBOARD
+  </div>
 
-  <h1 id="welcomeTitle">Welcome back.</h1>
 
-  <p class="lead" id="creatorEmail"></p>
+  <h1>
+    Welcome back.
+  </h1>
+
+
+  <p
+    class="lead"
+    id="creatorEmail"
+  >
+    Loading account...
+  </p>
+
+
+  <!-- Statistics -->
 
   <div class="rule-grid">
 
     <div>
-      <small>Estimated earnings</small>
-      <h2 id="totalEarnings">₹0.00</h2>
+
+      <small>
+        Estimated earnings
+      </small>
+
+      <h2 id="totalEarnings">
+        ₹0.00000000
+      </h2>
+
     </div>
 
-    <div>
-      <small>Total downloads</small>
-      <h2 id="totalDownloads">0</h2>
-    </div>
 
     <div>
-      <small>Available balance</small>
-      <h2 id="availableBalance">₹0.00</h2>
+
+      <small>
+        Total downloads
+      </small>
+
+      <h2 id="totalDownloads">
+        0
+      </h2>
+
+    </div>
+
+
+    <div>
+
+      <small>
+        Available balance
+      </small>
+
+      <h2 id="availableBalance">
+        ₹0.00000000
+      </h2>
+
     </div>
 
   </div>
 
-  <div class="table-card">
 
-    <h2>Your files</h2>
+  <!-- Files -->
 
-    <p class="lead" id="fileMessage">
-      Loading your files...
-    </p>
+  <div
+    class="table-card"
+    style="margin-top:30px;"
+  >
 
-    <div id="fileList"></div>
+    <h2>
+      Your files
+    </h2>
 
-    <a class="primary" href="../upload.html">
-      Upload file
-    </a>
+
+    <div id="filesContainer">
+
+      <p class="lead">
+        Loading your files...
+      </p>
+
+    </div>
+
+
+    <div style="margin-top:25px;">
+
+      <a
+        class="primary"
+        href="../upload.html"
+      >
+        Upload file
+      </a>
+
+    </div>
 
   </div>
 
 </main>
 
+
 <!-- Supabase -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../assets/js/supabase-config.js"></script>
@@ -81,195 +166,379 @@
 
 <script>
 
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const creatorEmail =
+  document.getElementById("creatorEmail");
+
+const totalEarnings =
+  document.getElementById("totalEarnings");
+
+const totalDownloads =
+  document.getElementById("totalDownloads");
+
+const availableBalance =
+  document.getElementById("availableBalance");
+
+const filesContainer =
+  document.getElementById("filesContainer");
+
+const signOut =
+  document.getElementById("signOut");
+
+
+/* =========================================
+   START
+========================================= */
+
+loadDashboard();
+
+
+/* =========================================
+   LOAD DASHBOARD
+========================================= */
+
 async function loadDashboard() {
 
-  /*
-   * Check whether the creator is logged in.
-   */
+  try {
 
-  const {
-    data: { user },
-    error: sessionError
-  } = await supabaseClient.auth.getUser();
+    /*
+     * Check logged-in user.
+     */
 
-
-  if (sessionError || !user) {
-
-    window.location.href = "../login.html";
-
-    return;
-  }
+    const {
+      data: {
+        user
+      },
+      error: sessionError
+    } = await supabaseClient.auth.getUser();
 
 
-  /*
-   * Load creator profile.
-   */
+    if (
+      sessionError ||
+      !user
+    ) {
 
-  const {
-    data: profile,
-    error: profileError
-  } = await supabaseClient
-    .from("profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
+      window.location.href =
+        "../login.html";
+
+      return;
+
+    }
 
 
-  if (profileError) {
-
-    console.error(profileError);
-
-    document.getElementById("creatorEmail").textContent =
-      user.email || "";
-
-  } else {
-
-    const name =
-      profile.display_name ||
-      profile.username ||
+    creatorEmail.textContent =
+      user.email ||
       "Creator";
 
-    document.getElementById("welcomeTitle").textContent =
-      "Welcome back, " + name + ".";
 
-    document.getElementById("creatorEmail").textContent =
-      profile.email || user.email || "";
+    /*
+     * Get this creator's files.
+     */
 
-    document.getElementById("totalEarnings").textContent =
-      "₹" + Number(profile.total_earnings || 0).toFixed(2);
+    const {
+      data: files,
+      error: filesError
+    } = await supabaseClient
 
-    document.getElementById("totalDownloads").textContent =
-      Number(profile.total_downloads || 0).toLocaleString();
+      .from("files")
 
-    document.getElementById("availableBalance").textContent =
-      "₹" + Number(profile.balance || 0).toFixed(2);
+      .select(
+        "id,file_name,file_size,category,ad_level,downloads,earnings,status,created_at"
+      )
+
+      .eq(
+        "creator_id",
+        user.id
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+
+    if (filesError) {
+
+      console.error(
+        "Files error:",
+        filesError
+      );
+
+      throw new Error(
+        "Could not load your files."
+      );
+
+    }
+
+
+    const creatorFiles =
+      files || [];
+
+
+    /* =====================================
+       CALCULATE TOTALS
+    ===================================== */
+
+    let downloads = 0;
+
+    let earnings = 0;
+
+
+    creatorFiles.forEach(
+      function(file) {
+
+        downloads +=
+          Number(
+            file.downloads || 0
+          );
+
+        earnings +=
+          Number(
+            file.earnings || 0
+          );
+
+      }
+    );
+
+
+    /* =====================================
+       DISPLAY TOTALS
+    ===================================== */
+
+    totalDownloads.textContent =
+      downloads.toLocaleString();
+
+
+    totalEarnings.textContent =
+      formatMoney(
+        earnings
+      );
+
+
+    /*
+     * Until the payout system is built,
+     * available balance equals earnings.
+     */
+
+    availableBalance.textContent =
+      formatMoney(
+        earnings
+      );
+
+
+    /* =====================================
+       DISPLAY FILES
+    ===================================== */
+
+    renderFiles(
+      creatorFiles
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Dashboard error:",
+      error
+    );
+
+    filesContainer.innerHTML =
+      `
+        <p class="lead">
+          ${escapeHtml(
+            error.message ||
+            "Unable to load dashboard."
+          )}
+        </p>
+      `;
+
   }
-
-
-  /*
-   * Load creator files.
-   */
-
-  const {
-    data: files,
-    error: filesError
-  } = await supabaseClient
-    .from("files")
-    .select("*")
-    .eq("creator_id", user.id)
-    .order("created_at", { ascending: false });
-
-
-  const fileMessage =
-    document.getElementById("fileMessage");
-
-  const fileList =
-    document.getElementById("fileList");
-
-
-  if (filesError) {
-
-    console.error(filesError);
-
-    fileMessage.textContent =
-      "Unable to load your files.";
-
-    return;
-  }
-
-
-  if (!files || files.length === 0) {
-
-    fileMessage.textContent =
-      "No files yet. Upload your first file to start building your library.";
-
-    return;
-  }
-
-
-  /*
-   * Display files.
-   */
-
-  fileMessage.textContent = "";
-
-  fileList.innerHTML = files.map(file => {
-
-    return `
-      <div class="table-row" style="
-        display:flex;
-        justify-content:space-between;
-        gap:20px;
-        padding:18px 0;
-        border-bottom:1px solid var(--line);
-        flex-wrap:wrap;
-      ">
-
-        <div>
-
-          <strong>
-            ${escapeHTML(file.file_name)}
-          </strong>
-
-          <small style="display:block;margin-top:5px;">
-            ${Number(file.downloads || 0).toLocaleString()} downloads
-            · Ad Level ${file.ad_level}
-          </small>
-
-        </div>
-
-        <div>
-
-          <strong>
-            ₹${Number(file.earnings || 0).toFixed(2)}
-          </strong>
-
-        </div>
-
-      </div>
-    `;
-
-  }).join("");
 
 }
 
 
-/*
- * Simple HTML escaping.
- */
+/* =========================================
+   RENDER FILES
+========================================= */
 
-function escapeHTML(value) {
+function renderFiles(files) {
+
+  if (!files.length) {
+
+    filesContainer.innerHTML =
+      `
+        <p class="lead">
+          No files yet. Upload your first
+          file to start building your library.
+        </p>
+      `;
+
+    return;
+
+  }
+
+
+  let html = "";
+
+
+  files.forEach(
+    function(file) {
+
+      html +=
+        `
+        <div
+          style="
+            padding:20px 0;
+            border-bottom:1px solid rgba(0,0,0,.08);
+          "
+        >
+
+          <h3>
+            ${escapeHtml(
+              file.file_name ||
+              "Unnamed file"
+            )}
+          </h3>
+
+          <p>
+            ${escapeHtml(
+              file.category ||
+              "Other"
+            )}
+            ·
+            Ad Level ${Number(
+              file.ad_level || 1
+            )}
+          </p>
+
+          <p>
+
+            <strong>
+              ${Number(
+                file.downloads || 0
+              ).toLocaleString()}
+            </strong>
+
+            downloads
+
+            &nbsp; · &nbsp;
+
+            <strong>
+              ${formatMoney(
+                Number(
+                  file.earnings || 0
+                )
+              )}
+            </strong>
+
+            earnings
+
+          </p>
+
+          <p>
+
+            Status:
+            <strong>
+              ${escapeHtml(
+                file.status ||
+                "unknown"
+              )}
+            </strong>
+
+          </p>
+
+          <a
+            href="../file.html?id=${encodeURIComponent(
+              file.id
+            )}"
+          >
+            View file page
+          </a>
+
+        </div>
+        `;
+
+    }
+  );
+
+
+  filesContainer.innerHTML =
+    html;
+
+}
+
+
+/* =========================================
+   MONEY FORMAT
+========================================= */
+
+function formatMoney(value) {
+
+  return (
+    "₹" +
+    Number(value || 0)
+      .toFixed(8)
+  );
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(value) {
 
   return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
 
-/*
- * Sign out.
- */
+/* =========================================
+   SIGN OUT
+========================================= */
 
-document
-  .getElementById("signOut")
-  .addEventListener("click", async (event) => {
+signOut.addEventListener(
+  "click",
+  async function(event) {
 
     event.preventDefault();
 
     await supabaseClient.auth.signOut();
 
-    window.location.href = "../login.html";
+    window.location.href =
+      "../login.html";
 
-  });
-
-
-loadDashboard();
+  }
+);
 
 </script>
 
 </body>
+
 </html>
