@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
   <meta charset="utf-8">
 
   <meta
@@ -15,6 +16,7 @@
     rel="stylesheet"
     href="assets/css/pro.css"
   >
+
 </head>
 
 <body>
@@ -31,6 +33,8 @@
 
 <main class="legal-page">
 
+  <!-- File category -->
+
   <div
     class="section-label"
     id="category"
@@ -39,10 +43,14 @@
   </div>
 
 
+  <!-- File name -->
+
   <h1 id="fileName">
     Loading file...
   </h1>
 
+
+  <!-- Description -->
 
   <p
     class="lead"
@@ -52,24 +60,49 @@
   </p>
 
 
+  <!-- File information -->
+
   <div
     class="rule-grid"
     id="fileInfo"
   >
 
     <div>
-      <small>Downloads</small>
-      <h2 id="downloads">0</h2>
+
+      <small>
+        Downloads
+      </small>
+
+      <h2 id="downloads">
+        0
+      </h2>
+
     </div>
 
-    <div>
-      <small>File size</small>
-      <h2 id="fileSize">—</h2>
-    </div>
 
     <div>
-      <small>Category</small>
-      <h2 id="fileCategory">—</h2>
+
+      <small>
+        File size
+      </small>
+
+      <h2 id="fileSize">
+        —
+      </h2>
+
+    </div>
+
+
+    <div>
+
+      <small>
+        Category
+      </small>
+
+      <h2 id="fileCategory">
+        —
+      </h2>
+
     </div>
 
   </div>
@@ -86,12 +119,14 @@
       ADVERTISEMENT
     </div>
 
+
     <p
       id="adLevelText"
       class="lead"
     >
       Advertisement
     </p>
+
 
     <div
       id="adContainer"
@@ -104,7 +139,11 @@
         margin:20px 0;
       "
     >
-      <span>Advertisement</span>
+
+      <span>
+        Advertisement
+      </span>
+
     </div>
 
   </div>
@@ -117,11 +156,15 @@
     style="text-align:center;margin-top:25px;"
   >
 
-    <h2>Ready to download?</h2>
+    <h2>
+      Ready to download?
+    </h2>
+
 
     <p class="lead">
       Your download will start after the advertisement step.
     </p>
+
 
     <button
       class="primary"
@@ -130,6 +173,7 @@
     >
       Loading...
     </button>
+
 
     <p id="downloadMessage"></p>
 
@@ -147,9 +191,9 @@
 
 <script>
 
-/* --------------------------------
-   Elements
--------------------------------- */
+/* =========================================
+   ELEMENTS
+========================================= */
 
 const fileNameElement =
   document.getElementById("fileName");
@@ -175,10 +219,13 @@ const downloadButton =
 const downloadMessage =
   document.getElementById("downloadMessage");
 
+const adLevelText =
+  document.getElementById("adLevelText");
 
-/* --------------------------------
-   Get file ID
--------------------------------- */
+
+/* =========================================
+   GET FILE ID
+========================================= */
 
 const params =
   new URLSearchParams(
@@ -189,9 +236,9 @@ const fileId =
   params.get("id");
 
 
-/* --------------------------------
-   Start
--------------------------------- */
+/* =========================================
+   START
+========================================= */
 
 if (!fileId) {
 
@@ -206,46 +253,69 @@ if (!fileId) {
 }
 
 
-/* --------------------------------
-   Load file
--------------------------------- */
+/* =========================================
+   LOAD PUBLIC FILE
+========================================= */
 
 async function loadFile() {
 
   try {
 
+    /*
+     * IMPORTANT:
+     *
+     * We use get_public_file()
+     * instead of selecting directly
+     * from public.files.
+     *
+     * This allows visitors who are
+     * NOT logged in to view active
+     * file pages.
+     */
+
     const {
-      data: file,
+      data,
       error
-    } = await supabaseClient
+    } = await supabaseClient.rpc(
+      "get_public_file",
+      {
+        p_file_id: fileId
+      }
+    );
 
-      .from("files")
 
-      .select(
-        "id,file_name,file_size,description,category,ad_level,downloads,status,storage_path"
-      )
-
-      .eq("id", fileId)
-
-      .eq("status", "active")
-
-      .single();
+    console.log(
+      "Public file response:",
+      data,
+      error
+    );
 
 
     if (error) {
 
       console.error(
-        "Supabase file error:",
+        "Public file RPC error:",
         error
       );
 
       showError(
-        "This file does not exist or is no longer available."
+        "Unable to load this file."
       );
 
       return;
 
     }
+
+
+    /*
+     * RPC returns an array because
+     * the function uses RETURNS TABLE.
+     */
+
+    const file =
+      data && data.length > 0
+        ? data[0]
+        : null;
 
 
     if (!file) {
@@ -259,9 +329,9 @@ async function loadFile() {
     }
 
 
-    /* ----------------------------
-       Display information
-    ---------------------------- */
+    /* =====================================
+       DISPLAY FILE INFORMATION
+    ===================================== */
 
     fileNameElement.textContent =
       file.file_name ||
@@ -295,43 +365,48 @@ async function loadFile() {
       );
 
 
-    /* ----------------------------
-       Advertisement level
-    ---------------------------- */
+    /* =====================================
+       AD LEVEL
+    ===================================== */
 
     const adLevel =
-      Number(file.ad_level || 2);
+      Number(
+        file.ad_level || 2
+      );
 
 
     const adNames = {
+
       1: "Low",
+
       2: "Medium",
+
       3: "High",
+
       4: "Ultra"
+
     };
-
-
-    const adLevelText =
-      document.getElementById(
-        "adLevelText"
-      );
 
 
     if (adLevelText) {
 
       adLevelText.textContent =
         "Advertisement level: " +
-        (adNames[adLevel] || "Medium");
+        (
+          adNames[adLevel] ||
+          "Medium"
+        );
 
     }
 
 
-    /* ----------------------------
-       Enable download
-    ---------------------------- */
+    /* =====================================
+       ENABLE DOWNLOAD
+    ===================================== */
 
     downloadButton.disabled =
       false;
+
 
     downloadButton.textContent =
       "Download File";
@@ -361,17 +436,19 @@ async function loadFile() {
 }
 
 
-/* --------------------------------
-   Download file
--------------------------------- */
+/* =========================================
+   DOWNLOAD FILE
+========================================= */
 
 async function downloadFile(file) {
 
   downloadButton.disabled =
     true;
 
+
   downloadButton.textContent =
     "Preparing download...";
+
 
   downloadMessage.textContent =
     "";
@@ -379,9 +456,9 @@ async function downloadFile(file) {
 
   try {
 
-    /* ----------------------------
-       Create signed URL
-    ---------------------------- */
+    /* =====================================
+       CREATE SIGNED URL
+    ===================================== */
 
     const {
       data,
@@ -414,9 +491,9 @@ async function downloadFile(file) {
     }
 
 
-    /* ----------------------------
-       Download complete file
-    ---------------------------- */
+    /* =====================================
+       DOWNLOAD FILE
+    ===================================== */
 
     downloadButton.textContent =
       "Downloading...";
@@ -438,18 +515,18 @@ async function downloadFile(file) {
 
 
     /*
-     * IMPORTANT:
-     *
-     * blob() waits until the
-     * complete file has been
-     * received.
+     * blob() waits until the complete
+     * file has been received.
      */
 
     const blob =
       await response.blob();
 
 
-    if (!blob || blob.size <= 0) {
+    if (
+      !blob ||
+      blob.size <= 0
+    ) {
 
       throw new Error(
         "The downloaded file is empty."
@@ -458,9 +535,9 @@ async function downloadFile(file) {
     }
 
 
-    /* ----------------------------
-       Create browser download
-    ---------------------------- */
+    /* =====================================
+       CREATE LOCAL DOWNLOAD
+    ===================================== */
 
     const blobUrl =
       URL.createObjectURL(
@@ -483,6 +560,10 @@ async function downloadFile(file) {
       "download";
 
 
+    link.style.display =
+      "none";
+
+
     document.body.appendChild(
       link
     );
@@ -495,8 +576,8 @@ async function downloadFile(file) {
 
 
     /*
-     * Keep URL alive briefly so
-     * browser can start download.
+     * Give browser time to start
+     * the download.
      */
 
     setTimeout(
@@ -507,14 +588,13 @@ async function downloadFile(file) {
         );
 
       },
-      1000
+      2000
     );
 
 
-    /* ----------------------------
-       COMPLETE DOWNLOAD
-       Record it now.
-    ---------------------------- */
+    /* =====================================
+       RECORD COMPLETED DOWNLOAD
+    ===================================== */
 
     downloadButton.textContent =
       "Recording download...";
@@ -527,6 +607,13 @@ async function downloadFile(file) {
       "record_download",
       {
         p_file_id: file.id,
+
+        /*
+         * Currently using India
+         * while country detection
+         * is being built.
+         */
+
         p_country_code: "IN"
       }
     );
@@ -535,7 +622,7 @@ async function downloadFile(file) {
     if (countError) {
 
       console.error(
-        "Download count error:",
+        "Download recording error:",
         countError
       );
 
@@ -547,14 +634,14 @@ async function downloadFile(file) {
 
 
     console.log(
-      "Download recorded:",
+      "Download recorded successfully:",
       countResult
     );
 
 
-    /* ----------------------------
-       Update displayed count
-    ---------------------------- */
+    /* =====================================
+       UPDATE DISPLAYED COUNT
+    ===================================== */
 
     const currentDownloads =
       Number(
@@ -568,9 +655,9 @@ async function downloadFile(file) {
       ).toLocaleString();
 
 
-    /* ----------------------------
-       Success
-    ---------------------------- */
+    /* =====================================
+       SUCCESS
+    ===================================== */
 
     downloadButton.textContent =
       "Download Complete";
@@ -605,9 +692,9 @@ async function downloadFile(file) {
 }
 
 
-/* --------------------------------
-   Format file size
--------------------------------- */
+/* =========================================
+   FORMAT FILE SIZE
+========================================= */
 
 function formatFileSize(bytes) {
 
@@ -624,11 +711,17 @@ function formatFileSize(bytes) {
 
 
   const units = [
+
     "B",
+
     "KB",
+
     "MB",
+
     "GB",
+
     "TB"
+
   ];
 
 
@@ -654,21 +747,29 @@ function formatFileSize(bytes) {
 
 
   return (
+
     size.toFixed(
+
       size >= 10 || unit === 0
+
         ? 0
+
         : 1
+
     )
+
     + " "
+
     + units[unit]
+
   );
 
 }
 
 
-/* --------------------------------
-   Error screen
--------------------------------- */
+/* =========================================
+   ERROR SCREEN
+========================================= */
 
 function showError(message) {
 
@@ -694,6 +795,10 @@ function showError(message) {
 
   downloadsElement.textContent =
     "0";
+
+
+  fileSizeElement.textContent =
+    "—";
 
 
   downloadButton.style.display =
