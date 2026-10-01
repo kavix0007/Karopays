@@ -1,100 +1,399 @@
 <!doctype html>
 <html lang="en">
+
 <head>
+
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
   <title>Sign In — KaroPays</title>
-  <link rel="stylesheet" href="assets/css/pro.css">
+
+  <link
+    rel="stylesheet"
+    href="assets/css/pro.css"
+  >
+
 </head>
+
 
 <body>
 
+
 <main class="auth-wrap">
 
-  <a class="logo" href="index.html">
-    <span class="logo-mark">K</span>
+
+  <a
+    class="logo"
+    href="index.html"
+  >
+
+    <span class="logo-mark">
+      K
+    </span>
+
     KaroPays
+
   </a>
 
-  <form class="auth-card" id="loginForm">
 
-    <div class="section-label">WELCOME BACK</div>
+  <form
+    class="auth-card"
+    id="loginForm"
+  >
 
-    <h1>Sign in to KaroPays.</h1>
+
+    <div class="section-label">
+      WELCOME BACK
+    </div>
+
+
+    <h1>
+      Sign in to KaroPays.
+    </h1>
+
 
     <label>
+
       Email
+
       <input
         id="email"
         type="email"
         required
         autocomplete="email"
+        placeholder="you@example.com"
       >
+
     </label>
 
+
     <label>
+
       Password
+
       <input
         id="password"
         type="password"
         required
         autocomplete="current-password"
+        placeholder="Your password"
       >
+
     </label>
 
-    <p id="loginMessage"></p>
 
-    <button class="primary full" type="submit">
+    <p
+      id="loginMessage"
+      style="min-height:24px;"
+    ></p>
+
+
+    <button
+      class="primary full"
+      type="submit"
+      id="loginButton"
+    >
+
       Sign in
+
     </button>
 
+
     <p>
+
       New creator?
-      <a href="register.html">Create an account</a>
+
+      <a href="register.html">
+        Create an account
+      </a>
+
     </p>
+
 
   </form>
 
+
 </main>
 
-<!-- Supabase -->
+
+<!-- =========================================
+     SUPABASE
+========================================= -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="assets/js/supabase-config.js"></script>
 
-<!-- KaroPays login -->
+
 <script>
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
 
-loginForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
+/* =========================================
+   ELEMENTS
+========================================= */
 
-  const email =
-    document.getElementById("email").value.trim();
+const loginForm =
+  document.getElementById("loginForm");
 
-  const password =
-    document.getElementById("password").value;
+const loginMessage =
+  document.getElementById("loginMessage");
 
-  loginMessage.textContent = "Signing in...";
+const loginButton =
+  document.getElementById("loginButton");
 
-  const { data, error } =
-    await supabaseClient.auth.signInWithPassword({
-      email: email,
-      password: password
-    });
 
-  if (error) {
-    loginMessage.textContent = error.message;
-    return;
+/* =========================================
+   DASHBOARD LOCATION
+========================================= */
+
+const DASHBOARD_URL =
+  "creator/dashboard.html";
+
+
+/* =========================================
+   CHECK EXISTING SESSION
+========================================= */
+
+async function checkExistingSession() {
+
+  try {
+
+    loginMessage.textContent =
+      "Checking your session...";
+
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if (error) {
+
+      console.error(
+        "Session check error:",
+        error
+      );
+
+      loginMessage.textContent = "";
+
+      return;
+
+    }
+
+
+    /*
+     * If the browser already has
+     * a valid Supabase session,
+     * go directly to dashboard.
+     */
+
+    if (
+      data &&
+      data.session &&
+      data.session.user
+    ) {
+
+      window.location.replace(
+        DASHBOARD_URL
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * No existing login.
+     * Show normal login page.
+     */
+
+    loginMessage.textContent = "";
+
+
+  } catch (error) {
+
+    console.error(
+      "Session check failed:",
+      error
+    );
+
+    loginMessage.textContent = "";
+
   }
 
-  if (data.user) {
-    loginMessage.textContent = "Login successful. Redirecting...";
+}
 
-    window.location.href = "creator/dashboard.html";
+
+/* =========================================
+   LOGIN
+========================================= */
+
+loginForm.addEventListener(
+  "submit",
+  async function(event) {
+
+    event.preventDefault();
+
+
+    const email =
+      document
+        .getElementById("email")
+        .value
+        .trim();
+
+
+    const password =
+      document
+        .getElementById("password")
+        .value;
+
+
+    if (!email || !password) {
+
+      loginMessage.textContent =
+        "Please enter your email and password.";
+
+      return;
+
+    }
+
+
+    /*
+     * Disable button while logging in.
+     */
+
+    loginButton.disabled = true;
+
+    loginButton.textContent =
+      "Signing in...";
+
+
+    loginMessage.textContent =
+      "Signing in...";
+
+
+    try {
+
+
+      const {
+        data,
+        error
+      } =
+        await supabaseClient.auth.signInWithPassword({
+
+          email:
+            email,
+
+          password:
+            password
+
+        });
+
+
+      if (error) {
+
+        console.error(
+          "Login error:",
+          error
+        );
+
+        loginMessage.textContent =
+          error.message ||
+          "Unable to sign in.";
+
+        loginButton.disabled =
+          false;
+
+        loginButton.textContent =
+          "Sign in";
+
+        return;
+
+      }
+
+
+      /*
+       * Supabase has successfully
+       * created the session.
+       */
+
+      if (
+        data &&
+        data.session &&
+        data.user
+      ) {
+
+        loginMessage.textContent =
+          "Login successful. Redirecting...";
+
+
+        /*
+         * replace() prevents the login
+         * page remaining in browser history.
+         */
+
+        window.location.replace(
+          DASHBOARD_URL
+        );
+
+        return;
+
+      }
+
+
+      /*
+       * Safety fallback.
+       */
+
+      loginMessage.textContent =
+        "Login completed, but no session was created.";
+
+      loginButton.disabled =
+        false;
+
+      loginButton.textContent =
+        "Sign in";
+
+
+    } catch (error) {
+
+      console.error(
+        "Unexpected login error:",
+        error
+      );
+
+
+      loginMessage.textContent =
+        error.message ||
+        "Unable to sign in. Please try again.";
+
+
+      loginButton.disabled =
+        false;
+
+      loginButton.textContent =
+        "Sign in";
+
+    }
+
   }
-});
+);
+
+
+/* =========================================
+   START
+========================================= */
+
+checkExistingSession();
+
 </script>
 
+
 </body>
+
 </html>
