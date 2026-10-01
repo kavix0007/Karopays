@@ -17,9 +17,221 @@
     href="../assets/css/pro.css"
   >
 
+  <style>
+
+    /* =========================================
+       KAROPAYS DASHBOARD
+    ========================================= */
+
+    .dashboard-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:20px;
+      margin-bottom:30px;
+      flex-wrap:wrap;
+    }
+
+    .creator-email {
+      color:#8f7aff;
+      word-break:break-all;
+    }
+
+    .dashboard-actions {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .file-item {
+      padding:24px 0;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .file-item:last-child {
+      border-bottom:0;
+    }
+
+    .file-title {
+      margin:0 0 8px;
+      font-size:20px;
+    }
+
+    .file-description {
+      color:#9298a4;
+      line-height:1.6;
+      margin:8px 0;
+      word-break:break-word;
+    }
+
+    .file-meta {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin:12px 0;
+    }
+
+    .file-meta span {
+      padding:7px 10px;
+      background:#151820;
+      border:1px solid #292d37;
+      border-radius:8px;
+      color:#a9aeb8;
+      font-size:12px;
+    }
+
+    .file-stats {
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+      color:#9298a4;
+      margin:12px 0;
+    }
+
+    .file-stats strong {
+      color:#fff;
+    }
+
+    .file-buttons {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .dashboard-btn {
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:0;
+      border-radius:9px;
+      background:#7c5cff;
+      color:#fff;
+      padding:10px 15px;
+      font-weight:800;
+      cursor:pointer;
+      font-size:13px;
+      text-decoration:none;
+    }
+
+    .dashboard-btn:hover {
+      opacity:.9;
+    }
+
+    .dashboard-btn.secondary {
+      background:#151820;
+      border:1px solid #292d37;
+    }
+
+    .dashboard-btn.danger {
+      background:#29141a;
+      border:1px solid #5a2732;
+      color:#ff9aa8;
+    }
+
+    .dashboard-btn:disabled {
+      opacity:.5;
+      cursor:not-allowed;
+    }
+
+    .edit-box {
+      margin-top:18px;
+      padding:20px;
+      background:#0c0e13;
+      border:1px solid #292d37;
+      border-radius:12px;
+      display:none;
+    }
+
+    .edit-box.open {
+      display:block;
+    }
+
+    .edit-box label {
+      margin:12px 0;
+    }
+
+    .edit-box input,
+    .edit-box textarea,
+    .edit-box select {
+      width:100%;
+      background:#0e1015;
+      border:1px solid #292d37;
+      color:#fff;
+      border-radius:9px;
+      padding:12px;
+      font:inherit;
+      margin-top:7px;
+    }
+
+    .edit-buttons {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .status-message {
+      min-height:22px;
+      color:#a9aeb8;
+      margin:12px 0;
+    }
+
+    .success-message {
+      color:#9fe3b1;
+    }
+
+    .error-message {
+      color:#ff9aa8;
+    }
+
+    .copy-notice {
+      position:fixed;
+      left:50%;
+      bottom:25px;
+      transform:translateX(-50%);
+      background:#171320;
+      border:1px solid #493d70;
+      color:#fff;
+      padding:12px 18px;
+      border-radius:10px;
+      box-shadow:0 10px 35px rgba(0,0,0,.35);
+      z-index:9999;
+      display:none;
+    }
+
+    .copy-notice.show {
+      display:block;
+    }
+
+    @media(max-width:700px) {
+
+      .dashboard-top {
+        align-items:flex-start;
+      }
+
+      .file-buttons {
+        display:grid;
+        grid-template-columns:1fr 1fr;
+      }
+
+      .dashboard-btn {
+        width:100%;
+      }
+
+    }
+
+  </style>
+
 </head>
 
+
 <body>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
 
 <header class="site-header">
 
@@ -27,9 +239,15 @@
     class="logo"
     href="../index.html"
   >
-    <span class="logo-mark">K</span>
+
+    <span class="logo-mark">
+      K
+    </span>
+
     KaroPays
+
   </a>
+
 
   <nav class="desktop-nav">
 
@@ -45,8 +263,10 @@
       Premium
     </a>
 
-    <a href="#"
-       id="signOut">
+    <a
+      href="#"
+      id="signOut"
+    >
       Sign out
     </a>
 
@@ -55,27 +275,60 @@
 </header>
 
 
+<!-- =========================================
+     MAIN
+========================================= -->
+
 <main class="legal-page">
 
-  <div class="section-label">
-    CREATOR DASHBOARD
+
+  <div class="dashboard-top">
+
+    <div>
+
+      <div class="section-label">
+        CREATOR DASHBOARD
+      </div>
+
+      <h1>
+        Welcome back.
+      </h1>
+
+      <p
+        class="lead creator-email"
+        id="creatorEmail"
+      >
+        Loading account...
+      </p>
+
+    </div>
+
+
+    <div class="dashboard-actions">
+
+      <a
+        class="primary"
+        href="../upload.html"
+      >
+        + Upload file
+      </a>
+
+      <button
+        class="dashboard-btn secondary"
+        id="refreshButton"
+        type="button"
+      >
+        Refresh
+      </button>
+
+    </div>
+
   </div>
 
 
-  <h1>
-    Welcome back.
-  </h1>
-
-
-  <p
-    class="lead"
-    id="creatorEmail"
-  >
-    Loading account...
-  </p>
-
-
-  <!-- Statistics -->
+  <!-- =========================================
+       STATISTICS
+  ========================================= -->
 
   <div class="rule-grid">
 
@@ -120,16 +373,32 @@
   </div>
 
 
-  <!-- Files -->
+  <!-- =========================================
+       DASHBOARD MESSAGE
+  ========================================= -->
+
+  <p
+    id="dashboardMessage"
+    class="status-message"
+  ></p>
+
+
+  <!-- =========================================
+       FILES
+  ========================================= -->
 
   <div
     class="table-card"
     style="margin-top:30px;"
   >
 
-    <h2>
-      Your files
-    </h2>
+    <div class="section-head">
+
+      <h2>
+        Your files
+      </h2>
+
+    </div>
 
 
     <div id="filesContainer">
@@ -141,23 +410,25 @@
     </div>
 
 
-    <div style="margin-top:25px;">
-
-      <a
-        class="primary"
-        href="../upload.html"
-      >
-        Upload file
-      </a>
-
-    </div>
-
   </div>
+
 
 </main>
 
 
-<!-- Supabase -->
+<!-- COPY NOTICE -->
+
+<div
+  id="copyNotice"
+  class="copy-notice"
+>
+  Link copied!
+</div>
+
+
+<!-- =========================================
+     SUPABASE
+========================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -185,8 +456,24 @@ const availableBalance =
 const filesContainer =
   document.getElementById("filesContainer");
 
+const dashboardMessage =
+  document.getElementById("dashboardMessage");
+
 const signOut =
   document.getElementById("signOut");
+
+const refreshButton =
+  document.getElementById("refreshButton");
+
+const copyNotice =
+  document.getElementById("copyNotice");
+
+
+/* =========================================
+   CURRENT USER
+========================================= */
+
+let currentUser = null;
 
 
 /* =========================================
@@ -204,8 +491,11 @@ async function loadDashboard() {
 
   try {
 
+    dashboardMessage.textContent =
+      "";
+
     /*
-     * Check logged-in user.
+     * Check current authenticated user.
      */
 
     const {
@@ -213,7 +503,8 @@ async function loadDashboard() {
         user
       },
       error: sessionError
-    } = await supabaseClient.auth.getUser();
+    } =
+      await supabaseClient.auth.getUser();
 
 
     if (
@@ -221,12 +512,17 @@ async function loadDashboard() {
       !user
     ) {
 
-      window.location.href =
-        "../login.html";
+      window.location.replace(
+        "../login.html"
+      );
 
       return;
 
     }
+
+
+    currentUser =
+      user;
 
 
     creatorEmail.textContent =
@@ -235,31 +531,32 @@ async function loadDashboard() {
 
 
     /*
-     * Get this creator's files.
+     * Load creator files.
      */
 
     const {
       data: files,
       error: filesError
-    } = await supabaseClient
+    } =
+      await supabaseClient
 
-      .from("files")
+        .from("files")
 
-      .select(
-        "id,file_name,file_size,category,ad_level,downloads,earnings,status,created_at"
-      )
+        .select(
+          "id,file_name,file_size,description,category,ad_level,downloads,earnings,status,storage_path,created_at"
+        )
 
-      .eq(
-        "creator_id",
-        user.id
-      )
+        .eq(
+          "creator_id",
+          user.id
+        )
 
-      .order(
-        "created_at",
-        {
-          ascending: false
-        }
-      );
+        .order(
+          "created_at",
+          {
+            ascending:false
+          }
+        );
 
 
     if (filesError) {
@@ -270,7 +567,8 @@ async function loadDashboard() {
       );
 
       throw new Error(
-        "Could not load your files."
+        "Could not load your files: " +
+        filesError.message
       );
 
     }
@@ -280,9 +578,9 @@ async function loadDashboard() {
       files || [];
 
 
-    /* =====================================
-       CALCULATE TOTALS
-    ===================================== */
+    /*
+     * Calculate totals.
+     */
 
     let downloads = 0;
 
@@ -306,9 +604,9 @@ async function loadDashboard() {
     );
 
 
-    /* =====================================
-       DISPLAY TOTALS
-    ===================================== */
+    /*
+     * Display totals.
+     */
 
     totalDownloads.textContent =
       downloads.toLocaleString();
@@ -321,8 +619,8 @@ async function loadDashboard() {
 
 
     /*
-     * Until the payout system is built,
-     * available balance equals earnings.
+     * For now available balance
+     * equals total earnings.
      */
 
     availableBalance.textContent =
@@ -331,9 +629,9 @@ async function loadDashboard() {
       );
 
 
-    /* =====================================
-       DISPLAY FILES
-    ===================================== */
+    /*
+     * Render files.
+     */
 
     renderFiles(
       creatorFiles
@@ -347,15 +645,13 @@ async function loadDashboard() {
       error
     );
 
-    filesContainer.innerHTML =
-      `
-        <p class="lead">
-          ${escapeHtml(
-            error.message ||
-            "Unable to load dashboard."
-          )}
-        </p>
-      `;
+
+    dashboardMessage.textContent =
+      error.message ||
+      "Unable to load dashboard.";
+
+    dashboardMessage.className =
+      "status-message error-message";
 
   }
 
@@ -372,10 +668,20 @@ function renderFiles(files) {
 
     filesContainer.innerHTML =
       `
-        <p class="lead">
-          No files yet. Upload your first
-          file to start building your library.
-        </p>
+        <div class="empty">
+
+          <p>
+            No files yet.
+          </p>
+
+          <a
+            class="primary"
+            href="../upload.html"
+          >
+            Upload your first file
+          </a>
+
+        </div>
       `;
 
     return;
@@ -389,78 +695,318 @@ function renderFiles(files) {
   files.forEach(
     function(file) {
 
+      const fileId =
+        encodeURIComponent(
+          file.id
+        );
+
+
+      const fileName =
+        escapeHtml(
+          file.file_name ||
+          "Unnamed file"
+        );
+
+
+      const description =
+        escapeHtml(
+          file.description ||
+          "No description provided."
+        );
+
+
+      const category =
+        escapeHtml(
+          file.category ||
+          "Other"
+        );
+
+
+      const status =
+        escapeHtml(
+          file.status ||
+          "unknown"
+        );
+
+
+      const adLevel =
+        Number(
+          file.ad_level || 1
+        );
+
+
+      const downloads =
+        Number(
+          file.downloads || 0
+        );
+
+
+      const earnings =
+        Number(
+          file.earnings || 0
+        );
+
+
       html +=
         `
-        <div
-          style="
-            padding:20px 0;
-            border-bottom:1px solid rgba(0,0,0,.08);
-          "
+
+        <article
+          class="file-item"
+          data-file-id="${fileId}"
         >
 
-          <h3>
-            ${escapeHtml(
-              file.file_name ||
-              "Unnamed file"
-            )}
+          <h3 class="file-title">
+            ${fileName}
           </h3>
 
-          <p>
-            ${escapeHtml(
-              file.category ||
-              "Other"
-            )}
-            ·
-            Ad Level ${Number(
-              file.ad_level || 1
-            )}
+
+          <p class="file-description">
+            ${description}
           </p>
 
-          <p>
 
-            <strong>
-              ${Number(
-                file.downloads || 0
-              ).toLocaleString()}
-            </strong>
+          <div class="file-meta">
 
-            downloads
+            <span>
+              ${category}
+            </span>
 
-            &nbsp; · &nbsp;
+            <span>
+              Ad Level ${adLevel}
+            </span>
 
-            <strong>
-              ${formatMoney(
-                Number(
-                  file.earnings || 0
-                )
-              )}
-            </strong>
+            <span>
+              ${status}
+            </span>
 
-            earnings
+          </div>
 
-          </p>
 
-          <p>
+          <div class="file-stats">
 
-            Status:
-            <strong>
-              ${escapeHtml(
-                file.status ||
-                "unknown"
-              )}
-            </strong>
+            <span>
+              <strong>
+                ${downloads.toLocaleString()}
+              </strong>
+              downloads
+            </span>
 
-          </p>
 
-          <a
-            href="../file.html?id=${encodeURIComponent(
-              file.id
-            )}"
+            <span>
+              <strong>
+                ${formatMoney(earnings)}
+              </strong>
+              earnings
+            </span>
+
+          </div>
+
+
+          <div class="file-buttons">
+
+            <!-- VIEW -->
+
+            <a
+              class="dashboard-btn"
+              href="../file.html?id=${fileId}"
+            >
+              View
+            </a>
+
+
+            <!-- SHARE -->
+
+            <button
+              class="dashboard-btn secondary"
+              type="button"
+              onclick="shareFile('${escapeJs(file.id)}')"
+            >
+              Share
+            </button>
+
+
+            <!-- EDIT -->
+
+            <button
+              class="dashboard-btn secondary"
+              type="button"
+              onclick="toggleEdit('${escapeJs(file.id)}')"
+            >
+              Edit
+            </button>
+
+
+            <!-- DELETE -->
+
+            <button
+              class="dashboard-btn danger"
+              type="button"
+              onclick="deleteFile('${escapeJs(file.id)}')"
+            >
+              Delete
+            </button>
+
+          </div>
+
+
+          <!-- EDIT BOX -->
+
+          <div
+            id="edit-${fileId}"
+            class="edit-box"
           >
-            View file page
-          </a>
 
-        </div>
+            <label>
+
+              File name
+
+              <input
+                id="name-${fileId}"
+                type="text"
+                value="${escapeAttribute(
+                  file.file_name || ""
+                )}"
+                maxlength="200"
+              >
+
+            </label>
+
+
+            <label>
+
+              Description
+
+              <textarea
+                id="description-${fileId}"
+                rows="4"
+                maxlength="1000"
+              >${escapeHtml(
+                file.description || ""
+              )}</textarea>
+
+            </label>
+
+
+            <label>
+
+              Category
+
+              <select
+                id="category-${fileId}"
+              >
+
+                <option
+                  value="Presets"
+                  ${file.category === "Presets" ? "selected" : ""}
+                >
+                  Presets
+                </option>
+
+                <option
+                  value="Templates"
+                  ${file.category === "Templates" ? "selected" : ""}
+                >
+                  Templates
+                </option>
+
+                <option
+                  value="Wallpapers"
+                  ${file.category === "Wallpapers" ? "selected" : ""}
+                >
+                  Wallpapers
+                </option>
+
+                <option
+                  value="Resources"
+                  ${file.category === "Resources" ? "selected" : ""}
+                >
+                  Resources
+                </option>
+
+                <option
+                  value="Other"
+                  ${file.category === "Other" || !file.category ? "selected" : ""}
+                >
+                  Other
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+
+              Ad level
+
+              <select
+                id="adlevel-${fileId}"
+              >
+
+                <option
+                  value="1"
+                  ${adLevel === 1 ? "selected" : ""}
+                >
+                  1 — Low
+                </option>
+
+                <option
+                  value="2"
+                  ${adLevel === 2 ? "selected" : ""}
+                >
+                  2 — Medium
+                </option>
+
+                <option
+                  value="3"
+                  ${adLevel === 3 ? "selected" : ""}
+                >
+                  3 — High
+                </option>
+
+                <option
+                  value="4"
+                  ${adLevel === 4 ? "selected" : ""}
+                >
+                  4 — Ultra
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <div class="edit-buttons">
+
+              <button
+                class="dashboard-btn"
+                type="button"
+                onclick="saveEdit('${escapeJs(file.id)}')"
+              >
+                Save changes
+              </button>
+
+
+              <button
+                class="dashboard-btn secondary"
+                type="button"
+                onclick="toggleEdit('${escapeJs(file.id)}')"
+              >
+                Cancel
+              </button>
+
+            </div>
+
+
+            <p
+              id="edit-message-${fileId}"
+              class="status-message"
+            ></p>
+
+          </div>
+
+        </article>
+
         `;
 
     }
@@ -474,49 +1020,585 @@ function renderFiles(files) {
 
 
 /* =========================================
-   MONEY FORMAT
+   SHARE FILE
 ========================================= */
 
-function formatMoney(value) {
+async function shareFile(fileId) {
 
-  return (
-    "₹" +
-    Number(value || 0)
-      .toFixed(8)
+  const shareUrl =
+    new URL(
+      "../file.html?id=" +
+      encodeURIComponent(fileId),
+      window.location.href
+    ).href;
+
+
+  try {
+
+    /*
+     * Modern browser share.
+     */
+
+    if (
+      navigator.share
+    ) {
+
+      await navigator.share({
+
+        title:
+          "Download file — KaroPays",
+
+        url:
+          shareUrl
+
+      });
+
+      return;
+
+    }
+
+
+    /*
+     * Clipboard fallback.
+     */
+
+    await navigator.clipboard.writeText(
+      shareUrl
+    );
+
+
+    showCopyNotice(
+      "File link copied!"
+    );
+
+
+  } catch (error) {
+
+    /*
+     * User cancelling native
+     * share is not an error.
+     */
+
+    if (
+      error &&
+      error.name === "AbortError"
+    ) {
+
+      return;
+
+    }
+
+
+    /*
+     * Older browser fallback.
+     */
+
+    try {
+
+      const temporary =
+        document.createElement(
+          "textarea"
+        );
+
+      temporary.value =
+        shareUrl;
+
+      document.body.appendChild(
+        temporary
+      );
+
+      temporary.select();
+
+      document.execCommand(
+        "copy"
+      );
+
+      temporary.remove();
+
+
+      showCopyNotice(
+        "File link copied!"
+      );
+
+
+    } catch (copyError) {
+
+      console.error(
+        "Copy error:",
+        copyError
+      );
+
+
+      showCopyNotice(
+        "Could not copy the link."
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =========================================
+   SHOW COPY NOTICE
+========================================= */
+
+function showCopyNotice(message) {
+
+  copyNotice.textContent =
+    message;
+
+  copyNotice.classList.add(
+    "show"
+  );
+
+
+  setTimeout(
+    function() {
+
+      copyNotice.classList.remove(
+        "show"
+      );
+
+    },
+    2200
   );
 
 }
 
 
 /* =========================================
-   ESCAPE HTML
+   TOGGLE EDIT
 ========================================= */
 
-function escapeHtml(value) {
+function toggleEdit(fileId) {
 
-  return String(value)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
+  const box =
+    document.getElementById(
+      "edit-" +
+      encodeURIComponent(fileId)
     );
 
+
+  if (!box) {
+    return;
+  }
+
+
+  box.classList.toggle(
+    "open"
+  );
+
 }
+
+
+/* =========================================
+   SAVE EDIT
+========================================= */
+
+async function saveEdit(fileId) {
+
+  if (!currentUser) {
+
+    window.location.replace(
+      "../login.html"
+    );
+
+    return;
+
+  }
+
+
+  const encodedId =
+    encodeURIComponent(
+      fileId
+    );
+
+
+  const nameInput =
+    document.getElementById(
+      "name-" +
+      encodedId
+    );
+
+
+  const descriptionInput =
+    document.getElementById(
+      "description-" +
+      encodedId
+    );
+
+
+  const categoryInput =
+    document.getElementById(
+      "category-" +
+      encodedId
+    );
+
+
+  const adLevelInput =
+    document.getElementById(
+      "adlevel-" +
+      encodedId
+    );
+
+
+  const message =
+    document.getElementById(
+      "edit-message-" +
+      encodedId
+    );
+
+
+  if (
+    !nameInput ||
+    !descriptionInput ||
+    !categoryInput ||
+    !adLevelInput
+  ) {
+
+    return;
+
+  }
+
+
+  const fileName =
+    nameInput.value.trim();
+
+
+  const description =
+    descriptionInput.value.trim();
+
+
+  const category =
+    categoryInput.value;
+
+
+  const adLevel =
+    Number(
+      adLevelInput.value
+    );
+
+
+  if (!fileName) {
+
+    message.textContent =
+      "File name is required.";
+
+    message.className =
+      "status-message error-message";
+
+    return;
+
+  }
+
+
+  message.textContent =
+    "Saving...";
+
+  message.className =
+    "status-message";
+
+
+  try {
+
+    /*
+     * Ownership is enforced by the
+     * database RLS policy.
+     */
+
+    const {
+      error
+    } =
+      await supabaseClient
+
+        .from("files")
+
+        .update({
+
+          file_name:
+            fileName,
+
+          description:
+            description,
+
+          category:
+            category,
+
+          ad_level:
+            adLevel
+
+        })
+
+        .eq(
+          "id",
+          fileId
+        )
+
+        .eq(
+          "creator_id",
+          currentUser.id
+        );
+
+
+    if (error) {
+
+      console.error(
+        "Edit error:",
+        error
+      );
+
+      throw new Error(
+        error.message ||
+        "Could not update file."
+      );
+
+    }
+
+
+    message.textContent =
+      "Changes saved.";
+
+    message.className =
+      "status-message success-message";
+
+
+    setTimeout(
+      function() {
+
+        loadDashboard();
+
+      },
+      600
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      error
+    );
+
+
+    message.textContent =
+      error.message ||
+      "Could not save changes.";
+
+    message.className =
+      "status-message error-message";
+
+  }
+
+}
+
+
+/* =========================================
+   DELETE FILE
+========================================= */
+
+async function deleteFile(fileId) {
+
+  if (!currentUser) {
+
+    window.location.replace(
+      "../login.html"
+    );
+
+    return;
+
+  }
+
+
+  const confirmed =
+    window.confirm(
+      "Delete this file permanently?\n\nThis will remove the file from your KaroPays library."
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  try {
+
+    dashboardMessage.textContent =
+      "Deleting file...";
+
+    dashboardMessage.className =
+      "status-message";
+
+
+    /*
+     * First get the storage path.
+     */
+
+    const {
+      data: file,
+      error: fetchError
+    } =
+      await supabaseClient
+
+        .from("files")
+
+        .select(
+          "id,storage_path"
+        )
+
+        .eq(
+          "id",
+          fileId
+        )
+
+        .eq(
+          "creator_id",
+          currentUser.id
+        )
+
+        .single();
+
+
+    if (fetchError || !file) {
+
+      throw new Error(
+        fetchError?.message ||
+        "File not found."
+      );
+
+    }
+
+
+    /*
+     * Delete Storage object first.
+     */
+
+    if (file.storage_path) {
+
+      const {
+        error: storageError
+      } =
+        await supabaseClient.storage
+
+          .from("files")
+
+          .remove([
+            file.storage_path
+          ]);
+
+
+      if (storageError) {
+
+        console.error(
+          "Storage delete error:",
+          storageError
+        );
+
+        throw new Error(
+          "Could not delete the stored file: " +
+          storageError.message
+        );
+
+      }
+
+    }
+
+
+    /*
+     * Delete database record.
+     */
+
+    const {
+      error: databaseError
+    } =
+      await supabaseClient
+
+        .from("files")
+
+        .delete()
+
+        .eq(
+          "id",
+          fileId
+        )
+
+        .eq(
+          "creator_id",
+          currentUser.id
+        );
+
+
+    if (databaseError) {
+
+      console.error(
+        "Database delete error:",
+        databaseError
+      );
+
+      throw new Error(
+        "Storage was deleted, but the database record could not be deleted: " +
+        databaseError.message
+      );
+
+    }
+
+
+    dashboardMessage.textContent =
+      "File deleted successfully.";
+
+    dashboardMessage.className =
+      "status-message success-message";
+
+
+    await loadDashboard();
+
+
+  } catch (error) {
+
+    console.error(
+      "Delete error:",
+      error
+    );
+
+
+    dashboardMessage.textContent =
+      error.message ||
+      "Could not delete the file.";
+
+    dashboardMessage.className =
+      "status-message error-message";
+
+  }
+
+}
+
+
+/* =========================================
+   REFRESH
+========================================= */
+
+refreshButton.addEventListener(
+  "click",
+  async function() {
+
+    refreshButton.disabled =
+      true;
+
+    refreshButton.textContent =
+      "Refreshing...";
+
+
+    await loadDashboard();
+
+
+    refreshButton.disabled =
+      false;
+
+    refreshButton.textContent =
+      "Refresh";
+
+  }
+);
 
 
 /* =========================================
@@ -529,15 +1611,137 @@ signOut.addEventListener(
 
     event.preventDefault();
 
-    await supabaseClient.auth.signOut();
 
-    window.location.href =
-      "../login.html";
+    signOut.textContent =
+      "Signing out...";
+
+
+    const {
+      error
+    } =
+      await supabaseClient.auth.signOut();
+
+
+    if (error) {
+
+      console.error(
+        "Sign out error:",
+        error
+      );
+
+      signOut.textContent =
+        "Sign out";
+
+      return;
+
+    }
+
+
+    window.location.replace(
+      "../login.html"
+    );
 
   }
 );
 
+
+/* =========================================
+   MONEY FORMAT
+========================================= */
+
+function formatMoney(value) {
+
+  return (
+    "₹" +
+    Number(
+      value || 0
+    ).toFixed(8)
+  );
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(value) {
+
+  return String(
+    value ?? ""
+  )
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+
+/* =========================================
+   ESCAPE ATTRIBUTE
+========================================= */
+
+function escapeAttribute(value) {
+
+  return escapeHtml(
+    value
+  );
+
+}
+
+
+/* =========================================
+   ESCAPE JAVASCRIPT STRING
+========================================= */
+
+function escapeJs(value) {
+
+  return String(
+    value ?? ""
+  )
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /\r/g,
+      "\\r"
+    )
+    .replace(
+      /\n/g,
+      "\\n"
+    );
+
+}
+
 </script>
+
 
 </body>
 
