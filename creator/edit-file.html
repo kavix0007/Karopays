@@ -7,42 +7,25 @@
 
   <title>Edit File — KaroPays</title>
 
-  <link
-    rel="stylesheet"
-    href="assets/css/pro.css"
-  >
+  <link rel="stylesheet" href="assets/css/pro.css">
 </head>
 
 <body>
 
 <header class="site-header">
 
-  <a
-    class="logo"
-    href="index.html"
-  >
+  <a class="logo" href="index.html">
     <span class="logo-mark">K</span>
     KaroPays
   </a>
 
   <nav class="desktop-nav">
 
-    <a href="payout-rates.html">
-      Payout Rates
-    </a>
+    <a href="payout-rates.html">Payout Rates</a>
+    <a href="payment-proof.html">Payment Proof</a>
+    <a href="premium.html">Premium</a>
 
-    <a href="payment-proof.html">
-      Payment Proof
-    </a>
-
-    <a href="premium.html">
-      Premium
-    </a>
-
-    <a
-      href="creator/dashboard.html"
-      class="nav-cta"
-    >
+    <a href="creator/dashboard.html" class="nav-cta">
       Dashboard
     </a>
 
@@ -51,32 +34,24 @@
 </header>
 
 
-<main class="page">
+<main class="legal-page">
 
-  <div class="page-head">
-
-    <div class="eyebrow">
-      FILE MANAGEMENT
-    </div>
-
-    <h1>
-      Edit file
-    </h1>
-
-    <p class="lead">
-      Update your file information and monetization settings.
-    </p>
-
+  <div class="section-label">
+    FILE MANAGEMENT
   </div>
 
+  <h1>Edit file</h1>
 
-  <!-- EDIT PANEL -->
+  <p class="lead">
+    Update your file information and monetization settings.
+  </p>
 
-  <section class="panel">
 
-    <h2>
-      File information
-    </h2>
+  <!-- EDIT -->
+
+  <section class="table-card wide-form">
+
+    <h2>File information</h2>
 
     <form id="editForm">
 
@@ -115,25 +90,11 @@
 
         <select id="category">
 
-          <option value="Presets">
-            Presets
-          </option>
-
-          <option value="Templates">
-            Templates
-          </option>
-
-          <option value="Wallpapers">
-            Wallpapers
-          </option>
-
-          <option value="Resources">
-            Resources
-          </option>
-
-          <option value="Other">
-            Other
-          </option>
+          <option value="Presets">Presets</option>
+          <option value="Templates">Templates</option>
+          <option value="Wallpapers">Wallpapers</option>
+          <option value="Resources">Resources</option>
+          <option value="Other">Other</option>
 
         </select>
 
@@ -145,21 +106,10 @@
 
         <select id="adLevel">
 
-          <option value="1">
-            1 — Low
-          </option>
-
-          <option value="2">
-            2 — Medium
-          </option>
-
-          <option value="3">
-            3 — High
-          </option>
-
-          <option value="4">
-            4 — Ultra
-          </option>
+          <option value="1">1 — Low</option>
+          <option value="2">2 — Medium</option>
+          <option value="3">3 — High</option>
+          <option value="4">4 — Ultra</option>
 
         </select>
 
@@ -170,10 +120,7 @@
       </label>
 
 
-      <div
-        id="editMessage"
-        class="form-message"
-      ></div>
+      <p id="editMessage" class="form-message"></p>
 
 
       <div class="edit-actions">
@@ -200,21 +147,17 @@
   </section>
 
 
-  <!-- FILE INFORMATION -->
+  <!-- STATISTICS -->
 
-  <section class="panel">
+  <section class="table-card wide-form">
 
-    <h2>
-      File statistics
-    </h2>
+    <h2>File statistics</h2>
 
     <div class="file-stat-grid">
 
       <div class="file-stat">
 
-        <span>
-          Downloads
-        </span>
+        <span>Downloads</span>
 
         <strong id="downloads">
           0
@@ -225,9 +168,7 @@
 
       <div class="file-stat">
 
-        <span>
-          Earnings
-        </span>
+        <span>Earnings</span>
 
         <strong id="earnings">
           ₹0.00000000
@@ -238,12 +179,55 @@
 
       <div class="file-stat">
 
-        <span>
-          Status
-        </span>
+        <span>Status</span>
 
         <strong id="status">
           —
+        </strong>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- MORE INFORMATION -->
+
+  <section class="table-card wide-form">
+
+    <h2>Additional information</h2>
+
+    <div class="file-stat-grid">
+
+      <div class="file-stat">
+
+        <span>File size</span>
+
+        <strong id="fileSize">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="file-stat">
+
+        <span>Created</span>
+
+        <strong id="createdAt">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="file-stat">
+
+        <span>Last download</span>
+
+        <strong id="lastDownload">
+          Never
         </strong>
 
       </div>
@@ -257,29 +241,19 @@
 
   <section class="danger-panel">
 
-    <div class="danger-header">
-
-      <div>
-
-        <div class="danger-label">
-          DANGER ZONE
-        </div>
-
-        <h2>
-          Delete this file
-        </h2>
-
-      </div>
-
+    <div class="danger-label">
+      DANGER ZONE
     </div>
 
+    <h2>
+      Delete this file
+    </h2>
 
     <p>
       Deleting this file is permanent. The stored file,
       file page, download count and earnings associated
       with this file will be removed.
     </p>
-
 
     <button
       type="button"
@@ -294,7 +268,7 @@
 </main>
 
 
-<!-- DELETE CONFIRMATION MODAL -->
+<!-- DELETE MODAL -->
 
 <div
   id="deleteModal"
@@ -313,27 +287,21 @@
       !
     </div>
 
-
     <div class="danger-label">
       PERMANENT ACTION
     </div>
-
 
     <h2 id="deleteTitle">
       Delete this file?
     </h2>
 
-
     <p>
-      <strong>This cannot be undone.</strong>
+      <strong>This action cannot be undone.</strong>
     </p>
 
-
-    <p>
-      Deleting this file will remove the file permanently
-      and reset/remove its recorded statistics.
+    <p id="deleteFileName">
+      You are about to permanently delete this file.
     </p>
-
 
     <div class="delete-warning">
 
@@ -341,13 +309,23 @@
         Think before you delete.
       </strong>
 
-      <br>
+      <br><br>
 
-      Your total downloads and earnings from this file
-      will no longer be available after deletion.
+      This will remove your file permanently.
+
+      <br><br>
+
+      <strong>
+        Your total downloads and earnings for this file
+        will also be removed.
+      </strong>
 
     </div>
 
+    <p
+      id="deleteMessage"
+      class="form-message"
+    ></p>
 
     <div class="delete-modal-actions">
 
@@ -356,9 +334,8 @@
         class="btn ghost"
         id="cancelDelete"
       >
-        Cancel
+        Keep file
       </button>
-
 
       <button
         type="button"
@@ -370,18 +347,10 @@
 
     </div>
 
-
-    <p
-      id="deleteMessage"
-      class="form-message"
-    ></p>
-
   </div>
 
 </div>
 
-
-<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -394,71 +363,49 @@
    ELEMENTS
 ========================================= */
 
-const editForm =
-  document.getElementById("editForm");
+const editForm = document.getElementById("editForm");
 
-const fileNameInput =
-  document.getElementById("fileName");
+const fileNameInput = document.getElementById("fileName");
+const descriptionInput = document.getElementById("description");
+const categoryInput = document.getElementById("category");
+const adLevelInput = document.getElementById("adLevel");
 
-const descriptionInput =
-  document.getElementById("description");
+const saveButton = document.getElementById("saveButton");
+const editMessage = document.getElementById("editMessage");
 
-const categoryInput =
-  document.getElementById("category");
+const downloadsElement = document.getElementById("downloads");
+const earningsElement = document.getElementById("earnings");
+const statusElement = document.getElementById("status");
 
-const adLevelInput =
-  document.getElementById("adLevel");
+const fileSizeElement = document.getElementById("fileSize");
+const createdAtElement = document.getElementById("createdAt");
+const lastDownloadElement = document.getElementById("lastDownload");
 
-const saveButton =
-  document.getElementById("saveButton");
+const deleteButton = document.getElementById("deleteButton");
 
-const editMessage =
-  document.getElementById("editMessage");
+const deleteModal = document.getElementById("deleteModal");
+const deleteFileName = document.getElementById("deleteFileName");
 
-const downloadsElement =
-  document.getElementById("downloads");
+const cancelDelete = document.getElementById("cancelDelete");
+const confirmDelete = document.getElementById("confirmDelete");
 
-const earningsElement =
-  document.getElementById("earnings");
-
-const statusElement =
-  document.getElementById("status");
-
-const deleteButton =
-  document.getElementById("deleteButton");
-
-const deleteModal =
-  document.getElementById("deleteModal");
-
-const cancelDelete =
-  document.getElementById("cancelDelete");
-
-const confirmDelete =
-  document.getElementById("confirmDelete");
-
-const deleteMessage =
-  document.getElementById("deleteMessage");
+const deleteMessage = document.getElementById("deleteMessage");
 
 
 /* =========================================
-   GET FILE ID
+   FILE ID
 ========================================= */
 
-const params =
-  new URLSearchParams(
-    window.location.search
-  );
+const params = new URLSearchParams(window.location.search);
 
-const fileId =
-  params.get("id");
+const fileId = params.get("id");
 
 
 /* =========================================
-   FILE DATA
+   STATE
 ========================================= */
 
 let currentFile = null;
-
 let currentUser = null;
 
 
@@ -487,69 +434,57 @@ async function loadFile() {
 
   try {
 
-    /*
-     * Get logged-in user.
-     */
-
     const {
       data: {
         user
       },
       error: userError
-    } =
-      await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser();
 
 
-    if (
-      userError ||
-      !user
-    ) {
+    if (userError || !user) {
 
-      window.location.href =
-        "login.html";
+      window.location.href = "login.html";
 
       return;
 
     }
 
 
-    currentUser =
-      user;
+    currentUser = user;
 
-
-    /*
-     * Get file.
-     */
 
     const {
       data: file,
       error: fileError
-    } =
-      await supabaseClient
+    } = await supabaseClient
 
-        .from("files")
+      .from("files")
 
-        .select(
-          "id,creator_id,file_name,description,category,ad_level,downloads,earnings,status,storage_path"
-        )
+      .select(`
+        id,
+        creator_id,
+        file_name,
+        file_size,
+        storage_path,
+        description,
+        category,
+        ad_level,
+        downloads,
+        earnings,
+        status,
+        created_at,
+        last_download_at
+      `)
 
-        .eq(
-          "id",
-          fileId
-        )
+      .eq("id", fileId)
 
-        .eq(
-          "creator_id",
-          user.id
-        )
+      .eq("creator_id", user.id)
 
-        .single();
+      .single();
 
 
-    if (
-      fileError ||
-      !file
-    ) {
+    if (fileError || !file) {
 
       console.error(
         "File loading error:",
@@ -565,53 +500,51 @@ async function loadFile() {
     }
 
 
-    currentFile =
-      file;
+    currentFile = file;
 
 
-    /*
-     * Fill form.
-     */
+    /* FORM */
 
     fileNameInput.value =
-      file.file_name ||
-      "";
+      file.file_name || "";
 
     descriptionInput.value =
-      file.description ||
-      "";
+      file.description || "";
 
     categoryInput.value =
-      file.category ||
-      "Other";
+      file.category || "Other";
 
     adLevelInput.value =
-      String(
-        file.ad_level ||
-        1
-      );
+      String(file.ad_level || 1);
 
 
-    /*
-     * Statistics.
-     */
+    /* STATISTICS */
 
     downloadsElement.textContent =
-      Number(
-        file.downloads ||
-        0
-      ).toLocaleString();
-
+      Number(file.downloads || 0)
+        .toLocaleString();
 
     earningsElement.textContent =
-      formatMoney(
-        file.earnings
-      );
-
+      formatMoney(file.earnings);
 
     statusElement.textContent =
-      file.status ||
-      "unknown";
+      file.status || "unknown";
+
+
+    /* EXTRA INFORMATION */
+
+    fileSizeElement.textContent =
+      formatFileSize(file.file_size);
+
+
+    createdAtElement.textContent =
+      formatDate(file.created_at);
+
+
+    lastDownloadElement.textContent =
+      file.last_download_at
+        ? formatDate(file.last_download_at)
+        : "Never";
 
 
   } catch (error) {
@@ -631,7 +564,7 @@ async function loadFile() {
 
 
 /* =========================================
-   SAVE CHANGES
+   SAVE
 ========================================= */
 
 editForm.addEventListener(
@@ -641,10 +574,8 @@ editForm.addEventListener(
     event.preventDefault();
 
 
-    if (!currentFile) {
-
+    if (!currentFile || !currentUser) {
       return;
-
     }
 
 
@@ -658,14 +589,8 @@ editForm.addEventListener(
       categoryInput.value;
 
     const adLevel =
-      Number(
-        adLevelInput.value
-      );
+      Number(adLevelInput.value);
 
-
-    /*
-     * Validate.
-     */
 
     if (!fileName) {
 
@@ -677,67 +602,82 @@ editForm.addEventListener(
     }
 
 
-    if (
-      fileName.length < 1 ||
-      fileName.length > 200
-    ) {
+    if (fileName.length > 200) {
 
       editMessage.textContent =
-        "File name must be between 1 and 200 characters.";
+        "File name must be 200 characters or less.";
 
       return;
 
     }
 
 
-    /*
-     * Disable button.
-     */
+    if (description.length > 1000) {
 
-    saveButton.disabled =
-      true;
+      editMessage.textContent =
+        "Description must be 1000 characters or less.";
 
-    saveButton.textContent =
-      "Saving...";
+      return;
 
-    editMessage.textContent =
-      "";
+    }
+
+
+    if (![1, 2, 3, 4].includes(adLevel)) {
+
+      editMessage.textContent =
+        "Invalid ad level.";
+
+      return;
+
+    }
+
+
+    saveButton.disabled = true;
+
+    saveButton.textContent = "Saving...";
+
+    editMessage.textContent = "";
 
 
     try {
 
       const {
+        data,
         error
-      } =
-        await supabaseClient
+      } = await supabaseClient
 
-          .from("files")
+        .from("files")
 
-          .update({
+        .update({
 
-            file_name:
-              fileName,
+          file_name: fileName,
 
-            description:
-              description,
+          description: description,
 
-            category:
-              category,
+          category: category,
 
-            ad_level:
-              adLevel
+          ad_level: adLevel
 
-          })
+        })
 
-          .eq(
-            "id",
-            currentFile.id
-          )
+        .eq("id", currentFile.id)
 
-          .eq(
-            "creator_id",
-            currentUser.id
-          );
+        .eq("creator_id", currentUser.id)
+
+        .select(`
+          id,
+          file_name,
+          description,
+          category,
+          ad_level,
+          downloads,
+          earnings,
+          status,
+          file_size,
+          created_at,
+          last_download_at,
+          storage_path
+        `);
 
 
       if (error) {
@@ -755,42 +695,36 @@ editForm.addEventListener(
       }
 
 
-      /*
-       * Update local object.
-       */
+      if (!data || !data.length) {
 
-      currentFile.file_name =
-        fileName;
+        throw new Error(
+          "No file was updated. Check your Supabase RLS UPDATE policy."
+        );
 
-      currentFile.description =
-        description;
+      }
 
-      currentFile.category =
-        category;
 
-      currentFile.ad_level =
-        adLevel;
+      currentFile = {
+        ...currentFile,
+        ...data[0]
+      };
 
 
       editMessage.textContent =
-        "Changes saved successfully.";
+        "✓ Changes saved successfully.";
 
       saveButton.textContent =
         "Saved";
 
 
-      setTimeout(
-        function() {
+      setTimeout(function() {
 
-          saveButton.disabled =
-            false;
+        saveButton.disabled = false;
 
-          saveButton.textContent =
-            "Save changes";
+        saveButton.textContent =
+          "Save changes";
 
-        },
-        1500
-      );
+      }, 1500);
 
 
     } catch (error) {
@@ -804,8 +738,7 @@ editForm.addEventListener(
         error.message ||
         "Unable to save changes.";
 
-      saveButton.disabled =
-        false;
+      saveButton.disabled = false;
 
       saveButton.textContent =
         "Save changes";
@@ -825,20 +758,21 @@ deleteButton.addEventListener(
   function() {
 
     if (!currentFile) {
-
       return;
-
     }
 
 
-    deleteMessage.textContent =
-      "";
+    deleteMessage.textContent = "";
 
 
-    deleteModal.classList.add(
-      "open"
-    );
+    deleteFileName.innerHTML =
+      `You are about to permanently delete
+       <strong>${escapeHtml(
+         currentFile.file_name || "this file"
+       )}</strong>.`;
 
+
+    deleteModal.classList.add("open");
 
     deleteModal.setAttribute(
       "aria-hidden",
@@ -863,10 +797,7 @@ deleteModal.addEventListener(
   "click",
   function(event) {
 
-    if (
-      event.target ===
-      deleteModal
-    ) {
+    if (event.target === deleteModal) {
 
       closeDeleteModal();
 
@@ -882,9 +813,7 @@ document.addEventListener(
 
     if (
       event.key === "Escape" &&
-      deleteModal.classList.contains(
-        "open"
-      )
+      deleteModal.classList.contains("open")
     ) {
 
       closeDeleteModal();
@@ -897,9 +826,7 @@ document.addEventListener(
 
 function closeDeleteModal() {
 
-  deleteModal.classList.remove(
-    "open"
-  );
+  deleteModal.classList.remove("open");
 
   deleteModal.setAttribute(
     "aria-hidden",
@@ -910,104 +837,50 @@ function closeDeleteModal() {
 
 
 /* =========================================
-   CONFIRM DELETE
+   DELETE
 ========================================= */
 
 confirmDelete.addEventListener(
   "click",
   async function() {
 
-    if (
-      !currentFile ||
-      !currentUser
-    ) {
-
+    if (!currentFile || !currentUser) {
       return;
-
     }
 
 
-    confirmDelete.disabled =
-      true;
-
-    cancelDelete.disabled =
-      true;
+    confirmDelete.disabled = true;
+    cancelDelete.disabled = true;
 
     confirmDelete.textContent =
       "Deleting...";
 
     deleteMessage.textContent =
-      "Deleting your file and its stored data...";
+      "Removing the file and its database record...";
 
 
     try {
 
       /*
-       * First remove the physical file
-       * from Supabase Storage.
-       */
-
-      if (
-        currentFile.storage_path
-      ) {
-
-        const {
-          error:
-            storageError
-        } =
-          await supabaseClient.storage
-
-            .from("files")
-
-            .remove([
-              currentFile.storage_path
-            ]);
-
-
-        if (storageError) {
-
-          console.error(
-            "Storage delete error:",
-            storageError
-          );
-
-          throw new Error(
-            "The stored file could not be deleted. Your database record was not removed."
-          );
-
-        }
-
-      }
-
-
-      /*
-       * Delete the database record.
+       * Delete the database record first.
        *
-       * Because the file record contains
-       * downloads and earnings, deleting
-       * this record removes those values
-       * from this file permanently.
+       * RLS still requires creator_id = current user.
        */
 
       const {
-        error:
-          databaseError
-      } =
-        await supabaseClient
+        data: deletedRows,
+        error: databaseError
+      } = await supabaseClient
 
-          .from("files")
+        .from("files")
 
-          .delete()
+        .delete()
 
-          .eq(
-            "id",
-            currentFile.id
-          )
+        .eq("id", currentFile.id)
 
-          .eq(
-            "creator_id",
-            currentUser.id
-          );
+        .eq("creator_id", currentUser.id)
+
+        .select("id");
 
 
       if (databaseError) {
@@ -1025,32 +898,72 @@ confirmDelete.addEventListener(
       }
 
 
+      if (!deletedRows || !deletedRows.length) {
+
+        throw new Error(
+          "The file was not deleted. Check your Supabase RLS DELETE policy."
+        );
+
+      }
+
+
       /*
-       * Success.
+       * Database record is now gone.
+       *
+       * Remove physical Storage object.
        */
 
-      deleteMessage.textContent =
-        "File deleted successfully. Redirecting...";
+      if (currentFile.storage_path) {
+
+        const {
+          error: storageError
+        } = await supabaseClient.storage
+
+          .from("files")
+
+          .remove([
+            currentFile.storage_path
+          ]);
+
+
+        if (storageError) {
+
+          console.error(
+            "Storage cleanup error:",
+            storageError
+          );
+
+          /*
+           * Do not report complete failure because
+           * the database record has already been deleted.
+           */
+
+          deleteMessage.textContent =
+            "File record deleted. Storage cleanup may require administrator cleanup.";
+
+        }
+
+      }
+
+
+      if (!deleteMessage.textContent) {
+
+        deleteMessage.textContent =
+          "File deleted successfully.";
+
+      }
 
 
       confirmDelete.textContent =
         "Deleted";
 
 
-      /*
-       * Give the message a moment
-       * to be visible.
-       */
+      setTimeout(function() {
 
-      setTimeout(
-        function() {
+        window.location.href =
+          "creator/dashboard.html";
 
-          window.location.href =
-            "creator/dashboard.html";
-
-        },
-        1000
-      );
+      }, 1200);
 
 
     } catch (error) {
@@ -1064,11 +977,8 @@ confirmDelete.addEventListener(
         error.message ||
         "Unable to delete the file.";
 
-      confirmDelete.disabled =
-        false;
-
-      cancelDelete.disabled =
-        false;
+      confirmDelete.disabled = false;
+      cancelDelete.disabled = false;
 
       confirmDelete.textContent =
         "Yes, permanently delete";
@@ -1083,18 +993,14 @@ confirmDelete.addEventListener(
    ERROR
 ========================================= */
 
-function showEditError(
-  message
-) {
+function showEditError(message) {
 
   editMessage.textContent =
     message;
 
-  saveButton.disabled =
-    true;
+  saveButton.disabled = true;
 
-  deleteButton.disabled =
-    true;
+  deleteButton.disabled = true;
 
 }
 
@@ -1103,22 +1009,97 @@ function showEditError(
    MONEY
 ========================================= */
 
-function formatMoney(
-  value
-) {
+function formatMoney(value) {
 
   return (
     "₹" +
-    Number(
-      value ||
-      0
-    ).toFixed(8)
+    Number(value || 0).toFixed(8)
   );
+
+}
+
+
+/* =========================================
+   FILE SIZE
+========================================= */
+
+function formatFileSize(bytes) {
+
+  const size =
+    Number(bytes || 0);
+
+  if (!size) {
+    return "0 B";
+  }
+
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB"
+  ];
+
+  const index =
+    Math.floor(
+      Math.log(size) / Math.log(1024)
+    );
+
+  const safeIndex =
+    Math.min(index, units.length - 1);
+
+  return (
+    (size / Math.pow(1024, safeIndex))
+      .toFixed(safeIndex === 0 ? 0 : 2)
+    + " "
+    + units[safeIndex]
+  );
+
+}
+
+
+/* =========================================
+   DATE
+========================================= */
+
+function formatDate(value) {
+
+  if (!value) {
+    return "—";
+  }
+
+  const date =
+    new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "—";
+  }
+
+  return date.toLocaleString();
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(value) {
+
+  return String(value)
+
+    .replace(/&/g, "&amp;")
+
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(/'/g, "&#039;");
 
 }
 
 </script>
 
 </body>
-
 </html>
