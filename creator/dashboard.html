@@ -1,2 +1,1200 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Creator Dashboard — KaroPays</title><link rel="stylesheet" href="../assets/css/pro.css"></head><body><header class="site-header"><a class="logo" href="../index.html"><span class="logo-mark">K</span>KaroPays</a><nav class="desktop-nav"><a href="../payout-rates.html">Payout Rates</a><a href="../payment-proof.html">Payment Proof</a><a href="../premium.html">Premium</a><a href="#" id="signOut">Sign out</a></nav></header><main class="legal-page"><div class="section-label">CREATOR DASHBOARD</div><h1>Welcome back.</h1><p class="lead" id="creatorEmail">Loading account...</p><div class="rule-grid"><div><small>Estimated earnings</small><h2 id="totalEarnings">₹0.00000000</h2></div><div><small>Total downloads</small><h2 id="totalDownloads">0</h2></div><div><small>Available balance</small><h2 id="availableBalance">₹0.00000000</h2></div></div><div class="table-card" style="margin-top:30px"><div class="section-head"><h2>Your files</h2><a class="primary" href="../upload.html">Upload file</a></div><p id="dashboardMessage" class="form-message"></p><div id="filesContainer"><p class="lead">Loading your files...</p></div></div></main><div class="delete-modal" id="deleteModal" aria-hidden="true"><div class="delete-modal-card"><div class="delete-icon">!</div><div class="danger-label">PERMANENT ACTION</div><h2>Delete this file?</h2><p id="deleteFileText"></p><div class="delete-warning"><strong>Think before you delete.</strong><br>Deleting this file will permanently remove the file, its total downloads, and its earnings from your dashboard. This action cannot be undone.</div><p id="deleteMessage" class="form-message"></p><div class="delete-modal-actions"><button class="btn ghost" id="cancelDelete">Keep file</button><button class="delete-confirm-btn" id="confirmDelete">Delete permanently</button></div></div></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="../assets/js/supabase-config.js"></script><script>
-let user=null,fileToDelete=null;const $=id=>document.getElementById(id);init();async function init(){const{data:{user:u}}=await supabaseClient.auth.getUser();if(!u)return location.replace('../login.html');user=u;$('creatorEmail').textContent=u.email||'Creator';load()}async function load(){const{data:files,error}=await supabaseClient.from('files').select('id,file_name,category,ad_level,downloads,earnings,status,created_at,storage_path').eq('creator_id',user.id).order('created_at',{ascending:false});if(error){$('filesContainer').innerHTML='<p class="lead">'+esc(error.message)+'</p>';return}let d=0,e=0;(files||[]).forEach(f=>{d+=+f.downloads||0;e+=+f.earnings||0});$('totalDownloads').textContent=d.toLocaleString();$('totalEarnings').textContent=money(e);$('availableBalance').textContent=money(e);render(files||[])}function render(files){if(!files.length){$('filesContainer').innerHTML='<div class="empty">No files yet. Upload your first file to start earning.</div>';return}$('filesContainer').innerHTML=files.map(f=>`<article class="dashboard-file"><div class="dashboard-file-main"><div class="eyebrow">${esc(f.category||'Other')}</div><h3>${esc(f.file_name||'Unnamed file')}</h3><div class="file-meta"><span>${(+f.downloads||0).toLocaleString()} downloads</span><span>${money(f.earnings)} earnings</span><span>Ad Level ${+f.ad_level||1}</span><span>${esc(f.status||'unknown')}</span></div></div><div class="dashboard-file-actions"><a class="btn small" href="../file.html?id=${encodeURIComponent(f.id)}">View</a><button class="btn small ghost share" data-id="${f.id}">Share</button><a class="btn small ghost" href="../edit-file.html?id=${f.id}">Edit</a><button class="delete-btn small-delete del" data-id="${f.id}" data-name="${esc(f.file_name||'this file')}">Delete</button></div></article>`).join('');document.querySelectorAll('.share').forEach(b=>b.onclick=()=>share(b.dataset.id));document.querySelectorAll('.del').forEach(b=>b.onclick=()=>openDelete(b.dataset.id,b.dataset.name))}async function share(id){const url=new URL('../file.html?id='+encodeURIComponent(id),location.href).href;try{if(navigator.share)await navigator.share({title:'KaroPays file',url});else{await navigator.clipboard.writeText(url);msg('✓ File link copied to clipboard.')}}catch(e){if(e.name!=='AbortError')msg('Could not share the file link.')}}function openDelete(id,name){fileToDelete=id;$('deleteFileText').innerHTML=`You are about to permanently delete <strong>${name}</strong>.`;$('deleteMessage').textContent='';$('deleteModal').classList.add('open')}function closeDelete(){fileToDelete=null;$('deleteModal').classList.remove('open')}$('cancelDelete').onclick=closeDelete;$('confirmDelete').onclick=async()=>{if(!fileToDelete)return;const b=$('confirmDelete');b.disabled=true;b.textContent='Deleting...';try{const{data:f,error:fe}=await supabaseClient.from('files').select('storage_path').eq('id',fileToDelete).eq('creator_id',user.id).single();if(fe||!f)throw new Error('File not found or you do not own this file.');if(f.storage_path){const{error:se}=await supabaseClient.storage.from('files').remove([f.storage_path]);if(se)console.warn(se)}const{error:de}=await supabaseClient.from('files').delete().eq('id',fileToDelete).eq('creator_id',user.id);if(de)throw de;closeDelete();msg('File deleted. Its downloads and earnings are no longer included in your dashboard totals.');load()}catch(e){$('deleteMessage').textContent=e.message||'Could not delete the file.';b.disabled=false;b.textContent='Delete permanently'}};$('signOut').onclick=async e=>{e.preventDefault();await supabaseClient.auth.signOut();location.replace('../login.html')};function msg(t){$('dashboardMessage').textContent=t;setTimeout(()=>$('dashboardMessage').textContent='',4500)}function money(v){return'₹'+(+v||0).toFixed(8)}function esc(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]))}</script></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Creator Dashboard — KaroPays</title>
+
+  <link rel="stylesheet" href="../assets/css/pro.css">
+</head>
+
+<body>
+
+<header class="site-header">
+
+  <a class="logo" href="../index.html">
+    <span class="logo-mark">K</span>
+    KaroPays
+  </a>
+
+  <nav class="desktop-nav">
+
+    <a href="../payout-rates.html">
+      Payout Rates
+    </a>
+
+    <a href="../payment-proof.html">
+      Payment Proof
+    </a>
+
+    <a href="../premium.html">
+      Premium
+    </a>
+
+    <a href="#" id="signOut">
+      Sign out
+    </a>
+
+  </nav>
+
+</header>
+
+
+<main class="legal-page">
+
+  <div class="section-label">
+    CREATOR DASHBOARD
+  </div>
+
+  <h1>
+    Welcome back.
+  </h1>
+
+  <p class="lead" id="creatorEmail">
+    Loading account...
+  </p>
+
+
+  <!-- DASHBOARD STATS -->
+
+  <div class="rule-grid">
+
+    <div>
+      <small>
+        Estimated earnings
+      </small>
+
+      <h2 id="totalEarnings">
+        ₹0.00000000
+      </h2>
+    </div>
+
+
+    <div>
+      <small>
+        Total downloads
+      </small>
+
+      <h2 id="totalDownloads">
+        0
+      </h2>
+    </div>
+
+
+    <div>
+      <small>
+        Available balance
+      </small>
+
+      <h2 id="availableBalance">
+        ₹0.00000000
+      </h2>
+    </div>
+
+  </div>
+
+
+  <!-- FILES -->
+
+  <div
+    class="table-card"
+    style="margin-top:30px"
+  >
+
+    <div
+      class="section-head"
+      style="display:flex;align-items:center;justify-content:space-between;gap:15px"
+    >
+
+      <h2>
+        Your files
+      </h2>
+
+      <a
+        class="primary"
+        href="../upload.html"
+      >
+        Upload file
+      </a>
+
+    </div>
+
+
+    <p
+      id="dashboardMessage"
+      class="form-message"
+    ></p>
+
+
+    <div id="filesContainer">
+
+      <p class="lead">
+        Loading your files...
+      </p>
+
+    </div>
+
+  </div>
+
+</main>
+
+
+<!-- DELETE MODAL -->
+
+<div
+  class="delete-modal"
+  id="deleteModal"
+  aria-hidden="true"
+>
+
+  <div
+    class="delete-modal-card"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="deleteTitle"
+  >
+
+    <div class="delete-icon">
+      !
+    </div>
+
+
+    <div class="danger-label">
+      PERMANENT ACTION
+    </div>
+
+
+    <h2 id="deleteTitle">
+      Delete this file?
+    </h2>
+
+
+    <p id="deleteFileText">
+      You are about to permanently delete this file.
+    </p>
+
+
+    <div class="delete-warning">
+
+      <strong>
+        Think before you delete.
+      </strong>
+
+      <br><br>
+
+      This will permanently remove the file.
+
+      <br>
+
+      Your total downloads and earnings for this file
+      will also be removed from your dashboard totals.
+
+      <br><br>
+
+      <strong>
+        This action cannot be undone.
+      </strong>
+
+    </div>
+
+
+    <p
+      id="deleteMessage"
+      class="form-message"
+    ></p>
+
+
+    <div class="delete-modal-actions">
+
+      <button
+        type="button"
+        class="btn ghost"
+        id="cancelDelete"
+      >
+        Keep file
+      </button>
+
+
+      <button
+        type="button"
+        class="delete-confirm-btn"
+        id="confirmDelete"
+      >
+        Delete permanently
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../assets/js/supabase-config.js"></script>
+
+
+<script>
+
+/* =========================================
+   STATE
+========================================= */
+
+let user = null;
+let fileToDelete = null;
+
+
+/* =========================================
+   ELEMENT HELPER
+========================================= */
+
+const $ = id =>
+  document.getElementById(id);
+
+
+/* =========================================
+   START
+========================================= */
+
+init();
+
+
+/* =========================================
+   INIT
+========================================= */
+
+async function init() {
+
+  try {
+
+    const {
+      data: {
+        user: loggedUser
+      },
+      error
+    } =
+      await supabaseClient.auth.getUser();
+
+
+    if (
+      error ||
+      !loggedUser
+    ) {
+
+      window.location.replace(
+        "../login.html"
+      );
+
+      return;
+
+    }
+
+
+    user =
+      loggedUser;
+
+
+    $("creatorEmail").textContent =
+      user.email ||
+      "Creator";
+
+
+    await load();
+
+
+  } catch (error) {
+
+    console.error(
+      "Dashboard initialization error:",
+      error
+    );
+
+    $("filesContainer").innerHTML =
+      `<p class="lead">
+        Unable to load your dashboard.
+      </p>`;
+
+  }
+
+}
+
+
+/* =========================================
+   LOAD FILES
+========================================= */
+
+async function load() {
+
+  const {
+    data: files,
+    error
+  } =
+    await supabaseClient
+
+      .from("files")
+
+      .select(
+        "id,file_name,category,ad_level,downloads,earnings,status,created_at,storage_path"
+      )
+
+      .eq(
+        "creator_id",
+        user.id
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+
+  if (error) {
+
+    console.error(
+      "Files loading error:",
+      error
+    );
+
+    $("filesContainer").innerHTML =
+      `<p class="lead">
+        ${esc(error.message)}
+      </p>`;
+
+    return;
+
+  }
+
+
+  let totalDownloads = 0;
+  let totalEarnings = 0;
+
+
+  (files || []).forEach(
+    file => {
+
+      totalDownloads +=
+        Number(
+          file.downloads
+        ) || 0;
+
+      totalEarnings +=
+        Number(
+          file.earnings
+        ) || 0;
+
+    }
+  );
+
+
+  $("totalDownloads").textContent =
+    totalDownloads.toLocaleString();
+
+
+  $("totalEarnings").textContent =
+    money(totalEarnings);
+
+
+  $("availableBalance").textContent =
+    money(totalEarnings);
+
+
+  render(
+    files || []
+  );
+
+}
+
+
+/* =========================================
+   RENDER FILES
+========================================= */
+
+function render(files) {
+
+  if (!files.length) {
+
+    $("filesContainer").innerHTML = `
+      <div class="empty">
+        No files yet.
+        Upload your first file to start earning.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  $("filesContainer").innerHTML =
+    files.map(
+      file => `
+
+        <article class="dashboard-file">
+
+          <div class="dashboard-file-main">
+
+            <div class="eyebrow">
+              ${esc(
+                file.category ||
+                "Other"
+              )}
+            </div>
+
+
+            <h3>
+              ${esc(
+                file.file_name ||
+                "Unnamed file"
+              )}
+            </h3>
+
+
+            <div class="file-meta">
+
+              <span>
+                ${
+                  (
+                    Number(
+                      file.downloads
+                    ) || 0
+                  ).toLocaleString()
+                }
+                downloads
+              </span>
+
+
+              <span>
+                ${money(
+                  file.earnings
+                )}
+                earnings
+              </span>
+
+
+              <span>
+                Ad Level
+                ${
+                  Number(
+                    file.ad_level
+                  ) || 1
+                }
+              </span>
+
+
+              <span>
+                ${esc(
+                  file.status ||
+                  "unknown"
+                )}
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="dashboard-file-actions">
+
+            <a
+              class="btn small"
+              href="../file.html?id=${encodeURIComponent(file.id)}"
+            >
+              View
+            </a>
+
+
+            <button
+              type="button"
+              class="btn small ghost share"
+              data-id="${esc(file.id)}"
+            >
+              Share
+            </button>
+
+
+            <a
+              class="btn small ghost"
+              href="../edit-file.html?id=${encodeURIComponent(file.id)}"
+            >
+              Edit
+            </a>
+
+
+            <button
+              type="button"
+              class="delete-btn small-delete del"
+              data-id="${esc(file.id)}"
+              data-name="${esc(
+                file.file_name ||
+                "this file"
+              )}"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </article>
+
+      `
+    ).join("");
+
+
+  /*
+   * Share buttons
+   */
+
+  document
+    .querySelectorAll(".share")
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            share(
+              button.dataset.id
+            );
+
+          }
+        );
+
+      }
+    );
+
+
+  /*
+   * Delete buttons
+   */
+
+  document
+    .querySelectorAll(".del")
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          "click",
+          () => {
+
+            openDelete(
+              button.dataset.id,
+              button.dataset.name
+            );
+
+          }
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================
+   SHARE
+========================================= */
+
+async function share(id) {
+
+  const url =
+    new URL(
+      "../file.html?id=" +
+      encodeURIComponent(id),
+      location.href
+    ).href;
+
+
+  try {
+
+    /*
+     * Native share menu
+     */
+
+    if (
+      navigator.share
+    ) {
+
+      await navigator.share({
+
+        title:
+          "KaroPays file",
+
+        text:
+          "Check out this file on KaroPays.",
+
+        url:
+          url
+
+      });
+
+      return;
+
+    }
+
+
+    /*
+     * Modern clipboard
+     */
+
+    if (
+      navigator.clipboard &&
+      window.isSecureContext
+    ) {
+
+      await navigator.clipboard.writeText(
+        url
+      );
+
+      msg(
+        "✓ File link copied to clipboard."
+      );
+
+      return;
+
+    }
+
+
+    /*
+     * Older browser fallback
+     */
+
+    const textarea =
+      document.createElement(
+        "textarea"
+      );
+
+    textarea.value =
+      url;
+
+    textarea.style.position =
+      "fixed";
+
+    textarea.style.left =
+      "-9999px";
+
+    textarea.style.top =
+      "0";
+
+    document.body.appendChild(
+      textarea
+    );
+
+    textarea.focus();
+    textarea.select();
+
+    const copied =
+      document.execCommand(
+        "copy"
+      );
+
+    textarea.remove();
+
+
+    if (copied) {
+
+      msg(
+        "✓ File link copied to clipboard."
+      );
+
+    } else {
+
+      window.prompt(
+        "Copy this file link:",
+        url
+      );
+
+    }
+
+
+  } catch (error) {
+
+    /*
+     * User cancelled native share.
+     */
+
+    if (
+      error.name ===
+      "AbortError"
+    ) {
+
+      return;
+
+    }
+
+
+    console.error(
+      "Share error:",
+      error
+    );
+
+
+    window.prompt(
+      "Copy this file link:",
+      url
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   OPEN DELETE MODAL
+========================================= */
+
+function openDelete(
+  id,
+  name
+) {
+
+  fileToDelete =
+    id;
+
+
+  $("deleteFileText").innerHTML =
+    `
+      You are about to permanently delete
+      <strong>${esc(name)}</strong>.
+    `;
+
+
+  $("deleteMessage").textContent =
+    "";
+
+
+  $("deleteModal")
+    .classList
+    .add("open");
+
+
+  $("deleteModal")
+    .setAttribute(
+      "aria-hidden",
+      "false"
+    );
+
+}
+
+
+/* =========================================
+   CLOSE DELETE
+========================================= */
+
+function closeDelete() {
+
+  fileToDelete =
+    null;
+
+
+  $("deleteModal")
+    .classList
+    .remove("open");
+
+
+  $("deleteModal")
+    .setAttribute(
+      "aria-hidden",
+      "true"
+    );
+
+
+  $("confirmDelete").disabled =
+    false;
+
+  $("confirmDelete").textContent =
+    "Delete permanently";
+
+  $("cancelDelete").disabled =
+    false;
+
+}
+
+
+$("cancelDelete")
+  .addEventListener(
+    "click",
+    closeDelete
+  );
+
+
+$("deleteModal")
+  .addEventListener(
+    "click",
+    event => {
+
+      if (
+        event.target ===
+        $("deleteModal")
+      ) {
+
+        closeDelete();
+
+      }
+
+    }
+  );
+
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key ===
+      "Escape" &&
+      $("deleteModal")
+        .classList
+        .contains("open")
+    ) {
+
+      closeDelete();
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   CONFIRM DELETE
+========================================= */
+
+$("confirmDelete")
+  .addEventListener(
+    "click",
+    deleteFile
+  );
+
+
+async function deleteFile() {
+
+  if (
+    !fileToDelete ||
+    !user
+  ) {
+
+    return;
+
+  }
+
+
+  const button =
+    $("confirmDelete");
+
+
+  button.disabled =
+    true;
+
+  $("cancelDelete").disabled =
+    true;
+
+  button.textContent =
+    "Deleting...";
+
+
+  $("deleteMessage").textContent =
+    "Deleting your file and checking its stored data...";
+
+
+  try {
+
+    /*
+     * Get the file first.
+     */
+
+    const {
+      data: file,
+      error: fileError
+    } =
+      await supabaseClient
+
+        .from("files")
+
+        .select(
+          "id,storage_path"
+        )
+
+        .eq(
+          "id",
+          fileToDelete
+        )
+
+        .eq(
+          "creator_id",
+          user.id
+        )
+
+        .single();
+
+
+    if (
+      fileError ||
+      !file
+    ) {
+
+      throw new Error(
+        "File not found or you do not own this file."
+      );
+
+    }
+
+
+    /*
+     * Delete physical Storage file.
+     *
+     * We DO NOT delete the database
+     * record if this fails.
+     */
+
+    if (
+      file.storage_path
+    ) {
+
+      const {
+        error: storageError
+      } =
+        await supabaseClient.storage
+
+          .from("files")
+
+          .remove([
+            file.storage_path
+          ]);
+
+
+      if (
+        storageError
+      ) {
+
+        console.error(
+          "Storage delete error:",
+          storageError
+        );
+
+        throw new Error(
+          "The stored file could not be deleted. Your file record, downloads and earnings were NOT removed."
+        );
+
+      }
+
+    }
+
+
+    /*
+     * Delete database record.
+     */
+
+    const {
+      error: databaseError
+    } =
+      await supabaseClient
+
+        .from("files")
+
+        .delete()
+
+        .eq(
+          "id",
+          fileToDelete
+        )
+
+        .eq(
+          "creator_id",
+          user.id
+        );
+
+
+    if (
+      databaseError
+    ) {
+
+      console.error(
+        "Database delete error:",
+        databaseError
+      );
+
+      throw new Error(
+        databaseError.message ||
+        "The file could not be deleted."
+      );
+
+    }
+
+
+    /*
+     * Success
+     */
+
+    $("deleteMessage").textContent =
+      "File deleted successfully. Redirecting...";
+
+
+    button.textContent =
+      "Deleted";
+
+
+    setTimeout(
+      () => {
+
+        closeDelete();
+
+        msg(
+          "File deleted. Its downloads and earnings are no longer included in your dashboard totals."
+        );
+
+        load();
+
+      },
+      900
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Delete error:",
+      error
+    );
+
+
+    $("deleteMessage").textContent =
+      error.message ||
+      "Could not delete the file.";
+
+
+    button.disabled =
+      false;
+
+    $("cancelDelete").disabled =
+      false;
+
+    button.textContent =
+      "Delete permanently";
+
+  }
+
+}
+
+
+/* =========================================
+   SIGN OUT
+========================================= */
+
+$("signOut")
+  .addEventListener(
+    "click",
+    async event => {
+
+      event.preventDefault();
+
+
+      const {
+        error
+      } =
+        await supabaseClient.auth.signOut();
+
+
+      if (error) {
+
+        console.error(
+          "Sign out error:",
+          error
+        );
+
+        msg(
+          "Could not sign out."
+        );
+
+        return;
+
+      }
+
+
+      window.location.replace(
+        "../login.html"
+      );
+
+    }
+  );
+
+
+/* =========================================
+   DASHBOARD MESSAGE
+========================================= */
+
+function msg(
+  text
+) {
+
+  $("dashboardMessage").textContent =
+    text;
+
+
+  setTimeout(
+    () => {
+
+      $("dashboardMessage").textContent =
+        "";
+
+    },
+    4500
+  );
+
+}
+
+
+/* =========================================
+   MONEY
+========================================= */
+
+function money(
+  value
+) {
+
+  return (
+    "₹" +
+    (
+      Number(value) ||
+      0
+    ).toFixed(8)
+  );
+
+}
+
+
+/* =========================================
+   HTML ESCAPE
+========================================= */
+
+function esc(
+  value
+) {
+
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>'"]/g,
+    character => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "'": "&#039;",
+      '"': "&quot;"
+    })[character]
+  );
+
+}
+
+</script>
+
+</body>
+
+</html>
