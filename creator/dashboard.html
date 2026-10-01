@@ -19,206 +19,118 @@
 
   <style>
 
-    /* =========================================
-       KAROPAYS DASHBOARD
-    ========================================= */
-
-    .dashboard-top {
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-end;
-      gap:20px;
-      margin-bottom:30px;
-      flex-wrap:wrap;
+    .file-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
     }
 
-    .creator-email {
-      color:#8f7aff;
-      word-break:break-all;
+    .file-actions button,
+    .file-actions a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 9px 14px;
+      border-radius: 8px;
+      border: 1px solid #292d37;
+      background: #151820;
+      color: #fff;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      text-decoration: none;
     }
 
-    .dashboard-actions {
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+    .file-actions .edit-btn {
+      background: #7c5cff;
+      border-color: #7c5cff;
     }
 
-    .file-item {
-      padding:24px 0;
-      border-bottom:1px solid rgba(255,255,255,.08);
+    .file-actions .delete-btn {
+      background: #32151a;
+      border-color: #7d303b;
+      color: #ff9ca6;
     }
 
-    .file-item:last-child {
-      border-bottom:0;
+    .file-actions button:hover,
+    .file-actions a:hover {
+      opacity: .85;
     }
 
-    .file-title {
-      margin:0 0 8px;
-      font-size:20px;
+    .edit-panel {
+      display: none;
+      margin-top: 18px;
+      padding: 20px;
+      background: #0c0e13;
+      border: 1px solid #292d37;
+      border-radius: 12px;
     }
 
-    .file-description {
-      color:#9298a4;
-      line-height:1.6;
-      margin:8px 0;
-      word-break:break-word;
+    .edit-panel.open {
+      display: block;
     }
 
-    .file-meta {
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin:12px 0;
+    .edit-panel label {
+      display: block;
+      margin: 14px 0;
+      color: #c9ccd2;
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    .file-meta span {
-      padding:7px 10px;
-      background:#151820;
-      border:1px solid #292d37;
-      border-radius:8px;
-      color:#a9aeb8;
-      font-size:12px;
+    .edit-panel input,
+    .edit-panel textarea,
+    .edit-panel select {
+      width: 100%;
+      margin-top: 7px;
+      background: #101218;
+      border: 1px solid #292d37;
+      color: #fff;
+      border-radius: 8px;
+      padding: 11px;
+      font: inherit;
     }
 
-    .file-stats {
-      display:flex;
-      gap:20px;
-      flex-wrap:wrap;
-      color:#9298a4;
-      margin:12px 0;
+    .edit-panel textarea {
+      resize: vertical;
     }
 
-    .file-stats strong {
-      color:#fff;
+    .edit-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+      flex-wrap: wrap;
     }
 
-    .file-buttons {
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:16px;
+    .edit-actions button {
+      padding: 9px 14px;
+      border-radius: 8px;
+      border: 0;
+      cursor: pointer;
+      font-weight: 700;
     }
 
-    .dashboard-btn {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border:0;
-      border-radius:9px;
-      background:#7c5cff;
-      color:#fff;
-      padding:10px 15px;
-      font-weight:800;
-      cursor:pointer;
-      font-size:13px;
-      text-decoration:none;
+    .save-edit {
+      background: #7c5cff;
+      color: #fff;
     }
 
-    .dashboard-btn:hover {
-      opacity:.9;
+    .cancel-edit {
+      background: #20232b;
+      color: #fff;
     }
 
-    .dashboard-btn.secondary {
-      background:#151820;
-      border:1px solid #292d37;
+    .share-message {
+      color: #8f7aff;
+      font-size: 13px;
+      margin-top: 10px;
     }
 
-    .dashboard-btn.danger {
-      background:#29141a;
-      border:1px solid #5a2732;
-      color:#ff9aa8;
-    }
-
-    .dashboard-btn:disabled {
-      opacity:.5;
-      cursor:not-allowed;
-    }
-
-    .edit-box {
-      margin-top:18px;
-      padding:20px;
-      background:#0c0e13;
-      border:1px solid #292d37;
-      border-radius:12px;
-      display:none;
-    }
-
-    .edit-box.open {
-      display:block;
-    }
-
-    .edit-box label {
-      margin:12px 0;
-    }
-
-    .edit-box input,
-    .edit-box textarea,
-    .edit-box select {
-      width:100%;
-      background:#0e1015;
-      border:1px solid #292d37;
-      color:#fff;
-      border-radius:9px;
-      padding:12px;
-      font:inherit;
-      margin-top:7px;
-    }
-
-    .edit-buttons {
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .status-message {
-      min-height:22px;
-      color:#a9aeb8;
-      margin:12px 0;
-    }
-
-    .success-message {
-      color:#9fe3b1;
-    }
-
-    .error-message {
-      color:#ff9aa8;
-    }
-
-    .copy-notice {
-      position:fixed;
-      left:50%;
-      bottom:25px;
-      transform:translateX(-50%);
-      background:#171320;
-      border:1px solid #493d70;
-      color:#fff;
-      padding:12px 18px;
-      border-radius:10px;
-      box-shadow:0 10px 35px rgba(0,0,0,.35);
-      z-index:9999;
-      display:none;
-    }
-
-    .copy-notice.show {
-      display:block;
-    }
-
-    @media(max-width:700px) {
-
-      .dashboard-top {
-        align-items:flex-start;
-      }
-
-      .file-buttons {
-        display:grid;
-        grid-template-columns:1fr 1fr;
-      }
-
-      .dashboard-btn {
-        width:100%;
-      }
-
+    .file-divider {
+      border: 0;
+      border-top: 1px solid rgba(255,255,255,.08);
+      margin: 22px 0 0;
     }
 
   </style>
@@ -229,23 +141,14 @@
 <body>
 
 
-<!-- =========================================
-     HEADER
-========================================= -->
-
 <header class="site-header">
 
   <a
     class="logo"
     href="../index.html"
   >
-
-    <span class="logo-mark">
-      K
-    </span>
-
+    <span class="logo-mark">K</span>
     KaroPays
-
   </a>
 
 
@@ -275,62 +178,35 @@
 </header>
 
 
-<!-- =========================================
-     MAIN
-========================================= -->
 
 <main class="legal-page">
 
 
-  <div class="dashboard-top">
-
-    <div>
-
-      <div class="section-label">
-        CREATOR DASHBOARD
-      </div>
-
-      <h1>
-        Welcome back.
-      </h1>
-
-      <p
-        class="lead creator-email"
-        id="creatorEmail"
-      >
-        Loading account...
-      </p>
-
-    </div>
-
-
-    <div class="dashboard-actions">
-
-      <a
-        class="primary"
-        href="../upload.html"
-      >
-        + Upload file
-      </a>
-
-      <button
-        class="dashboard-btn secondary"
-        id="refreshButton"
-        type="button"
-      >
-        Refresh
-      </button>
-
-    </div>
-
+  <div class="section-label">
+    CREATOR DASHBOARD
   </div>
 
 
-  <!-- =========================================
+  <h1>
+    Welcome back.
+  </h1>
+
+
+  <p
+    class="lead"
+    id="creatorEmail"
+  >
+    Loading account...
+  </p>
+
+
+
+  <!-- ================================
        STATISTICS
-  ========================================= -->
+  ================================= -->
 
   <div class="rule-grid">
+
 
     <div>
 
@@ -370,35 +246,24 @@
 
     </div>
 
+
   </div>
 
 
-  <!-- =========================================
-       DASHBOARD MESSAGE
-  ========================================= -->
 
-  <p
-    id="dashboardMessage"
-    class="status-message"
-  ></p>
-
-
-  <!-- =========================================
+  <!-- ================================
        FILES
-  ========================================= -->
+  ================================= -->
 
   <div
     class="table-card"
     style="margin-top:30px;"
   >
 
-    <div class="section-head">
 
-      <h2>
-        Your files
-      </h2>
-
-    </div>
+    <h2>
+      Your files
+    </h2>
 
 
     <div id="filesContainer">
@@ -410,32 +275,37 @@
     </div>
 
 
+    <div style="margin-top:25px;">
+
+      <a
+        class="primary"
+        href="../upload.html"
+      >
+        Upload file
+      </a>
+
+    </div>
+
+
   </div>
 
 
 </main>
 
 
-<!-- COPY NOTICE -->
 
-<div
-  id="copyNotice"
-  class="copy-notice"
->
-  Link copied!
-</div>
-
-
-<!-- =========================================
+<!-- ================================
      SUPABASE
-========================================= -->
+================================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../assets/js/supabase-config.js"></script>
 
 
+
 <script>
+
 
 /* =========================================
    ELEMENTS
@@ -456,17 +326,9 @@ const availableBalance =
 const filesContainer =
   document.getElementById("filesContainer");
 
-const dashboardMessage =
-  document.getElementById("dashboardMessage");
-
 const signOut =
   document.getElementById("signOut");
 
-const refreshButton =
-  document.getElementById("refreshButton");
-
-const copyNotice =
-  document.getElementById("copyNotice");
 
 
 /* =========================================
@@ -476,11 +338,13 @@ const copyNotice =
 let currentUser = null;
 
 
+
 /* =========================================
    START
 ========================================= */
 
 loadDashboard();
+
 
 
 /* =========================================
@@ -491,11 +355,9 @@ async function loadDashboard() {
 
   try {
 
-    dashboardMessage.textContent =
-      "";
 
     /*
-     * Check current authenticated user.
+     * Check logged-in user.
      */
 
     const {
@@ -512,17 +374,15 @@ async function loadDashboard() {
       !user
     ) {
 
-      window.location.replace(
-        "../login.html"
-      );
+      window.location.href =
+        "../login.html";
 
       return;
 
     }
 
 
-    currentUser =
-      user;
+    currentUser = user;
 
 
     creatorEmail.textContent =
@@ -530,8 +390,9 @@ async function loadDashboard() {
       "Creator";
 
 
+
     /*
-     * Load creator files.
+     * Get creator files.
      */
 
     const {
@@ -554,7 +415,7 @@ async function loadDashboard() {
         .order(
           "created_at",
           {
-            ascending:false
+            ascending: false
           }
         );
 
@@ -567,8 +428,7 @@ async function loadDashboard() {
       );
 
       throw new Error(
-        "Could not load your files: " +
-        filesError.message
+        "Could not load your files."
       );
 
     }
@@ -578,9 +438,10 @@ async function loadDashboard() {
       files || [];
 
 
-    /*
-     * Calculate totals.
-     */
+
+    /* =====================================
+       CALCULATE TOTALS
+    ===================================== */
 
     let downloads = 0;
 
@@ -604,9 +465,10 @@ async function loadDashboard() {
     );
 
 
-    /*
-     * Display totals.
-     */
+
+    /* =====================================
+       DISPLAY TOTALS
+    ===================================== */
 
     totalDownloads.textContent =
       downloads.toLocaleString();
@@ -618,20 +480,16 @@ async function loadDashboard() {
       );
 
 
-    /*
-     * For now available balance
-     * equals total earnings.
-     */
-
     availableBalance.textContent =
       formatMoney(
         earnings
       );
 
 
-    /*
-     * Render files.
-     */
+
+    /* =====================================
+       DISPLAY FILES
+    ===================================== */
 
     renderFiles(
       creatorFiles
@@ -646,16 +504,20 @@ async function loadDashboard() {
     );
 
 
-    dashboardMessage.textContent =
-      error.message ||
-      "Unable to load dashboard.";
-
-    dashboardMessage.className =
-      "status-message error-message";
+    filesContainer.innerHTML =
+      `
+        <p class="lead">
+          ${escapeHtml(
+            error.message ||
+            "Unable to load dashboard."
+          )}
+        </p>
+      `;
 
   }
 
 }
+
 
 
 /* =========================================
@@ -664,22 +526,19 @@ async function loadDashboard() {
 
 function renderFiles(files) {
 
+
   if (!files.length) {
 
     filesContainer.innerHTML =
       `
         <div class="empty">
 
-          <p>
-            No files yet.
-          </p>
+          No files yet.
 
-          <a
-            class="primary"
-            href="../upload.html"
-          >
-            Upload your first file
-          </a>
+          <br><br>
+
+          Upload your first file
+          to start building your library.
 
         </div>
       `;
@@ -689,184 +548,187 @@ function renderFiles(files) {
   }
 
 
+
   let html = "";
+
 
 
   files.forEach(
     function(file) {
 
-      const fileId =
-        encodeURIComponent(
-          file.id
-        );
 
-
-      const fileName =
-        escapeHtml(
-          file.file_name ||
-          "Unnamed file"
-        );
-
-
-      const description =
-        escapeHtml(
-          file.description ||
-          "No description provided."
-        );
-
-
-      const category =
-        escapeHtml(
-          file.category ||
-          "Other"
-        );
-
-
-      const status =
-        escapeHtml(
-          file.status ||
-          "unknown"
-        );
-
-
-      const adLevel =
-        Number(
-          file.ad_level || 1
-        );
-
-
-      const downloads =
-        Number(
-          file.downloads || 0
-        );
-
-
-      const earnings =
-        Number(
-          file.earnings || 0
-        );
+      const fileUrl =
+        new URL(
+          "../file.html?id=" +
+          encodeURIComponent(file.id),
+          window.location.href
+        ).href;
 
 
       html +=
         `
 
-        <article
-          class="file-item"
-          data-file-id="${fileId}"
+        <div
+          id="file-${escapeHtml(file.id)}"
+          style="
+            padding:20px 0;
+          "
         >
 
-          <h3 class="file-title">
-            ${fileName}
+
+          <h3>
+
+            ${escapeHtml(
+              file.file_name ||
+              "Unnamed file"
+            )}
+
           </h3>
 
 
-          <p class="file-description">
-            ${description}
+          <p>
+
+            ${escapeHtml(
+              file.category ||
+              "Other"
+            )}
+
+            ·
+
+            Ad Level
+            ${Number(
+              file.ad_level || 1
+            )}
+
           </p>
 
 
-          <div class="file-meta">
+          <p>
 
-            <span>
-              ${category}
-            </span>
+            <strong>
 
-            <span>
-              Ad Level ${adLevel}
-            </span>
+              ${Number(
+                file.downloads || 0
+              ).toLocaleString()}
 
-            <span>
-              ${status}
-            </span>
+            </strong>
 
-          </div>
+            downloads
 
+            &nbsp; · &nbsp;
 
-          <div class="file-stats">
+            <strong>
 
-            <span>
-              <strong>
-                ${downloads.toLocaleString()}
-              </strong>
-              downloads
-            </span>
+              ${formatMoney(
+                Number(
+                  file.earnings || 0
+                )
+              )}
 
+            </strong>
 
-            <span>
-              <strong>
-                ${formatMoney(earnings)}
-              </strong>
-              earnings
-            </span>
+            earnings
 
-          </div>
+          </p>
 
 
-          <div class="file-buttons">
+          <p>
 
-            <!-- VIEW -->
+            Status:
+
+            <strong>
+
+              ${escapeHtml(
+                file.status ||
+                "unknown"
+              )}
+
+            </strong>
+
+          </p>
+
+
+
+          <!-- ACTIONS -->
+
+          <div class="file-actions">
+
 
             <a
-              class="dashboard-btn"
-              href="../file.html?id=${fileId}"
+              href="../file.html?id=${encodeURIComponent(
+                file.id
+              )}"
+              target="_blank"
             >
               View
             </a>
 
 
-            <!-- SHARE -->
-
             <button
-              class="dashboard-btn secondary"
               type="button"
-              onclick="shareFile('${escapeJs(file.id)}')"
+              onclick="shareFile(
+                ${JSON.stringify(file.id)}
+              )"
             >
               Share
             </button>
 
 
-            <!-- EDIT -->
-
             <button
-              class="dashboard-btn secondary"
               type="button"
-              onclick="toggleEdit('${escapeJs(file.id)}')"
+              class="edit-btn"
+              onclick="toggleEdit(
+                ${JSON.stringify(file.id)}
+              )"
             >
               Edit
             </button>
 
 
-            <!-- DELETE -->
-
             <button
-              class="dashboard-btn danger"
               type="button"
-              onclick="deleteFile('${escapeJs(file.id)}')"
+              class="delete-btn"
+              onclick="deleteFile(
+                ${JSON.stringify(file.id)}
+              )"
             >
               Delete
             </button>
 
+
           </div>
 
 
-          <!-- EDIT BOX -->
+          <div
+            class="share-message"
+            id="share-${escapeHtml(file.id)}"
+          ></div>
+
+
+
+          <!-- EDIT PANEL -->
 
           <div
-            id="edit-${fileId}"
-            class="edit-box"
+            class="edit-panel"
+            id="edit-${escapeHtml(file.id)}"
           >
+
+
+            <h3>
+              Edit file
+            </h3>
+
 
             <label>
 
               File name
 
               <input
-                id="name-${fileId}"
                 type="text"
+                id="name-${escapeHtml(file.id)}"
                 value="${escapeAttribute(
                   file.file_name || ""
                 )}"
-                maxlength="200"
               >
 
             </label>
@@ -877,7 +739,7 @@ function renderFiles(files) {
               Description
 
               <textarea
-                id="description-${fileId}"
+                id="description-${escapeHtml(file.id)}"
                 rows="4"
                 maxlength="1000"
               >${escapeHtml(
@@ -892,7 +754,7 @@ function renderFiles(files) {
               Category
 
               <select
-                id="category-${fileId}"
+                id="category-${escapeHtml(file.id)}"
               >
 
                 <option
@@ -925,7 +787,7 @@ function renderFiles(files) {
 
                 <option
                   value="Other"
-                  ${file.category === "Other" || !file.category ? "selected" : ""}
+                  ${file.category === "Other" ? "selected" : ""}
                 >
                   Other
                 </option>
@@ -940,33 +802,33 @@ function renderFiles(files) {
               Ad level
 
               <select
-                id="adlevel-${fileId}"
+                id="adlevel-${escapeHtml(file.id)}"
               >
 
                 <option
                   value="1"
-                  ${adLevel === 1 ? "selected" : ""}
+                  ${Number(file.ad_level) === 1 ? "selected" : ""}
                 >
                   1 — Low
                 </option>
 
                 <option
                   value="2"
-                  ${adLevel === 2 ? "selected" : ""}
+                  ${Number(file.ad_level) === 2 ? "selected" : ""}
                 >
                   2 — Medium
                 </option>
 
                 <option
                   value="3"
-                  ${adLevel === 3 ? "selected" : ""}
+                  ${Number(file.ad_level) === 3 ? "selected" : ""}
                 >
                   3 — High
                 </option>
 
                 <option
                   value="4"
-                  ${adLevel === 4 ? "selected" : ""}
+                  ${Number(file.ad_level) === 4 ? "selected" : ""}
                 >
                   4 — Ultra
                 </option>
@@ -976,21 +838,25 @@ function renderFiles(files) {
             </label>
 
 
-            <div class="edit-buttons">
+            <div class="edit-actions">
 
               <button
-                class="dashboard-btn"
                 type="button"
-                onclick="saveEdit('${escapeJs(file.id)}')"
+                class="save-edit"
+                onclick="saveEdit(
+                  ${JSON.stringify(file.id)}
+                )"
               >
                 Save changes
               </button>
 
 
               <button
-                class="dashboard-btn secondary"
                 type="button"
-                onclick="toggleEdit('${escapeJs(file.id)}')"
+                class="cancel-edit"
+                onclick="toggleEdit(
+                  ${JSON.stringify(file.id)}
+                )"
               >
                 Cancel
               </button>
@@ -999,13 +865,17 @@ function renderFiles(files) {
 
 
             <p
-              id="edit-message-${fileId}"
-              class="status-message"
+              id="edit-message-${escapeHtml(file.id)}"
             ></p>
+
 
           </div>
 
-        </article>
+
+          <hr class="file-divider">
+
+
+        </div>
 
         `;
 
@@ -1019,13 +889,15 @@ function renderFiles(files) {
 }
 
 
+
 /* =========================================
    SHARE FILE
 ========================================= */
 
 async function shareFile(fileId) {
 
-  const shareUrl =
+
+  const fileUrl =
     new URL(
       "../file.html?id=" +
       encodeURIComponent(fileId),
@@ -1033,139 +905,88 @@ async function shareFile(fileId) {
     ).href;
 
 
+  const message =
+    document.getElementById(
+      "share-" + fileId
+    );
+
+
   try {
 
-    /*
-     * Modern browser share.
-     */
 
     if (
-      navigator.share
+      navigator.clipboard &&
+      window.isSecureContext
     ) {
 
-      await navigator.share({
-
-        title:
-          "Download file — KaroPays",
-
-        url:
-          shareUrl
-
-      });
-
-      return;
-
-    }
-
-
-    /*
-     * Clipboard fallback.
-     */
-
-    await navigator.clipboard.writeText(
-      shareUrl
-    );
-
-
-    showCopyNotice(
-      "File link copied!"
-    );
-
-
-  } catch (error) {
-
-    /*
-     * User cancelling native
-     * share is not an error.
-     */
-
-    if (
-      error &&
-      error.name === "AbortError"
-    ) {
-
-      return;
-
-    }
-
-
-    /*
-     * Older browser fallback.
-     */
-
-    try {
-
-      const temporary =
-        document.createElement(
-          "textarea"
-        );
-
-      temporary.value =
-        shareUrl;
-
-      document.body.appendChild(
-        temporary
+      await navigator.clipboard.writeText(
+        fileUrl
       );
 
-      temporary.select();
+    } else {
+
+      /*
+       * Fallback for browsers where
+       * Clipboard API is unavailable.
+       */
+
+      const input =
+        document.createElement("input");
+
+      input.value =
+        fileUrl;
+
+      document.body.appendChild(
+        input
+      );
+
+      input.select();
 
       document.execCommand(
         "copy"
       );
 
-      temporary.remove();
-
-
-      showCopyNotice(
-        "File link copied!"
-      );
-
-
-    } catch (copyError) {
-
-      console.error(
-        "Copy error:",
-        copyError
-      );
-
-
-      showCopyNotice(
-        "Could not copy the link."
-      );
+      input.remove();
 
     }
+
+
+    message.textContent =
+      "✓ File link copied!";
+
+
+    setTimeout(
+      function() {
+
+        message.textContent =
+          "";
+
+      },
+      2500
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Share error:",
+      error
+    );
+
+
+    /*
+     * If clipboard fails, show
+     * the link so the creator
+     * can copy it manually.
+     */
+
+    message.textContent =
+      fileUrl;
 
   }
 
 }
 
-
-/* =========================================
-   SHOW COPY NOTICE
-========================================= */
-
-function showCopyNotice(message) {
-
-  copyNotice.textContent =
-    message;
-
-  copyNotice.classList.add(
-    "show"
-  );
-
-
-  setTimeout(
-    function() {
-
-      copyNotice.classList.remove(
-        "show"
-      );
-
-    },
-    2200
-  );
-
-}
 
 
 /* =========================================
@@ -1174,23 +995,22 @@ function showCopyNotice(message) {
 
 function toggleEdit(fileId) {
 
-  const box =
+
+  const panel =
     document.getElementById(
-      "edit-" +
-      encodeURIComponent(fileId)
+      "edit-" + fileId
     );
 
 
-  if (!box) {
-    return;
-  }
+  if (!panel) return;
 
 
-  box.classList.toggle(
+  panel.classList.toggle(
     "open"
   );
 
 }
+
 
 
 /* =========================================
@@ -1199,10 +1019,11 @@ function toggleEdit(fileId) {
 
 async function saveEdit(fileId) {
 
+
   if (!currentUser) {
 
-    window.location.replace(
-      "../login.html"
+    alert(
+      "You are not logged in."
     );
 
     return;
@@ -1210,57 +1031,34 @@ async function saveEdit(fileId) {
   }
 
 
-  const encodedId =
-    encodeURIComponent(
-      fileId
-    );
-
-
   const nameInput =
     document.getElementById(
-      "name-" +
-      encodedId
+      "name-" + fileId
     );
 
 
   const descriptionInput =
     document.getElementById(
-      "description-" +
-      encodedId
+      "description-" + fileId
     );
 
 
   const categoryInput =
     document.getElementById(
-      "category-" +
-      encodedId
+      "category-" + fileId
     );
 
 
   const adLevelInput =
     document.getElementById(
-      "adlevel-" +
-      encodedId
+      "adlevel-" + fileId
     );
 
 
   const message =
     document.getElementById(
-      "edit-message-" +
-      encodedId
+      "edit-message-" + fileId
     );
-
-
-  if (
-    !nameInput ||
-    !descriptionInput ||
-    !categoryInput ||
-    !adLevelInput
-  ) {
-
-    return;
-
-  }
 
 
   const fileName =
@@ -1286,9 +1084,6 @@ async function saveEdit(fileId) {
     message.textContent =
       "File name is required.";
 
-    message.className =
-      "status-message error-message";
-
     return;
 
   }
@@ -1297,15 +1092,13 @@ async function saveEdit(fileId) {
   message.textContent =
     "Saving...";
 
-  message.className =
-    "status-message";
-
 
   try {
 
+
     /*
-     * Ownership is enforced by the
-     * database RLS policy.
+     * Update only this creator's
+     * own file.
      */
 
     const {
@@ -1351,18 +1144,20 @@ async function saveEdit(fileId) {
 
       throw new Error(
         error.message ||
-        "Could not update file."
+        "Could not save changes."
       );
 
     }
 
 
     message.textContent =
-      "Changes saved.";
+      "✓ Changes saved.";
 
-    message.className =
-      "status-message success-message";
 
+    /*
+     * Reload dashboard so
+     * displayed data is fresh.
+     */
 
     setTimeout(
       function() {
@@ -1370,7 +1165,7 @@ async function saveEdit(fileId) {
         loadDashboard();
 
       },
-      600
+      700
     );
 
 
@@ -1385,12 +1180,10 @@ async function saveEdit(fileId) {
       error.message ||
       "Could not save changes.";
 
-    message.className =
-      "status-message error-message";
-
   }
 
 }
+
 
 
 /* =========================================
@@ -1399,10 +1192,11 @@ async function saveEdit(fileId) {
 
 async function deleteFile(fileId) {
 
+
   if (!currentUser) {
 
-    window.location.replace(
-      "../login.html"
+    alert(
+      "You are not logged in."
     );
 
     return;
@@ -1410,33 +1204,36 @@ async function deleteFile(fileId) {
   }
 
 
+  /*
+   * Confirmation.
+   */
+
   const confirmed =
-    window.confirm(
-      "Delete this file permanently?\n\nThis will remove the file from your KaroPays library."
+    confirm(
+      "Are you sure you want to delete this file?\n\nThe file will be removed from KaroPays and its stored file will also be deleted.\n\nThis cannot be undone."
     );
 
 
   if (!confirmed) {
+
     return;
+
   }
 
 
   try {
 
-    dashboardMessage.textContent =
-      "Deleting file...";
-
-    dashboardMessage.className =
-      "status-message";
-
 
     /*
-     * First get the storage path.
+     * Get the file first.
+     *
+     * This lets us obtain the
+     * storage_path.
      */
 
     const {
       data: file,
-      error: fetchError
+      error: fileError
     } =
       await supabaseClient
 
@@ -1459,21 +1256,28 @@ async function deleteFile(fileId) {
         .single();
 
 
-    if (fetchError || !file) {
+    if (fileError) {
+
+      console.error(
+        "Get file before delete:",
+        fileError
+      );
 
       throw new Error(
-        fetchError?.message ||
-        "File not found."
+        "Could not find the file."
       );
 
     }
 
 
     /*
-     * Delete Storage object first.
+     * Remove Storage file first.
      */
 
-    if (file.storage_path) {
+    if (
+      file.storage_path
+    ) {
+
 
       const {
         error: storageError
@@ -1505,7 +1309,7 @@ async function deleteFile(fileId) {
 
 
     /*
-     * Delete database record.
+     * Remove database record.
      */
 
     const {
@@ -1536,19 +1340,16 @@ async function deleteFile(fileId) {
       );
 
       throw new Error(
-        "Storage was deleted, but the database record could not be deleted: " +
+        "The Storage file was deleted, but the database record could not be removed: " +
         databaseError.message
       );
 
     }
 
 
-    dashboardMessage.textContent =
-      "File deleted successfully.";
-
-    dashboardMessage.className =
-      "status-message success-message";
-
+    /*
+     * Refresh dashboard.
+     */
 
     await loadDashboard();
 
@@ -1561,88 +1362,15 @@ async function deleteFile(fileId) {
     );
 
 
-    dashboardMessage.textContent =
+    alert(
       error.message ||
-      "Could not delete the file.";
-
-    dashboardMessage.className =
-      "status-message error-message";
+      "Could not delete the file."
+    );
 
   }
 
 }
 
-
-/* =========================================
-   REFRESH
-========================================= */
-
-refreshButton.addEventListener(
-  "click",
-  async function() {
-
-    refreshButton.disabled =
-      true;
-
-    refreshButton.textContent =
-      "Refreshing...";
-
-
-    await loadDashboard();
-
-
-    refreshButton.disabled =
-      false;
-
-    refreshButton.textContent =
-      "Refresh";
-
-  }
-);
-
-
-/* =========================================
-   SIGN OUT
-========================================= */
-
-signOut.addEventListener(
-  "click",
-  async function(event) {
-
-    event.preventDefault();
-
-
-    signOut.textContent =
-      "Signing out...";
-
-
-    const {
-      error
-    } =
-      await supabaseClient.auth.signOut();
-
-
-    if (error) {
-
-      console.error(
-        "Sign out error:",
-        error
-      );
-
-      signOut.textContent =
-        "Sign out";
-
-      return;
-
-    }
-
-
-    window.location.replace(
-      "../login.html"
-    );
-
-  }
-);
 
 
 /* =========================================
@@ -1650,6 +1378,7 @@ signOut.addEventListener(
 ========================================= */
 
 function formatMoney(value) {
+
 
   return (
     "₹" +
@@ -1661,14 +1390,16 @@ function formatMoney(value) {
 }
 
 
+
 /* =========================================
    ESCAPE HTML
 ========================================= */
 
 function escapeHtml(value) {
 
+
   return String(
-    value ?? ""
+    value
   )
 
     .replace(
@@ -1699,46 +1430,40 @@ function escapeHtml(value) {
 }
 
 
+
 /* =========================================
    ESCAPE ATTRIBUTE
 ========================================= */
 
 function escapeAttribute(value) {
 
-  return escapeHtml(
-    value
-  );
+  return escapeHtml(value);
 
 }
+
 
 
 /* =========================================
-   ESCAPE JAVASCRIPT STRING
+   SIGN OUT
 ========================================= */
 
-function escapeJs(value) {
+signOut.addEventListener(
+  "click",
+  async function(event) {
 
-  return String(
-    value ?? ""
-  )
-    .replace(
-      /\\/g,
-      "\\\\"
-    )
-    .replace(
-      /'/g,
-      "\\'"
-    )
-    .replace(
-      /\r/g,
-      "\\r"
-    )
-    .replace(
-      /\n/g,
-      "\\n"
-    );
 
-}
+    event.preventDefault();
+
+
+    await supabaseClient.auth.signOut();
+
+
+    window.location.href =
+      "../login.html";
+
+  }
+);
+
 
 </script>
 
