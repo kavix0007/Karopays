@@ -1,0 +1,1059 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <title>Edit File — KaroPays</title>
+
+  <link
+    rel="stylesheet"
+    href="../assets/css/pro.css"
+  >
+
+</head>
+
+
+<body>
+
+<header class="site-header">
+
+  <a
+    class="logo"
+    href="../index.html"
+  >
+    <span class="logo-mark">K</span>
+    KaroPays
+  </a>
+
+  <nav class="desktop-nav">
+
+    <a href="dashboard.html">
+      Dashboard
+    </a>
+
+    <a href="../payout-rates.html">
+      Payout Rates
+    </a>
+
+    <a href="../payment-proof.html">
+      Payment Proof
+    </a>
+
+    <a href="../premium.html">
+      Premium
+    </a>
+
+    <a
+      href="#"
+      id="signOut"
+    >
+      Sign out
+    </a>
+
+  </nav>
+
+</header>
+
+
+<main class="legal-page">
+
+  <div class="section-label">
+    CREATOR DASHBOARD
+  </div>
+
+
+  <h1>
+    Edit file
+  </h1>
+
+
+  <p class="lead">
+    Update your file information without replacing the uploaded file.
+  </p>
+
+
+  <form
+    class="auth-card wide-form"
+    id="editForm"
+  >
+
+
+    <!-- File name -->
+
+    <label>
+
+      File name
+
+      <input
+        id="fileName"
+        type="text"
+        maxlength="200"
+        required
+        placeholder="Enter file name"
+      >
+
+    </label>
+
+
+    <!-- Description -->
+
+    <label>
+
+      Description
+
+      <textarea
+        id="description"
+        rows="5"
+        maxlength="1000"
+        placeholder="Describe your file..."
+      ></textarea>
+
+    </label>
+
+
+    <!-- Category -->
+
+    <label>
+
+      Category
+
+      <select id="category">
+
+        <option value="Presets">
+          Presets
+        </option>
+
+        <option value="Templates">
+          Templates
+        </option>
+
+        <option value="Wallpapers">
+          Wallpapers
+        </option>
+
+        <option value="Resources">
+          Resources
+        </option>
+
+        <option value="Other">
+          Other
+        </option>
+
+      </select>
+
+    </label>
+
+
+    <!-- Ad level -->
+
+    <label>
+
+      Ad level
+
+      <select id="adLevel">
+
+        <option value="1">
+          1 — Low
+        </option>
+
+        <option value="2">
+          2 — Medium
+        </option>
+
+        <option value="3">
+          3 — High
+        </option>
+
+        <option value="4">
+          4 — Ultra
+        </option>
+
+      </select>
+
+      <small>
+        This changes the monetization level for future eligible downloads.
+      </small>
+
+    </label>
+
+
+    <!-- Existing file information -->
+
+    <div
+      class="table-card"
+      style="margin-top:20px;"
+    >
+
+      <div class="section-label">
+        EXISTING FILE
+      </div>
+
+
+      <p>
+
+        <strong>
+          File:
+        </strong>
+
+        <span id="originalFileName">
+          Loading...
+        </span>
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Size:
+        </strong>
+
+        <span id="fileSize">
+          —
+        </span>
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Downloads:
+        </strong>
+
+        <span id="downloads">
+          0
+        </span>
+
+      </p>
+
+
+      <p>
+
+        <strong>
+          Earnings:
+        </strong>
+
+        <span id="earnings">
+          ₹0.00000000
+        </span>
+
+      </p>
+
+    </div>
+
+
+    <!-- Message -->
+
+    <p id="editMessage"></p>
+
+
+    <!-- Buttons -->
+
+    <div
+      style="
+        display:flex;
+        gap:12px;
+        flex-wrap:wrap;
+        margin-top:20px;
+      "
+    >
+
+      <button
+        class="primary"
+        type="submit"
+        id="saveButton"
+      >
+        Save changes
+      </button>
+
+
+      <a
+        class="secondary"
+        id="viewButton"
+        href="#"
+      >
+        View file
+      </a>
+
+
+      <a
+        class="secondary"
+        href="dashboard.html"
+      >
+        Cancel
+      </a>
+
+    </div>
+
+
+  </form>
+
+</main>
+
+
+<!-- Supabase -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="../assets/js/supabase-config.js"></script>
+
+
+<script>
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const editForm =
+  document.getElementById("editForm");
+
+const fileNameInput =
+  document.getElementById("fileName");
+
+const descriptionInput =
+  document.getElementById("description");
+
+const categoryInput =
+  document.getElementById("category");
+
+const adLevelInput =
+  document.getElementById("adLevel");
+
+const originalFileName =
+  document.getElementById("originalFileName");
+
+const fileSizeElement =
+  document.getElementById("fileSize");
+
+const downloadsElement =
+  document.getElementById("downloads");
+
+const earningsElement =
+  document.getElementById("earnings");
+
+const editMessage =
+  document.getElementById("editMessage");
+
+const saveButton =
+  document.getElementById("saveButton");
+
+const viewButton =
+  document.getElementById("viewButton");
+
+const signOut =
+  document.getElementById("signOut");
+
+
+/* =========================================
+   GET FILE ID
+========================================= */
+
+const params =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+const fileId =
+  params.get("id");
+
+
+/* =========================================
+   START
+========================================= */
+
+if (!fileId) {
+
+  showError(
+    "No file was specified."
+  );
+
+} else {
+
+  loadFile();
+
+}
+
+
+/* =========================================
+   LOAD FILE
+========================================= */
+
+async function loadFile() {
+
+  editMessage.textContent =
+    "Loading file...";
+
+
+  try {
+
+    /*
+     * Get logged-in user
+     */
+
+    const {
+      data: {
+        user
+      },
+      error: userError
+    } =
+      await supabaseClient.auth.getUser();
+
+
+    if (
+      userError ||
+      !user
+    ) {
+
+      window.location.href =
+        "../login.html";
+
+      return;
+
+    }
+
+
+    /*
+     * Get file.
+     *
+     * IMPORTANT:
+     *
+     * creator_id must match the
+     * currently logged-in user.
+     */
+
+    const {
+      data: file,
+      error: fileError
+    } =
+      await supabaseClient
+
+        .from("files")
+
+        .select(
+          "id,creator_id,file_name,file_size,description,category,ad_level,downloads,earnings,status"
+        )
+
+        .eq(
+          "id",
+          fileId
+        )
+
+        .eq(
+          "creator_id",
+          user.id
+        )
+
+        .single();
+
+
+    if (
+      fileError ||
+      !file
+    ) {
+
+      console.error(
+        "File load error:",
+        fileError
+      );
+
+
+      showError(
+        "File not found or you do not have permission to edit it."
+      );
+
+
+      return;
+
+    }
+
+
+    /*
+     * Store file information
+     */
+
+    window.currentFile =
+      file;
+
+
+    /*
+     * Fill form
+     */
+
+    fileNameInput.value =
+      file.file_name ||
+      "";
+
+
+    descriptionInput.value =
+      file.description ||
+      "";
+
+
+    categoryInput.value =
+      file.category ||
+      "Other";
+
+
+    /*
+     * Make sure an unexpected
+     * category doesn't break
+     * the select.
+     */
+
+    if (
+      categoryInput.value !==
+      file.category
+    ) {
+
+      categoryInput.value =
+        "Other";
+
+    }
+
+
+    adLevelInput.value =
+      String(
+        file.ad_level || 1
+      );
+
+
+    /*
+     * Existing file information
+     */
+
+    originalFileName.textContent =
+      file.file_name ||
+      "Unnamed file";
+
+
+    fileSizeElement.textContent =
+      formatFileSize(
+        file.file_size
+      );
+
+
+    downloadsElement.textContent =
+      Number(
+        file.downloads || 0
+      ).toLocaleString();
+
+
+    earningsElement.textContent =
+      formatMoney(
+        file.earnings
+      );
+
+
+    /*
+     * View file link
+     */
+
+    viewButton.href =
+      "../file.html?id=" +
+      encodeURIComponent(
+        file.id
+      );
+
+
+    editMessage.textContent =
+      "";
+
+
+  } catch (error) {
+
+    console.error(
+      "Load file error:",
+      error
+    );
+
+
+    showError(
+      "Unable to load this file."
+    );
+
+  }
+
+}
+
+
+/* =========================================
+   SAVE CHANGES
+========================================= */
+
+editForm.addEventListener(
+  "submit",
+  async function(event) {
+
+    event.preventDefault();
+
+
+    /*
+     * Make sure file was loaded.
+     */
+
+    if (
+      !window.currentFile
+    ) {
+
+      editMessage.textContent =
+        "File information has not loaded yet.";
+
+      return;
+
+    }
+
+
+    /*
+     * Get current user.
+     */
+
+    const {
+      data: {
+        user
+      },
+      error: userError
+    } =
+      await supabaseClient.auth.getUser();
+
+
+    if (
+      userError ||
+      !user
+    ) {
+
+      window.location.href =
+        "../login.html";
+
+      return;
+
+    }
+
+
+    /*
+     * Get values.
+     */
+
+    const fileName =
+      fileNameInput.value.trim();
+
+
+    const description =
+      descriptionInput.value.trim();
+
+
+    const category =
+      categoryInput.value;
+
+
+    const adLevel =
+      Number(
+        adLevelInput.value
+      );
+
+
+    /*
+     * Validate name.
+     */
+
+    if (!fileName) {
+
+      editMessage.textContent =
+        "Please enter a file name.";
+
+      fileNameInput.focus();
+
+      return;
+
+    }
+
+
+    if (
+      fileName.length > 200
+    ) {
+
+      editMessage.textContent =
+        "File name is too long.";
+
+      return;
+
+    }
+
+
+    /*
+     * Validate ad level.
+     */
+
+    if (
+      ![1, 2, 3, 4].includes(
+        adLevel
+      )
+    ) {
+
+      editMessage.textContent =
+        "Invalid ad level.";
+
+      return;
+
+    }
+
+
+    /*
+     * Disable save button.
+     */
+
+    saveButton.disabled =
+      true;
+
+
+    saveButton.textContent =
+      "Saving...";
+
+
+    editMessage.textContent =
+      "";
+
+
+    try {
+
+      /*
+       * Update ONLY the editable
+       * database fields.
+       *
+       * We intentionally do NOT
+       * modify:
+       *
+       * id
+       * creator_id
+       * storage_path
+       * file_size
+       * downloads
+       * earnings
+       * status
+       */
+
+      const {
+        data: updatedFile,
+        error: updateError
+      } =
+        await supabaseClient
+
+          .from("files")
+
+          .update({
+
+            file_name:
+              fileName,
+
+            description:
+              description,
+
+            category:
+              category,
+
+            ad_level:
+              adLevel
+
+          })
+
+          .eq(
+            "id",
+            window.currentFile.id
+          )
+
+          .eq(
+            "creator_id",
+            user.id
+          )
+
+          .select(
+            "id,file_name,file_size,description,category,ad_level,downloads,earnings,status"
+          )
+
+          .single();
+
+
+      if (
+        updateError
+      ) {
+
+        console.error(
+          "Update error:",
+          updateError
+        );
+
+
+        throw new Error(
+          updateError.message ||
+          "Could not save changes."
+        );
+
+      }
+
+
+      /*
+       * Update local information.
+       */
+
+      window.currentFile =
+        updatedFile;
+
+
+      /*
+       * Update displayed
+       * original file name.
+       */
+
+      originalFileName.textContent =
+        updatedFile.file_name;
+
+
+      /*
+       * Update earnings/downloads.
+       */
+
+      downloadsElement.textContent =
+        Number(
+          updatedFile.downloads || 0
+        ).toLocaleString();
+
+
+      earningsElement.textContent =
+        formatMoney(
+          updatedFile.earnings
+        );
+
+
+      /*
+       * Success.
+       */
+
+      editMessage.textContent =
+        "Changes saved successfully.";
+
+
+      saveButton.textContent =
+        "Saved";
+
+
+      /*
+       * Return to dashboard
+       * after a short delay.
+       */
+
+      setTimeout(
+        function() {
+
+          window.location.href =
+            "dashboard.html";
+
+        },
+        900
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Save error:",
+        error
+      );
+
+
+      editMessage.textContent =
+        error.message ||
+        "Unable to save changes.";
+
+
+      saveButton.disabled =
+        false;
+
+
+      saveButton.textContent =
+        "Save changes";
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   SIGN OUT
+========================================= */
+
+signOut.addEventListener(
+  "click",
+  async function(event) {
+
+    event.preventDefault();
+
+
+    await supabaseClient.auth.signOut();
+
+
+    window.location.href =
+      "../login.html";
+
+  }
+);
+
+
+/* =========================================
+   FILE SIZE
+========================================= */
+
+function formatFileSize(
+  bytes
+) {
+
+  if (
+    bytes === null ||
+    bytes === undefined ||
+    Number(bytes) <= 0
+  ) {
+
+    return "—";
+
+  }
+
+
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB",
+    "TB"
+  ];
+
+
+  let size =
+    Number(bytes);
+
+
+  let unit =
+    0;
+
+
+  while (
+    size >= 1024 &&
+    unit < units.length - 1
+  ) {
+
+    size =
+      size / 1024;
+
+    unit++;
+
+  }
+
+
+  return (
+    size.toFixed(
+      size >= 10 || unit === 0
+        ? 0
+        : 1
+    )
+    + " "
+    + units[unit]
+  );
+
+}
+
+
+/* =========================================
+   MONEY
+========================================= */
+
+function formatMoney(
+  value
+) {
+
+  return (
+    "₹" +
+    Number(
+      value || 0
+    ).toFixed(8)
+  );
+
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+function showError(
+  message
+) {
+
+  editForm.innerHTML =
+    `
+      <div class="section-label">
+        ERROR
+      </div>
+
+      <h2>
+        Unable to edit file
+      </h2>
+
+      <p class="lead">
+        ${escapeHtml(message)}
+      </p>
+
+      <a
+        class="primary"
+        href="dashboard.html"
+      >
+        Back to dashboard
+      </a>
+    `;
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHtml(
+  value
+) {
+
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+
+}
+
+</script>
+
+</body>
+
+</html>
