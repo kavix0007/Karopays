@@ -14,46 +14,489 @@
 
   <link
     rel="stylesheet"
-    href="../assets/css/pro.css"
+    href="assets/css/pro.css"
   >
+
+  <style>
+
+    /* =========================================
+       FILE ACTIONS
+    ========================================= */
+
+    .file-actions {
+
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:24px;
+
+    }
+
+
+    .action-btn {
+
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+
+      min-height:44px;
+
+      padding:11px 17px;
+
+      border-radius:9px;
+
+      border:1px solid #292d37;
+
+      background:#151820;
+
+      color:#e8e9ed;
+
+      font-size:13px;
+
+      font-weight:800;
+
+      cursor:pointer;
+
+      transition:
+        background .18s ease,
+        border-color .18s ease,
+        transform .18s ease,
+        box-shadow .18s ease;
+
+    }
+
+
+    .action-btn:hover {
+
+      background:#1c202a;
+
+      border-color:#3b4050;
+
+      transform:translateY(-1px);
+
+    }
+
+
+    .action-btn:active {
+
+      transform:translateY(0);
+
+    }
+
+
+    .action-btn.primary-action {
+
+      background:#7c5cff;
+
+      border-color:#7c5cff;
+
+      color:#fff;
+
+      box-shadow:
+        0 6px 20px rgba(124,92,255,.18);
+
+    }
+
+
+    .action-btn.primary-action:hover {
+
+      background:#8b70ff;
+
+      border-color:#8b70ff;
+
+      box-shadow:
+        0 8px 25px rgba(124,92,255,.28);
+
+    }
+
+
+    .action-btn.danger-action {
+
+      background:#180f13;
+
+      border-color:#5c2732;
+
+      color:#ff7180;
+
+    }
+
+
+    .action-btn.danger-action:hover {
+
+      background:#281219;
+
+      border-color:#a43c4d;
+
+      color:#ff929d;
+
+    }
+
+
+    .action-btn:disabled {
+
+      opacity:.55;
+
+      cursor:not-allowed;
+
+      transform:none;
+
+    }
+
+
+    /* =========================================
+       FILE STATS
+    ========================================= */
+
+    .file-stats {
+
+      display:grid;
+
+      grid-template-columns:
+        repeat(3,1fr);
+
+      gap:14px;
+
+      margin:25px 0;
+
+    }
+
+
+    .file-stat {
+
+      background:#101218;
+
+      border:1px solid #242832;
+
+      border-radius:12px;
+
+      padding:18px;
+
+    }
+
+
+    .file-stat small {
+
+      color:#747b87;
+
+      display:block;
+
+      margin-bottom:7px;
+
+    }
+
+
+    .file-stat strong {
+
+      font-size:22px;
+
+      color:#fff;
+
+    }
+
+
+    /* =========================================
+       DELETE WARNING
+    ========================================= */
+
+    .delete-warning {
+
+      display:none;
+
+      margin-top:22px;
+
+      padding:22px;
+
+      border:1px solid #632b37;
+
+      border-radius:13px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #180d11,
+          #120c10
+        );
+
+    }
+
+
+    .delete-warning.show {
+
+      display:block;
+
+    }
+
+
+    .delete-warning-title {
+
+      display:flex;
+
+      align-items:center;
+
+      gap:9px;
+
+      color:#ff7180;
+
+      font-size:18px;
+
+      font-weight:900;
+
+      margin-bottom:10px;
+
+    }
+
+
+    .delete-warning-text {
+
+      color:#b2aeb4;
+
+      font-size:14px;
+
+      line-height:1.7;
+
+      margin:0;
+
+    }
+
+
+    .delete-warning-text strong {
+
+      color:#ff8794;
+
+    }
+
+
+    .delete-stats {
+
+      display:grid;
+
+      grid-template-columns:
+        repeat(2,1fr);
+
+      gap:10px;
+
+      margin:18px 0;
+
+    }
+
+
+    .delete-stat {
+
+      padding:13px;
+
+      border-radius:9px;
+
+      background:#100b0e;
+
+      border:1px solid #352027;
+
+    }
+
+
+    .delete-stat span {
+
+      display:block;
+
+      color:#77717a;
+
+      font-size:11px;
+
+      margin-bottom:5px;
+
+    }
+
+
+    .delete-stat strong {
+
+      color:#ff7180;
+
+      font-size:17px;
+
+    }
+
+
+    .delete-confirm-box {
+
+      margin-top:18px;
+
+      padding-top:18px;
+
+      border-top:1px solid #352027;
+
+    }
+
+
+    .delete-confirm-label {
+
+      color:#aaa4aa;
+
+      font-size:13px;
+
+      margin-bottom:8px;
+
+    }
+
+
+    #deleteConfirmText {
+
+      width:100%;
+
+      background:#0e0a0d;
+
+      border:1px solid #4a2931;
+
+      color:#fff;
+
+      border-radius:9px;
+
+      padding:12px;
+
+      font:inherit;
+
+      outline:none;
+
+    }
+
+
+    #deleteConfirmText:focus {
+
+      border-color:#ff596b;
+
+    }
+
+
+    .delete-warning-actions {
+
+      display:flex;
+
+      gap:10px;
+
+      flex-wrap:wrap;
+
+      margin-top:16px;
+
+    }
+
+
+    .delete-status {
+
+      margin-top:13px;
+
+      color:#a9aeb8;
+
+      font-size:13px;
+
+      line-height:1.5;
+
+    }
+
+
+    /* =========================================
+       SHARE BOX
+    ========================================= */
+
+    .share-box {
+
+      display:none;
+
+      margin-top:20px;
+
+      padding:18px;
+
+      border:1px solid #292d37;
+
+      border-radius:12px;
+
+      background:#0f1117;
+
+    }
+
+
+    .share-box.show {
+
+      display:block;
+
+    }
+
+
+    .share-url {
+
+      display:flex;
+
+      gap:9px;
+
+    }
+
+
+    .share-url input {
+
+      flex:1;
+
+    }
+
+
+    @media(max-width:700px) {
+
+      .file-stats {
+
+        grid-template-columns:1fr;
+
+      }
+
+      .delete-stats {
+
+        grid-template-columns:1fr;
+
+      }
+
+      .share-url {
+
+        flex-direction:column;
+
+      }
+
+    }
+
+  </style>
 
 </head>
 
 
 <body>
 
+
 <header class="site-header">
 
   <a
     class="logo"
-    href="../index.html"
+    href="creator/dashboard.html"
   >
-    <span class="logo-mark">K</span>
+
+    <span class="logo-mark">
+      K
+    </span>
+
     KaroPays
+
   </a>
+
 
   <nav class="desktop-nav">
 
-    <a href="dashboard.html">
+    <a href="creator/dashboard.html">
       Dashboard
     </a>
 
-    <a href="../payout-rates.html">
+    <a href="payout-rates.html">
       Payout Rates
     </a>
 
-    <a href="../payment-proof.html">
-      Payment Proof
-    </a>
-
-    <a href="../premium.html">
+    <a href="premium.html">
       Premium
     </a>
 
-    <a
-      href="#"
-      id="signOut"
-    >
+    <a href="#" id="signOut">
       Sign out
     </a>
 
@@ -62,10 +505,12 @@
 </header>
 
 
+
 <main class="legal-page">
 
+
   <div class="section-label">
-    CREATOR DASHBOARD
+    FILE MANAGEMENT
   </div>
 
 
@@ -74,282 +519,593 @@
   </h1>
 
 
-  <p class="lead">
-    Update your file information without replacing the uploaded file.
+  <p
+    class="lead"
+    id="pageDescription"
+  >
+    Loading file...
   </p>
 
 
-  <form
-    class="auth-card wide-form"
-    id="editForm"
-  >
+
+  <!-- =====================================
+       FILE STATS
+  ====================================== -->
+
+  <div class="file-stats">
 
 
-    <!-- File name -->
-
-    <label>
-
-      File name
-
-      <input
-        id="fileName"
-        type="text"
-        maxlength="200"
-        required
-        placeholder="Enter file name"
-      >
-
-    </label>
-
-
-    <!-- Description -->
-
-    <label>
-
-      Description
-
-      <textarea
-        id="description"
-        rows="5"
-        maxlength="1000"
-        placeholder="Describe your file..."
-      ></textarea>
-
-    </label>
-
-
-    <!-- Category -->
-
-    <label>
-
-      Category
-
-      <select id="category">
-
-        <option value="Presets">
-          Presets
-        </option>
-
-        <option value="Templates">
-          Templates
-        </option>
-
-        <option value="Wallpapers">
-          Wallpapers
-        </option>
-
-        <option value="Resources">
-          Resources
-        </option>
-
-        <option value="Other">
-          Other
-        </option>
-
-      </select>
-
-    </label>
-
-
-    <!-- Ad level -->
-
-    <label>
-
-      Ad level
-
-      <select id="adLevel">
-
-        <option value="1">
-          1 — Low
-        </option>
-
-        <option value="2">
-          2 — Medium
-        </option>
-
-        <option value="3">
-          3 — High
-        </option>
-
-        <option value="4">
-          4 — Ultra
-        </option>
-
-      </select>
+    <div class="file-stat">
 
       <small>
-        This changes the monetization level for future eligible downloads.
+        Total downloads
       </small>
 
-    </label>
+      <strong id="downloadCount">
+        0
+      </strong>
+
+    </div>
 
 
-    <!-- Existing file information -->
+    <div class="file-stat">
 
-    <div
-      class="table-card"
-      style="margin-top:20px;"
-    >
+      <small>
+        File earnings
+      </small>
 
-      <div class="section-label">
-        EXISTING FILE
+      <strong id="earningCount">
+        ₹0.00000000
+      </strong>
+
+    </div>
+
+
+    <div class="file-stat">
+
+      <small>
+        Status
+      </small>
+
+      <strong id="fileStatus">
+        —
+      </strong>
+
+    </div>
+
+
+  </div>
+
+
+
+  <!-- =====================================
+       EDIT FORM
+  ====================================== -->
+
+  <div class="table-card">
+
+
+    <form id="editForm">
+
+
+      <label>
+
+        File name
+
+        <input
+          id="fileName"
+          type="text"
+          maxlength="200"
+          required
+        >
+
+      </label>
+
+
+
+      <label>
+
+        Description
+
+        <textarea
+          id="description"
+          rows="5"
+          maxlength="1000"
+          placeholder="Describe your file..."
+        ></textarea>
+
+      </label>
+
+
+
+      <label>
+
+        Category
+
+        <select id="category">
+
+          <option value="Presets">
+            Presets
+          </option>
+
+          <option value="Templates">
+            Templates
+          </option>
+
+          <option value="Wallpapers">
+            Wallpapers
+          </option>
+
+          <option value="Resources">
+            Resources
+          </option>
+
+          <option value="Other">
+            Other
+          </option>
+
+        </select>
+
+      </label>
+
+
+
+      <label>
+
+        Ad level
+
+        <select id="adLevel">
+
+          <option value="1">
+            1 — Low
+          </option>
+
+          <option value="2">
+            2 — Medium
+          </option>
+
+          <option value="3">
+            3 — High
+          </option>
+
+          <option value="4">
+            4 — Ultra
+          </option>
+
+        </select>
+
+      </label>
+
+
+
+      <p id="saveMessage"></p>
+
+
+
+      <!-- ACTIONS -->
+
+      <div class="file-actions">
+
+
+        <button
+          type="submit"
+          class="action-btn primary-action"
+          id="saveButton"
+        >
+          ✓ Save Changes
+        </button>
+
+
+
+        <a
+          href="#"
+          class="action-btn"
+          id="viewFileButton"
+        >
+          ↗ View File
+        </a>
+
+
+
+        <button
+          type="button"
+          class="action-btn"
+          id="shareButton"
+        >
+          ⤴ Share File
+        </button>
+
+
+
+        <button
+          type="button"
+          class="action-btn danger-action"
+          id="deleteButton"
+        >
+          Delete File
+        </button>
+
+
       </div>
 
 
-      <p>
-
-        <strong>
-          File:
-        </strong>
-
-        <span id="originalFileName">
-          Loading...
-        </span>
-
-      </p>
+    </form>
 
 
-      <p>
 
-        <strong>
-          Size:
-        </strong>
-
-        <span id="fileSize">
-          —
-        </span>
-
-      </p>
-
-
-      <p>
-
-        <strong>
-          Downloads:
-        </strong>
-
-        <span id="downloads">
-          0
-        </span>
-
-      </p>
-
-
-      <p>
-
-        <strong>
-          Earnings:
-        </strong>
-
-        <span id="earnings">
-          ₹0.00000000
-        </span>
-
-      </p>
-
-    </div>
-
-
-    <!-- Message -->
-
-    <p id="editMessage"></p>
-
-
-    <!-- Buttons -->
+    <!-- =====================================
+         SHARE
+    ====================================== -->
 
     <div
-      style="
-        display:flex;
-        gap:12px;
-        flex-wrap:wrap;
-        margin-top:20px;
-      "
+      class="share-box"
+      id="shareBox"
     >
 
-      <button
-        class="primary"
-        type="submit"
-        id="saveButton"
-      >
-        Save changes
-      </button>
+      <strong>
+        Share this file
+      </strong>
+
+      <p class="lead">
+        Copy this link and share it anywhere.
+      </p>
 
 
-      <a
-        class="secondary"
-        id="viewButton"
-        href="#"
-      >
-        View file
-      </a>
+      <div class="share-url">
+
+        <input
+          type="text"
+          id="shareUrl"
+          readonly
+        >
+
+        <button
+          type="button"
+          class="action-btn primary-action"
+          id="copyShareButton"
+        >
+          Copy Link
+        </button>
+
+      </div>
 
 
-      <a
-        class="secondary"
-        href="dashboard.html"
-      >
-        Cancel
-      </a>
+      <p id="shareMessage"></p>
 
     </div>
 
 
-  </form>
+
+    <!-- =====================================
+         DELETE WARNING
+    ====================================== -->
+
+    <div
+      class="delete-warning"
+      id="deleteWarning"
+    >
+
+
+      <div class="delete-warning-title">
+
+        ⚠
+
+        Delete this file?
+
+      </div>
+
+
+      <p class="delete-warning-text">
+
+        <strong>
+          Think carefully before deleting this file.
+        </strong>
+
+        <br><br>
+
+        Deleting this file will permanently remove
+        the file, its file page, and its recorded
+        download/earning data.
+
+        <br><br>
+
+        <strong>
+          Your total downloads and earnings from
+          this file will be removed from your
+          dashboard.
+        </strong>
+
+        <br><br>
+
+        This action cannot be undone.
+
+      </p>
+
+
+
+      <!-- CURRENT VALUES -->
+
+      <div class="delete-stats">
+
+
+        <div class="delete-stat">
+
+          <span>
+            DOWNLOADS THAT WILL BE REMOVED
+          </span>
+
+          <strong id="deleteDownloads">
+            0
+          </strong>
+
+        </div>
+
+
+        <div class="delete-stat">
+
+          <span>
+            EARNINGS THAT WILL BE REMOVED
+          </span>
+
+          <strong id="deleteEarnings">
+            ₹0.00000000
+          </strong>
+
+        </div>
+
+
+      </div>
+
+
+
+      <!-- CONFIRMATION -->
+
+      <div class="delete-confirm-box">
+
+
+        <div class="delete-confirm-label">
+
+          To confirm deletion, type:
+
+          <strong>
+            DELETE
+          </strong>
+
+        </div>
+
+
+        <input
+          id="deleteConfirmText"
+          type="text"
+          placeholder="Type DELETE"
+          autocomplete="off"
+        >
+
+
+        <div class="delete-warning-actions">
+
+
+          <button
+            type="button"
+            class="action-btn"
+            id="cancelDelete"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            class="action-btn danger-action"
+            id="confirmDelete"
+            disabled
+          >
+            Permanently Delete File
+          </button>
+
+
+        </div>
+
+
+        <div
+          class="delete-status"
+          id="deleteStatus"
+        ></div>
+
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
 
 </main>
 
 
-<!-- Supabase -->
+
+<!-- =====================================
+     SUPABASE
+====================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<script src="../assets/js/supabase-config.js"></script>
+<script src="assets/js/supabase-config.js"></script>
+
 
 
 <script>
+
 
 /* =========================================
    ELEMENTS
 ========================================= */
 
 const editForm =
-  document.getElementById("editForm");
+  document.getElementById(
+    "editForm"
+  );
+
 
 const fileNameInput =
-  document.getElementById("fileName");
+  document.getElementById(
+    "fileName"
+  );
+
 
 const descriptionInput =
-  document.getElementById("description");
+  document.getElementById(
+    "description"
+  );
+
 
 const categoryInput =
-  document.getElementById("category");
+  document.getElementById(
+    "category"
+  );
+
 
 const adLevelInput =
-  document.getElementById("adLevel");
+  document.getElementById(
+    "adLevel"
+  );
 
-const originalFileName =
-  document.getElementById("originalFileName");
-
-const fileSizeElement =
-  document.getElementById("fileSize");
-
-const downloadsElement =
-  document.getElementById("downloads");
-
-const earningsElement =
-  document.getElementById("earnings");
-
-const editMessage =
-  document.getElementById("editMessage");
 
 const saveButton =
-  document.getElementById("saveButton");
+  document.getElementById(
+    "saveButton"
+  );
 
-const viewButton =
-  document.getElementById("viewButton");
+
+const saveMessage =
+  document.getElementById(
+    "saveMessage"
+  );
+
+
+const pageDescription =
+  document.getElementById(
+    "pageDescription"
+  );
+
+
+const downloadCount =
+  document.getElementById(
+    "downloadCount"
+  );
+
+
+const earningCount =
+  document.getElementById(
+    "earningCount"
+  );
+
+
+const fileStatus =
+  document.getElementById(
+    "fileStatus"
+  );
+
+
+const viewFileButton =
+  document.getElementById(
+    "viewFileButton"
+  );
+
+
+const shareButton =
+  document.getElementById(
+    "shareButton"
+  );
+
+
+const shareBox =
+  document.getElementById(
+    "shareBox"
+  );
+
+
+const shareUrl =
+  document.getElementById(
+    "shareUrl"
+  );
+
+
+const copyShareButton =
+  document.getElementById(
+    "copyShareButton"
+  );
+
+
+const shareMessage =
+  document.getElementById(
+    "shareMessage"
+  );
+
+
+const deleteButton =
+  document.getElementById(
+    "deleteButton"
+  );
+
+
+const deleteWarning =
+  document.getElementById(
+    "deleteWarning"
+  );
+
+
+const deleteDownloads =
+  document.getElementById(
+    "deleteDownloads"
+  );
+
+
+const deleteEarnings =
+  document.getElementById(
+    "deleteEarnings"
+  );
+
+
+const deleteConfirmText =
+  document.getElementById(
+    "deleteConfirmText"
+  );
+
+
+const confirmDelete =
+  document.getElementById(
+    "confirmDelete"
+  );
+
+
+const cancelDelete =
+  document.getElementById(
+    "cancelDelete"
+  );
+
+
+const deleteStatus =
+  document.getElementById(
+    "deleteStatus"
+  );
+
 
 const signOut =
-  document.getElementById("signOut");
+  document.getElementById(
+    "signOut"
+  );
+
+
+
+/* =========================================
+   CURRENT FILE
+========================================= */
+
+let currentFile = null;
+
 
 
 /* =========================================
@@ -366,13 +1122,10 @@ const fileId =
   params.get("id");
 
 
-/* =========================================
-   START
-========================================= */
 
 if (!fileId) {
 
-  showError(
+  showPageError(
     "No file was specified."
   );
 
@@ -383,63 +1136,58 @@ if (!fileId) {
 }
 
 
+
 /* =========================================
    LOAD FILE
 ========================================= */
 
 async function loadFile() {
 
-  editMessage.textContent =
-    "Loading file...";
-
 
   try {
 
-    /*
-     * Get logged-in user
-     */
+
+    /* -------------------------------------
+       CHECK LOGIN
+    ------------------------------------- */
 
     const {
       data: {
         user
       },
-      error: userError
+      error: authError
     } =
       await supabaseClient.auth.getUser();
 
 
     if (
-      userError ||
+      authError ||
       !user
     ) {
 
       window.location.href =
-        "../login.html";
+        "login.html";
 
       return;
 
     }
 
 
-    /*
-     * Get file.
-     *
-     * IMPORTANT:
-     *
-     * creator_id must match the
-     * currently logged-in user.
-     */
+
+    /* -------------------------------------
+       LOAD FILE
+    ------------------------------------- */
 
     const {
       data: file,
-      error: fileError
+      error
     } =
       await supabaseClient
 
         .from("files")
 
         .select(
-          "id,creator_id,file_name,file_size,description,category,ad_level,downloads,earnings,status"
+          "id,creator_id,file_name,file_size,description,category,ad_level,downloads,earnings,status,storage_path,created_at"
         )
 
         .eq(
@@ -455,38 +1203,48 @@ async function loadFile() {
         .single();
 
 
-    if (
-      fileError ||
-      !file
-    ) {
+
+    if (error) {
 
       console.error(
-        "File load error:",
-        fileError
+        "File loading error:",
+        error
       );
 
-
-      showError(
-        "File not found or you do not have permission to edit it."
+      showPageError(
+        "This file could not be found."
       );
-
 
       return;
 
     }
 
 
-    /*
-     * Store file information
-     */
 
-    window.currentFile =
+    if (!file) {
+
+      showPageError(
+        "This file could not be found."
+      );
+
+      return;
+
+    }
+
+
+
+    /* -------------------------------------
+       STORE CURRENT FILE
+    ------------------------------------- */
+
+    currentFile =
       file;
 
 
-    /*
-     * Fill form
-     */
+
+    /* -------------------------------------
+       FILL FORM
+    ------------------------------------- */
 
     fileNameInput.value =
       file.file_name ||
@@ -503,86 +1261,109 @@ async function loadFile() {
       "Other";
 
 
-    /*
-     * Make sure an unexpected
-     * category doesn't break
-     * the select.
-     */
-
-    if (
-      categoryInput.value !==
-      file.category
-    ) {
-
-      categoryInput.value =
-        "Other";
-
-    }
-
-
     adLevelInput.value =
       String(
         file.ad_level || 1
       );
 
 
-    /*
-     * Existing file information
-     */
 
-    originalFileName.textContent =
-      file.file_name ||
-      "Unnamed file";
+    /* -------------------------------------
+       DISPLAY INFORMATION
+    ------------------------------------- */
 
-
-    fileSizeElement.textContent =
-      formatFileSize(
-        file.file_size
-      );
+    pageDescription.textContent =
+      file.description ||
+      "Edit your file information below.";
 
 
-    downloadsElement.textContent =
+    downloadCount.textContent =
       Number(
         file.downloads || 0
       ).toLocaleString();
 
 
-    earningsElement.textContent =
+    earningCount.textContent =
       formatMoney(
-        file.earnings
+        Number(
+          file.earnings || 0
+        )
       );
 
 
-    /*
-     * View file link
-     */
+    fileStatus.textContent =
+      file.status ||
+      "unknown";
 
-    viewButton.href =
-      "../file.html?id=" +
+
+
+    /* -------------------------------------
+       DELETE WARNING VALUES
+    ------------------------------------- */
+
+    deleteDownloads.textContent =
+      Number(
+        file.downloads || 0
+      ).toLocaleString();
+
+
+    deleteEarnings.textContent =
+      formatMoney(
+        Number(
+          file.earnings || 0
+        )
+      );
+
+
+
+    /* -------------------------------------
+       VIEW LINK
+    ------------------------------------- */
+
+    const filePage =
+      "file.html?id=" +
       encodeURIComponent(
         file.id
       );
 
 
-    editMessage.textContent =
-      "";
+    viewFileButton.href =
+      filePage;
+
+
+
+    /* -------------------------------------
+       SHARE URL
+    ------------------------------------- */
+
+    const absoluteFileUrl =
+      new URL(
+        filePage,
+        window.location.href
+      ).href;
+
+
+    shareUrl.value =
+      absoluteFileUrl;
 
 
   } catch (error) {
 
+
     console.error(
-      "Load file error:",
+      "Load error:",
       error
     );
 
 
-    showError(
+    showPageError(
       "Unable to load this file."
     );
 
   }
 
 }
+
 
 
 /* =========================================
@@ -593,122 +1374,19 @@ editForm.addEventListener(
   "submit",
   async function(event) {
 
+
     event.preventDefault();
 
 
-    /*
-     * Make sure file was loaded.
-     */
+    if (!currentFile) {
 
-    if (
-      !window.currentFile
-    ) {
-
-      editMessage.textContent =
-        "File information has not loaded yet.";
+      saveMessage.textContent =
+        "File information is not loaded.";
 
       return;
 
     }
 
-
-    /*
-     * Get current user.
-     */
-
-    const {
-      data: {
-        user
-      },
-      error: userError
-    } =
-      await supabaseClient.auth.getUser();
-
-
-    if (
-      userError ||
-      !user
-    ) {
-
-      window.location.href =
-        "../login.html";
-
-      return;
-
-    }
-
-
-    /*
-     * Get values.
-     */
-
-    const fileName =
-      fileNameInput.value.trim();
-
-
-    const description =
-      descriptionInput.value.trim();
-
-
-    const category =
-      categoryInput.value;
-
-
-    const adLevel =
-      Number(
-        adLevelInput.value
-      );
-
-
-    /*
-     * Validate name.
-     */
-
-    if (!fileName) {
-
-      editMessage.textContent =
-        "Please enter a file name.";
-
-      fileNameInput.focus();
-
-      return;
-
-    }
-
-
-    if (
-      fileName.length > 200
-    ) {
-
-      editMessage.textContent =
-        "File name is too long.";
-
-      return;
-
-    }
-
-
-    /*
-     * Validate ad level.
-     */
-
-    if (
-      ![1, 2, 3, 4].includes(
-        adLevel
-      )
-    ) {
-
-      editMessage.textContent =
-        "Invalid ad level.";
-
-      return;
-
-    }
-
-
-    /*
-     * Disable save button.
-     */
 
     saveButton.disabled =
       true;
@@ -718,31 +1396,45 @@ editForm.addEventListener(
       "Saving...";
 
 
-    editMessage.textContent =
+    saveMessage.textContent =
       "";
+
 
 
     try {
 
-      /*
-       * Update ONLY the editable
-       * database fields.
-       *
-       * We intentionally do NOT
-       * modify:
-       *
-       * id
-       * creator_id
-       * storage_path
-       * file_size
-       * downloads
-       * earnings
-       * status
-       */
+
+      const newName =
+        fileNameInput.value.trim();
+
+
+      const newDescription =
+        descriptionInput.value.trim();
+
+
+      const newCategory =
+        categoryInput.value;
+
+
+      const newAdLevel =
+        Number(
+          adLevelInput.value
+        );
+
+
+
+      if (!newName) {
+
+        throw new Error(
+          "File name cannot be empty."
+        );
+
+      }
+
+
 
       const {
-        data: updatedFile,
-        error: updateError
+        error
       } =
         await supabaseClient
 
@@ -751,116 +1443,79 @@ editForm.addEventListener(
           .update({
 
             file_name:
-              fileName,
+              newName,
 
             description:
-              description,
+              newDescription,
 
             category:
-              category,
+              newCategory,
 
             ad_level:
-              adLevel
+              newAdLevel
 
           })
 
           .eq(
             "id",
-            window.currentFile.id
-          )
-
-          .eq(
-            "creator_id",
-            user.id
-          )
-
-          .select(
-            "id,file_name,file_size,description,category,ad_level,downloads,earnings,status"
-          )
-
-          .single();
+            currentFile.id
+          );
 
 
-      if (
-        updateError
-      ) {
 
-        console.error(
-          "Update error:",
-          updateError
-        );
+      if (error) {
 
-
-        throw new Error(
-          updateError.message ||
-          "Could not save changes."
-        );
+        throw error;
 
       }
 
 
-      /*
-       * Update local information.
-       */
 
-      window.currentFile =
-        updatedFile;
+      /* Update local data */
 
-
-      /*
-       * Update displayed
-       * original file name.
-       */
-
-      originalFileName.textContent =
-        updatedFile.file_name;
+      currentFile.file_name =
+        newName;
 
 
-      /*
-       * Update earnings/downloads.
-       */
-
-      downloadsElement.textContent =
-        Number(
-          updatedFile.downloads || 0
-        ).toLocaleString();
+      currentFile.description =
+        newDescription;
 
 
-      earningsElement.textContent =
-        formatMoney(
-          updatedFile.earnings
-        );
+      currentFile.category =
+        newCategory;
 
 
-      /*
-       * Success.
-       */
+      currentFile.ad_level =
+        newAdLevel;
 
-      editMessage.textContent =
-        "Changes saved successfully.";
+
+
+      pageDescription.textContent =
+        newDescription ||
+        "Edit your file information below.";
+
+
+      saveMessage.textContent =
+        "✓ Changes saved successfully.";
 
 
       saveButton.textContent =
-        "Saved";
+        "✓ Saved";
 
-
-      /*
-       * Return to dashboard
-       * after a short delay.
-       */
 
       setTimeout(
         function() {
 
-          window.location.href =
-            "dashboard.html";
+          saveButton.textContent =
+            "✓ Save Changes";
 
         },
-        900
+        1800
       );
 
 
     } catch (error) {
+
 
       console.error(
         "Save error:",
@@ -868,22 +1523,437 @@ editForm.addEventListener(
       );
 
 
-      editMessage.textContent =
-        error.message ||
-        "Unable to save changes.";
+      saveMessage.textContent =
+        "Could not save changes: " +
+        (
+          error.message ||
+          "Unknown error"
+        );
+
+
+      saveButton.textContent =
+        "Try Again";
+
+
+    } finally {
 
 
       saveButton.disabled =
         false;
 
+    }
 
-      saveButton.textContent =
-        "Save changes";
+  }
+);
+
+
+
+/* =========================================
+   SHARE BUTTON
+========================================= */
+
+shareButton.addEventListener(
+  "click",
+  function() {
+
+
+    shareBox.classList.toggle(
+      "show"
+    );
+
+
+    if (
+      shareBox.classList.contains(
+        "show"
+      )
+    ) {
+
+      shareUrl.focus();
+
+      shareUrl.select();
 
     }
 
   }
 );
+
+
+
+/* =========================================
+   COPY SHARE LINK
+========================================= */
+
+copyShareButton.addEventListener(
+  "click",
+  async function() {
+
+
+    try {
+
+
+      await navigator.clipboard.writeText(
+        shareUrl.value
+      );
+
+
+      copyShareButton.textContent =
+        "✓ Copied";
+
+
+      shareMessage.textContent =
+        "File link copied to clipboard.";
+
+
+      setTimeout(
+        function() {
+
+          copyShareButton.textContent =
+            "Copy Link";
+
+        },
+        1800
+      );
+
+
+    } catch (error) {
+
+
+      shareUrl.select();
+
+      document.execCommand(
+        "copy"
+      );
+
+
+      copyShareButton.textContent =
+        "✓ Copied";
+
+
+      shareMessage.textContent =
+        "File link copied.";
+
+    }
+
+  }
+);
+
+
+
+/* =========================================
+   OPEN DELETE WARNING
+========================================= */
+
+deleteButton.addEventListener(
+  "click",
+  function() {
+
+
+    if (!currentFile) {
+
+      return;
+
+    }
+
+
+    deleteWarning.classList.add(
+      "show"
+    );
+
+
+    deleteButton.style.display =
+      "none";
+
+
+    deleteConfirmText.value =
+      "";
+
+
+    confirmDelete.disabled =
+      true;
+
+
+    deleteStatus.textContent =
+      "";
+
+
+    deleteWarning.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+
+  }
+);
+
+
+
+/* =========================================
+   DELETE CONFIRM TEXT
+========================================= */
+
+deleteConfirmText.addEventListener(
+  "input",
+  function() {
+
+
+    const value =
+      deleteConfirmText.value
+        .trim()
+        .toUpperCase();
+
+
+    confirmDelete.disabled =
+      value !== "DELETE";
+
+  }
+);
+
+
+
+/* =========================================
+   CANCEL DELETE
+========================================= */
+
+cancelDelete.addEventListener(
+  "click",
+  function() {
+
+
+    deleteWarning.classList.remove(
+      "show"
+    );
+
+
+    deleteButton.style.display =
+      "";
+
+
+    deleteConfirmText.value =
+      "";
+
+
+    confirmDelete.disabled =
+      true;
+
+
+    deleteStatus.textContent =
+      "";
+
+  }
+);
+
+
+
+/* =========================================
+   CONFIRM DELETE
+========================================= */
+
+confirmDelete.addEventListener(
+  "click",
+  async function() {
+
+
+    if (!currentFile) {
+
+      deleteStatus.textContent =
+        "File information is unavailable.";
+
+      return;
+
+    }
+
+
+
+    if (
+      deleteConfirmText.value
+        .trim()
+        .toUpperCase()
+      !== "DELETE"
+    ) {
+
+      deleteStatus.textContent =
+        "Type DELETE to confirm.";
+
+      return;
+
+    }
+
+
+
+    confirmDelete.disabled =
+      true;
+
+
+    cancelDelete.disabled =
+      true;
+
+
+    confirmDelete.textContent =
+      "Deleting...";
+
+
+    deleteStatus.textContent =
+      "Removing file, downloads and earnings...";
+
+
+
+    try {
+
+
+      /* -------------------------------------
+         1. Delete earning records
+      ------------------------------------- */
+
+      const {
+        error: earningsError
+      } =
+        await supabaseClient
+
+          .from(
+            "download_earnings"
+          )
+
+          .delete()
+
+          .eq(
+            "file_id",
+            currentFile.id
+          );
+
+
+
+      if (earningsError) {
+
+        throw new Error(
+          "Could not remove the file's earning records: " +
+          earningsError.message
+        );
+
+      }
+
+
+
+      /* -------------------------------------
+         2. Delete physical Storage file
+      ------------------------------------- */
+
+      if (
+        currentFile.storage_path
+      ) {
+
+
+        const {
+          error: storageError
+        } =
+          await supabaseClient.storage
+
+            .from("files")
+
+            .remove([
+              currentFile.storage_path
+            ]);
+
+
+        if (storageError) {
+
+          throw new Error(
+            "Could not remove the stored file: " +
+            storageError.message
+          );
+
+        }
+
+      }
+
+
+
+      /* -------------------------------------
+         3. Delete database file record
+      ------------------------------------- */
+
+      const {
+        error: databaseError
+      } =
+        await supabaseClient
+
+          .from("files")
+
+          .delete()
+
+          .eq(
+            "id",
+            currentFile.id
+          );
+
+
+
+      if (databaseError) {
+
+        throw new Error(
+          "Could not delete the file record: " +
+          databaseError.message
+        );
+
+      }
+
+
+
+      /* -------------------------------------
+         SUCCESS
+      ------------------------------------- */
+
+      confirmDelete.textContent =
+        "✓ File Deleted";
+
+
+      deleteStatus.textContent =
+        "File deleted successfully. Its downloads and earnings have been removed from your dashboard.";
+
+
+      setTimeout(
+        function() {
+
+          window.location.href =
+            "creator/dashboard.html";
+
+        },
+        1500
+      );
+
+
+    } catch (error) {
+
+
+      console.error(
+        "Delete error:",
+        error
+      );
+
+
+      confirmDelete.disabled =
+        false;
+
+
+      cancelDelete.disabled =
+        false;
+
+
+      confirmDelete.textContent =
+        "Permanently Delete File";
+
+
+      deleteStatus.textContent =
+        "Deletion failed: " +
+        (
+          error.message ||
+          "Unknown error"
+        );
+
+    }
+
+  }
+);
+
 
 
 /* =========================================
@@ -894,6 +1964,7 @@ signOut.addEventListener(
   "click",
   async function(event) {
 
+
     event.preventDefault();
 
 
@@ -901,72 +1972,11 @@ signOut.addEventListener(
 
 
     window.location.href =
-      "../login.html";
+      "login.html";
 
   }
 );
 
-
-/* =========================================
-   FILE SIZE
-========================================= */
-
-function formatFileSize(
-  bytes
-) {
-
-  if (
-    bytes === null ||
-    bytes === undefined ||
-    Number(bytes) <= 0
-  ) {
-
-    return "—";
-
-  }
-
-
-  const units = [
-    "B",
-    "KB",
-    "MB",
-    "GB",
-    "TB"
-  ];
-
-
-  let size =
-    Number(bytes);
-
-
-  let unit =
-    0;
-
-
-  while (
-    size >= 1024 &&
-    unit < units.length - 1
-  ) {
-
-    size =
-      size / 1024;
-
-    unit++;
-
-  }
-
-
-  return (
-    size.toFixed(
-      size >= 10 || unit === 0
-        ? 0
-        : 1
-    )
-    + " "
-    + units[unit]
-  );
-
-}
 
 
 /* =========================================
@@ -976,6 +1986,7 @@ function formatFileSize(
 function formatMoney(
   value
 ) {
+
 
   return (
     "₹" +
@@ -987,72 +1998,40 @@ function formatMoney(
 }
 
 
+
 /* =========================================
-   ERROR
+   PAGE ERROR
 ========================================= */
 
-function showError(
+function showPageError(
   message
 ) {
 
-  editForm.innerHTML =
-    `
-      <div class="section-label">
-        ERROR
-      </div>
 
-      <h2>
-        Unable to edit file
-      </h2>
+  pageDescription.textContent =
+    message;
 
-      <p class="lead">
-        ${escapeHtml(message)}
-      </p>
 
-      <a
-        class="primary"
-        href="dashboard.html"
-      >
-        Back to dashboard
-      </a>
-    `;
+  editForm.style.display =
+    "none";
+
+
+  deleteButton.style.display =
+    "none";
+
+
+  shareButton.style.display =
+    "none";
+
+
+  viewFileButton.style.display =
+    "none";
 
 }
 
-
-/* =========================================
-   ESCAPE HTML
-========================================= */
-
-function escapeHtml(
-  value
-) {
-
-  return String(value)
-    .replace(
-      /&/g,
-      "&amp;"
-    )
-    .replace(
-      /</g,
-      "&lt;"
-    )
-    .replace(
-      />/g,
-      "&gt;"
-    )
-    .replace(
-      /"/g,
-      "&quot;"
-    )
-    .replace(
-      /'/g,
-      "&#039;"
-    );
-
-}
 
 </script>
+
 
 </body>
 
