@@ -17,129 +17,10 @@
     href="../assets/css/pro.css"
   >
 
-  <style>
-
-    .file-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .file-actions button,
-    .file-actions a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 9px 14px;
-      border-radius: 8px;
-      border: 1px solid #292d37;
-      background: #151820;
-      color: #fff;
-      cursor: pointer;
-      font: inherit;
-      font-size: 13px;
-      text-decoration: none;
-    }
-
-    .file-actions .edit-btn {
-      background: #7c5cff;
-      border-color: #7c5cff;
-    }
-
-    .file-actions .delete-btn {
-      background: #32151a;
-      border-color: #7d303b;
-      color: #ff9ca6;
-    }
-
-    .file-actions button:hover,
-    .file-actions a:hover {
-      opacity: .85;
-    }
-
-    .edit-panel {
-      display: none;
-      margin-top: 18px;
-      padding: 20px;
-      background: #0c0e13;
-      border: 1px solid #292d37;
-      border-radius: 12px;
-    }
-
-    .edit-panel.open {
-      display: block;
-    }
-
-    .edit-panel label {
-      display: block;
-      margin: 14px 0;
-      color: #c9ccd2;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .edit-panel input,
-    .edit-panel textarea,
-    .edit-panel select {
-      width: 100%;
-      margin-top: 7px;
-      background: #101218;
-      border: 1px solid #292d37;
-      color: #fff;
-      border-radius: 8px;
-      padding: 11px;
-      font: inherit;
-    }
-
-    .edit-panel textarea {
-      resize: vertical;
-    }
-
-    .edit-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
-
-    .edit-actions button {
-      padding: 9px 14px;
-      border-radius: 8px;
-      border: 0;
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .save-edit {
-      background: #7c5cff;
-      color: #fff;
-    }
-
-    .cancel-edit {
-      background: #20232b;
-      color: #fff;
-    }
-
-    .share-message {
-      color: #8f7aff;
-      font-size: 13px;
-      margin-top: 10px;
-    }
-
-    .file-divider {
-      border: 0;
-      border-top: 1px solid rgba(255,255,255,.08);
-      margin: 22px 0 0;
-    }
-
-  </style>
-
 </head>
 
 
 <body>
-
 
 <header class="site-header">
 
@@ -178,9 +59,7 @@
 </header>
 
 
-
 <main class="legal-page">
-
 
   <div class="section-label">
     CREATOR DASHBOARD
@@ -200,13 +79,11 @@
   </p>
 
 
-
-  <!-- ================================
+  <!-- =====================================
        STATISTICS
-  ================================= -->
+  ====================================== -->
 
   <div class="rule-grid">
-
 
     <div>
 
@@ -246,27 +123,47 @@
 
     </div>
 
-
   </div>
 
 
-
-  <!-- ================================
+  <!-- =====================================
        FILES
-  ================================= -->
+  ====================================== -->
 
   <div
     class="table-card"
     style="margin-top:30px;"
   >
 
+    <div
+      style="
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:15px;
+        flex-wrap:wrap;
+      "
+    >
 
-    <h2>
-      Your files
-    </h2>
+      <h2>
+        Your files
+      </h2>
 
 
-    <div id="filesContainer">
+      <a
+        class="primary"
+        href="../upload.html"
+      >
+        + Upload file
+      </a>
+
+    </div>
+
+
+    <div
+      id="filesContainer"
+      style="margin-top:20px;"
+    >
 
       <p class="lead">
         Loading your files...
@@ -274,38 +171,22 @@
 
     </div>
 
-
-    <div style="margin-top:25px;">
-
-      <a
-        class="primary"
-        href="../upload.html"
-      >
-        Upload file
-      </a>
-
-    </div>
-
-
   </div>
 
 
 </main>
 
 
-
-<!-- ================================
+<!-- =====================================
      SUPABASE
-================================= -->
+====================================== -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="../assets/js/supabase-config.js"></script>
 
 
-
 <script>
-
 
 /* =========================================
    ELEMENTS
@@ -330,7 +211,6 @@ const signOut =
   document.getElementById("signOut");
 
 
-
 /* =========================================
    CURRENT USER
 ========================================= */
@@ -338,13 +218,11 @@ const signOut =
 let currentUser = null;
 
 
-
 /* =========================================
-   START
+   START DASHBOARD
 ========================================= */
 
 loadDashboard();
-
 
 
 /* =========================================
@@ -354,7 +232,6 @@ loadDashboard();
 async function loadDashboard() {
 
   try {
-
 
     /*
      * Check logged-in user.
@@ -382,13 +259,13 @@ async function loadDashboard() {
     }
 
 
-    currentUser = user;
+    currentUser =
+      user;
 
 
     creatorEmail.textContent =
       user.email ||
       "Creator";
-
 
 
     /*
@@ -404,7 +281,7 @@ async function loadDashboard() {
         .from("files")
 
         .select(
-          "id,file_name,file_size,description,category,ad_level,downloads,earnings,status,storage_path,created_at"
+          "id,file_name,file_size,category,ad_level,downloads,earnings,status,created_at,storage_path"
         )
 
         .eq(
@@ -438,7 +315,6 @@ async function loadDashboard() {
       files || [];
 
 
-
     /* =====================================
        CALCULATE TOTALS
     ===================================== */
@@ -456,6 +332,7 @@ async function loadDashboard() {
             file.downloads || 0
           );
 
+
         earnings +=
           Number(
             file.earnings || 0
@@ -463,7 +340,6 @@ async function loadDashboard() {
 
       }
     );
-
 
 
     /* =====================================
@@ -480,11 +356,15 @@ async function loadDashboard() {
       );
 
 
+    /*
+     * Until the payout system is built,
+     * available balance equals earnings.
+     */
+
     availableBalance.textContent =
       formatMoney(
         earnings
       );
-
 
 
     /* =====================================
@@ -519,13 +399,11 @@ async function loadDashboard() {
 }
 
 
-
 /* =========================================
    RENDER FILES
 ========================================= */
 
 function renderFiles(files) {
-
 
   if (!files.length) {
 
@@ -533,12 +411,16 @@ function renderFiles(files) {
       `
         <div class="empty">
 
-          No files yet.
+          <p>
+            No files yet.
+          </p>
 
-          <br><br>
-
-          Upload your first file
-          to start building your library.
+          <a
+            class="primary"
+            href="../upload.html"
+          >
+            Upload your first file
+          </a>
 
         </div>
       `;
@@ -548,335 +430,238 @@ function renderFiles(files) {
   }
 
 
-
   let html = "";
-
 
 
   files.forEach(
     function(file) {
 
-
       const fileUrl =
         new URL(
           "../file.html?id=" +
-          encodeURIComponent(file.id),
+          encodeURIComponent(
+            file.id
+          ),
           window.location.href
         ).href;
 
 
       html +=
         `
-
         <div
-          id="file-${escapeHtml(file.id)}"
+          class="panel"
+          id="file-${escapeHtml(
+            file.id
+          )}"
           style="
-            padding:20px 0;
+            margin-bottom:18px;
           "
         >
 
+          <!-- FILE HEADER -->
 
-          <h3>
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              align-items:flex-start;
+              gap:20px;
+              flex-wrap:wrap;
+            "
+          >
 
-            ${escapeHtml(
-              file.file_name ||
-              "Unnamed file"
-            )}
+            <div>
 
-          </h3>
-
-
-          <p>
-
-            ${escapeHtml(
-              file.category ||
-              "Other"
-            )}
-
-            ·
-
-            Ad Level
-            ${Number(
-              file.ad_level || 1
-            )}
-
-          </p>
+              <h3
+                style="
+                  margin:0 0 8px;
+                "
+              >
+                ${escapeHtml(
+                  file.file_name ||
+                  "Unnamed file"
+                )}
+              </h3>
 
 
-          <p>
+              <p
+                style="
+                  margin:0;
+                  color:#9298a4;
+                "
+              >
 
-            <strong>
+                ${escapeHtml(
+                  file.category ||
+                  "Other"
+                )}
 
-              ${Number(
-                file.downloads || 0
-              ).toLocaleString()}
+                ·
 
-            </strong>
+                Ad Level ${Number(
+                  file.ad_level || 1
+                )}
 
-            downloads
+              </p>
 
-            &nbsp; · &nbsp;
-
-            <strong>
-
-              ${formatMoney(
-                Number(
-                  file.earnings || 0
-                )
-              )}
-
-            </strong>
-
-            earnings
-
-          </p>
+            </div>
 
 
-          <p>
+            <!-- STATUS -->
 
-            Status:
-
-            <strong>
-
+            <span
+              style="
+                padding:7px 10px;
+                border:1px solid #292d37;
+                border-radius:8px;
+                color:#a9aeb8;
+                font-size:12px;
+              "
+            >
               ${escapeHtml(
                 file.status ||
                 "unknown"
               )}
+            </span>
 
-            </strong>
+          </div>
 
-          </p>
 
+          <!-- FILE STATS -->
+
+          <div
+            class="file-meta"
+            style="
+              margin-top:18px;
+            "
+          >
+
+            <span>
+              Downloads:
+              <strong>
+                ${Number(
+                  file.downloads || 0
+                ).toLocaleString()}
+              </strong>
+            </span>
+
+
+            <span>
+              Earnings:
+              <strong>
+                ${formatMoney(
+                  file.earnings
+                )}
+              </strong>
+            </span>
+
+
+            <span>
+              Size:
+              <strong>
+                ${formatFileSize(
+                  file.file_size
+                )}
+              </strong>
+            </span>
+
+          </div>
 
 
           <!-- ACTIONS -->
 
-          <div class="file-actions">
+          <div
+            style="
+              display:flex;
+              gap:10px;
+              flex-wrap:wrap;
+              margin-top:20px;
+            "
+          >
 
+            <!-- VIEW -->
 
             <a
+              class="btn small"
               href="../file.html?id=${encodeURIComponent(
                 file.id
               )}"
-              target="_blank"
             >
               View
             </a>
 
 
+            <!-- SHARE -->
+
             <button
               type="button"
+              class="btn small ghost"
               onclick="shareFile(
-                ${JSON.stringify(file.id)}
+                '${escapeJs(fileUrl)}',
+                this
               )"
             >
               Share
             </button>
 
 
-            <button
-              type="button"
-              class="edit-btn"
-              onclick="toggleEdit(
-                ${JSON.stringify(file.id)}
-              )"
+            <!-- EDIT -->
+
+            <a
+              class="btn small ghost"
+              href="edit-file.html?id=${encodeURIComponent(
+                file.id
+              )}"
             >
               Edit
-            </button>
+            </a>
 
+
+            <!-- DELETE -->
 
             <button
               type="button"
-              class="delete-btn"
+              class="btn small ghost"
               onclick="deleteFile(
-                ${JSON.stringify(file.id)}
+                '${escapeJs(file.id)}',
+                '${escapeJs(file.storage_path || "")}',
+                this
               )"
             >
               Delete
             </button>
 
-
           </div>
 
 
-          <div
-            class="share-message"
-            id="share-${escapeHtml(file.id)}"
-          ></div>
-
-
-
-          <!-- EDIT PANEL -->
+          <!-- SHARE URL -->
 
           <div
-            class="edit-panel"
-            id="edit-${escapeHtml(file.id)}"
+            style="
+              margin-top:15px;
+            "
           >
 
-
-            <h3>
-              Edit file
-            </h3>
-
-
-            <label>
-
-              File name
-
-              <input
-                type="text"
-                id="name-${escapeHtml(file.id)}"
-                value="${escapeAttribute(
-                  file.file_name || ""
-                )}"
-              >
-
-            </label>
-
-
-            <label>
-
-              Description
-
-              <textarea
-                id="description-${escapeHtml(file.id)}"
-                rows="4"
-                maxlength="1000"
-              >${escapeHtml(
-                file.description || ""
-              )}</textarea>
-
-            </label>
-
-
-            <label>
-
-              Category
-
-              <select
-                id="category-${escapeHtml(file.id)}"
-              >
-
-                <option
-                  value="Presets"
-                  ${file.category === "Presets" ? "selected" : ""}
-                >
-                  Presets
-                </option>
-
-                <option
-                  value="Templates"
-                  ${file.category === "Templates" ? "selected" : ""}
-                >
-                  Templates
-                </option>
-
-                <option
-                  value="Wallpapers"
-                  ${file.category === "Wallpapers" ? "selected" : ""}
-                >
-                  Wallpapers
-                </option>
-
-                <option
-                  value="Resources"
-                  ${file.category === "Resources" ? "selected" : ""}
-                >
-                  Resources
-                </option>
-
-                <option
-                  value="Other"
-                  ${file.category === "Other" ? "selected" : ""}
-                >
-                  Other
-                </option>
-
-              </select>
-
-            </label>
-
-
-            <label>
-
-              Ad level
-
-              <select
-                id="adlevel-${escapeHtml(file.id)}"
-              >
-
-                <option
-                  value="1"
-                  ${Number(file.ad_level) === 1 ? "selected" : ""}
-                >
-                  1 — Low
-                </option>
-
-                <option
-                  value="2"
-                  ${Number(file.ad_level) === 2 ? "selected" : ""}
-                >
-                  2 — Medium
-                </option>
-
-                <option
-                  value="3"
-                  ${Number(file.ad_level) === 3 ? "selected" : ""}
-                >
-                  3 — High
-                </option>
-
-                <option
-                  value="4"
-                  ${Number(file.ad_level) === 4 ? "selected" : ""}
-                >
-                  4 — Ultra
-                </option>
-
-              </select>
-
-            </label>
-
-
-            <div class="edit-actions">
-
-              <button
-                type="button"
-                class="save-edit"
-                onclick="saveEdit(
-                  ${JSON.stringify(file.id)}
-                )"
-              >
-                Save changes
-              </button>
-
-
-              <button
-                type="button"
-                class="cancel-edit"
-                onclick="toggleEdit(
-                  ${JSON.stringify(file.id)}
-                )"
-              >
-                Cancel
-              </button>
-
-            </div>
-
-
-            <p
-              id="edit-message-${escapeHtml(file.id)}"
-            ></p>
-
+            <input
+              type="text"
+              readonly
+              value="${escapeHtml(
+                fileUrl
+              )}"
+              onclick="this.select()"
+              style="
+                width:100%;
+                background:#0e1015;
+                border:1px solid #292d37;
+                color:#a9aeb8;
+                border-radius:8px;
+                padding:11px;
+              "
+            >
 
           </div>
 
-
-          <hr class="file-divider">
-
-
         </div>
-
         `;
 
     }
@@ -889,80 +674,84 @@ function renderFiles(files) {
 }
 
 
-
 /* =========================================
    SHARE FILE
 ========================================= */
 
-async function shareFile(fileId) {
+async function shareFile(
+  fileUrl,
+  button
+) {
 
-
-  const fileUrl =
-    new URL(
-      "../file.html?id=" +
-      encodeURIComponent(fileId),
-      window.location.href
-    ).href;
-
-
-  const message =
-    document.getElementById(
-      "share-" + fileId
-    );
+  const originalText =
+    button.textContent;
 
 
   try {
 
+    /*
+     * Use native share if available.
+     */
 
     if (
-      navigator.clipboard &&
-      window.isSecureContext
+      navigator.share
     ) {
 
-      await navigator.clipboard.writeText(
-        fileUrl
+      await navigator.share({
+
+        title:
+          "KaroPays File",
+
+        text:
+          "Download this file from KaroPays.",
+
+        url:
+          fileUrl
+
+      });
+
+
+      button.textContent =
+        "Shared";
+
+
+      setTimeout(
+        function() {
+
+          button.textContent =
+            originalText;
+
+        },
+        1500
       );
 
-    } else {
 
-      /*
-       * Fallback for browsers where
-       * Clipboard API is unavailable.
-       */
-
-      const input =
-        document.createElement("input");
-
-      input.value =
-        fileUrl;
-
-      document.body.appendChild(
-        input
-      );
-
-      input.select();
-
-      document.execCommand(
-        "copy"
-      );
-
-      input.remove();
+      return;
 
     }
 
 
-    message.textContent =
-      "✓ File link copied!";
+    /*
+     * Fallback to clipboard.
+     */
+
+    await navigator.clipboard.writeText(
+      fileUrl
+    );
+
+
+    button.textContent =
+      "Link Copied";
 
 
     setTimeout(
       function() {
 
-        message.textContent =
-          "";
+        button.textContent =
+          originalText;
 
       },
-      2500
+      1500
     );
 
 
@@ -975,242 +764,93 @@ async function shareFile(fileId) {
 
 
     /*
-     * If clipboard fails, show
-     * the link so the creator
-     * can copy it manually.
+     * Some browsers block
+     * navigator.clipboard.
+     *
+     * Try the older fallback.
      */
 
-    message.textContent =
-      fileUrl;
+    try {
 
-  }
-
-}
-
-
-
-/* =========================================
-   TOGGLE EDIT
-========================================= */
-
-function toggleEdit(fileId) {
-
-
-  const panel =
-    document.getElementById(
-      "edit-" + fileId
-    );
-
-
-  if (!panel) return;
-
-
-  panel.classList.toggle(
-    "open"
-  );
-
-}
-
-
-
-/* =========================================
-   SAVE EDIT
-========================================= */
-
-async function saveEdit(fileId) {
-
-
-  if (!currentUser) {
-
-    alert(
-      "You are not logged in."
-    );
-
-    return;
-
-  }
-
-
-  const nameInput =
-    document.getElementById(
-      "name-" + fileId
-    );
-
-
-  const descriptionInput =
-    document.getElementById(
-      "description-" + fileId
-    );
-
-
-  const categoryInput =
-    document.getElementById(
-      "category-" + fileId
-    );
-
-
-  const adLevelInput =
-    document.getElementById(
-      "adlevel-" + fileId
-    );
-
-
-  const message =
-    document.getElementById(
-      "edit-message-" + fileId
-    );
-
-
-  const fileName =
-    nameInput.value.trim();
-
-
-  const description =
-    descriptionInput.value.trim();
-
-
-  const category =
-    categoryInput.value;
-
-
-  const adLevel =
-    Number(
-      adLevelInput.value
-    );
-
-
-  if (!fileName) {
-
-    message.textContent =
-      "File name is required.";
-
-    return;
-
-  }
-
-
-  message.textContent =
-    "Saving...";
-
-
-  try {
-
-
-    /*
-     * Update only this creator's
-     * own file.
-     */
-
-    const {
-      error
-    } =
-      await supabaseClient
-
-        .from("files")
-
-        .update({
-
-          file_name:
-            fileName,
-
-          description:
-            description,
-
-          category:
-            category,
-
-          ad_level:
-            adLevel
-
-        })
-
-        .eq(
-          "id",
-          fileId
-        )
-
-        .eq(
-          "creator_id",
-          currentUser.id
+      const temp =
+        document.createElement(
+          "textarea"
         );
 
 
-    if (error) {
+      temp.value =
+        fileUrl;
 
-      console.error(
-        "Edit error:",
-        error
+
+      document.body.appendChild(
+        temp
       );
 
-      throw new Error(
-        error.message ||
-        "Could not save changes."
+
+      temp.select();
+
+
+      document.execCommand(
+        "copy"
+      );
+
+
+      temp.remove();
+
+
+      button.textContent =
+        "Link Copied";
+
+
+      setTimeout(
+        function() {
+
+          button.textContent =
+            originalText;
+
+        },
+        1500
+      );
+
+
+    } catch (fallbackError) {
+
+      console.error(
+        "Clipboard fallback error:",
+        fallbackError
+      );
+
+
+      alert(
+        "Copy failed. File link:\n\n" +
+        fileUrl
       );
 
     }
 
-
-    message.textContent =
-      "✓ Changes saved.";
-
-
-    /*
-     * Reload dashboard so
-     * displayed data is fresh.
-     */
-
-    setTimeout(
-      function() {
-
-        loadDashboard();
-
-      },
-      700
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      error
-    );
-
-
-    message.textContent =
-      error.message ||
-      "Could not save changes.";
-
   }
 
 }
-
 
 
 /* =========================================
    DELETE FILE
 ========================================= */
 
-async function deleteFile(fileId) {
-
-
-  if (!currentUser) {
-
-    alert(
-      "You are not logged in."
-    );
-
-    return;
-
-  }
-
+async function deleteFile(
+  fileId,
+  storagePath,
+  button
+) {
 
   /*
-   * Confirmation.
+   * Safety confirmation.
    */
 
   const confirmed =
     confirm(
-      "Are you sure you want to delete this file?\n\nThe file will be removed from KaroPays and its stored file will also be deleted.\n\nThis cannot be undone."
+      "Are you sure you want to delete this file?\n\n" +
+      "This will permanently remove the file from KaroPays and cannot be undone."
     );
 
 
@@ -1221,95 +861,79 @@ async function deleteFile(fileId) {
   }
 
 
+  /*
+   * Make sure user is still logged in.
+   */
+
+  const {
+    data: {
+      user
+    },
+    error: userError
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if (
+    userError ||
+    !user
+  ) {
+
+    alert(
+      "Your session has expired. Please sign in again."
+    );
+
+
+    window.location.href =
+      "../login.html";
+
+
+    return;
+
+  }
+
+
+  /*
+   * Make sure this is
+   * the current creator.
+   */
+
+  if (
+    user.id !== currentUser?.id
+  ) {
+
+    alert(
+      "Permission denied."
+    );
+
+
+    return;
+
+  }
+
+
+  const originalText =
+    button.textContent;
+
+
+  button.disabled =
+    true;
+
+
+  button.textContent =
+    "Deleting...";
+
+
   try {
 
-
     /*
-     * Get the file first.
+     * STEP 1
      *
-     * This lets us obtain the
-     * storage_path.
-     */
-
-    const {
-      data: file,
-      error: fileError
-    } =
-      await supabaseClient
-
-        .from("files")
-
-        .select(
-          "id,storage_path"
-        )
-
-        .eq(
-          "id",
-          fileId
-        )
-
-        .eq(
-          "creator_id",
-          currentUser.id
-        )
-
-        .single();
-
-
-    if (fileError) {
-
-      console.error(
-        "Get file before delete:",
-        fileError
-      );
-
-      throw new Error(
-        "Could not find the file."
-      );
-
-    }
-
-
-    /*
-     * Remove Storage file first.
-     */
-
-    if (
-      file.storage_path
-    ) {
-
-
-      const {
-        error: storageError
-      } =
-        await supabaseClient.storage
-
-          .from("files")
-
-          .remove([
-            file.storage_path
-          ]);
-
-
-      if (storageError) {
-
-        console.error(
-          "Storage delete error:",
-          storageError
-        );
-
-        throw new Error(
-          "Could not delete the stored file: " +
-          storageError.message
-        );
-
-      }
-
-    }
-
-
-    /*
-     * Remove database record.
+     * Delete database record.
+     *
+     * We use both ID and creator_id
+     * so another creator's file
+     * cannot be deleted.
      */
 
     const {
@@ -1328,7 +952,7 @@ async function deleteFile(fileId) {
 
         .eq(
           "creator_id",
-          currentUser.id
+          user.id
         );
 
 
@@ -1339,8 +963,9 @@ async function deleteFile(fileId) {
         databaseError
       );
 
+
       throw new Error(
-        "The Storage file was deleted, but the database record could not be removed: " +
+        "Could not delete the file record: " +
         databaseError.message
       );
 
@@ -1348,7 +973,75 @@ async function deleteFile(fileId) {
 
 
     /*
-     * Refresh dashboard.
+     * STEP 2
+     *
+     * Delete actual Storage file.
+     */
+
+    if (
+      storagePath
+    ) {
+
+      const {
+        error: storageError
+      } =
+        await supabaseClient.storage
+
+          .from("files")
+
+          .remove([
+            storagePath
+          ]);
+
+
+      if (storageError) {
+
+        /*
+         * Database record has already
+         * been deleted.
+         *
+         * Don't pretend the Storage
+         * deletion succeeded.
+         */
+
+        console.error(
+          "Storage delete error:",
+          storageError
+        );
+
+
+        alert(
+          "The database record was deleted, but the stored file could not be removed.\n\n" +
+          "Storage error: " +
+          storageError.message
+        );
+
+
+      }
+
+    }
+
+
+    /*
+     * Remove file card from page.
+     */
+
+    const card =
+      document.getElementById(
+        "file-" +
+        fileId
+      );
+
+
+    if (card) {
+
+      card.remove();
+
+    }
+
+
+    /*
+     * Recalculate dashboard.
      */
 
     await loadDashboard();
@@ -1364,21 +1057,29 @@ async function deleteFile(fileId) {
 
     alert(
       error.message ||
-      "Could not delete the file."
+      "Unable to delete file."
     );
+
+
+    button.disabled =
+      false;
+
+
+    button.textContent =
+      originalText;
 
   }
 
 }
 
 
-
 /* =========================================
    MONEY FORMAT
 ========================================= */
 
-function formatMoney(value) {
-
+function formatMoney(
+  value
+) {
 
   return (
     "₹" +
@@ -1390,38 +1091,93 @@ function formatMoney(value) {
 }
 
 
+/* =========================================
+   FILE SIZE
+========================================= */
+
+function formatFileSize(
+  bytes
+) {
+
+  if (
+    bytes === null ||
+    bytes === undefined ||
+    Number(bytes) <= 0
+  ) {
+
+    return "—";
+
+  }
+
+
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB",
+    "TB"
+  ];
+
+
+  let size =
+    Number(bytes);
+
+
+  let unit =
+    0;
+
+
+  while (
+    size >= 1024 &&
+    unit < units.length - 1
+  ) {
+
+    size =
+      size / 1024;
+
+    unit++;
+
+  }
+
+
+  return (
+    size.toFixed(
+      size >= 10 || unit === 0
+        ? 0
+        : 1
+    )
+    + " "
+    + units[unit]
+  );
+
+}
+
 
 /* =========================================
    ESCAPE HTML
 ========================================= */
 
-function escapeHtml(value) {
+function escapeHtml(
+  value
+) {
 
-
-  return String(
-    value
-  )
-
+  return String(value)
     .replace(
       /&/g,
       "&amp;"
     )
-
     .replace(
       /</g,
       "&lt;"
     )
-
     .replace(
       />/g,
       "&gt;"
     )
-
     .replace(
       /"/g,
       "&quot;"
     )
-
     .replace(
       /'/g,
       "&#039;"
@@ -1430,17 +1186,37 @@ function escapeHtml(value) {
 }
 
 
-
 /* =========================================
-   ESCAPE ATTRIBUTE
+   ESCAPE JAVASCRIPT
 ========================================= */
 
-function escapeAttribute(value) {
+function escapeJs(
+  value
+) {
 
-  return escapeHtml(value);
+  return String(value)
+    .replace(
+      /\\/g,
+      "\\\\"
+    )
+    .replace(
+      /'/g,
+      "\\'"
+    )
+    .replace(
+      /"/g,
+      '\\"'
+    )
+    .replace(
+      /\r/g,
+      "\\r"
+    )
+    .replace(
+      /\n/g,
+      "\\n"
+    );
 
 }
-
 
 
 /* =========================================
@@ -1450,7 +1226,6 @@ function escapeAttribute(value) {
 signOut.addEventListener(
   "click",
   async function(event) {
-
 
     event.preventDefault();
 
@@ -1464,9 +1239,7 @@ signOut.addEventListener(
   }
 );
 
-
 </script>
-
 
 </body>
 
