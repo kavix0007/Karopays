@@ -1,62 +1,279 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1"
-  >
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 
   <title>Browse Files — KaroPays</title>
 
-  <link
-    rel="stylesheet"
-    href="assets/css/pro.css"
-  >
+  <link rel="stylesheet" href="assets/css/pro.css">
+
+  <style>
+    /* =========================================
+       KAROPAYS PUBLIC FILE LIBRARY
+    ========================================= */
+
+    .library-toolbar{
+      display:grid;
+      grid-template-columns:1fr 190px 190px;
+      gap:12px;
+      margin:30px 0 24px;
+    }
+
+    .library-search,
+    .library-select{
+      width:100%;
+      padding:13px 14px;
+      border:1px solid #d6deea;
+      border-radius:9px;
+      background:#fff;
+      color:#172033;
+      font:inherit;
+      outline:none;
+    }
+
+    .library-search:focus,
+    .library-select:focus{
+      border-color:#9b87ff;
+      box-shadow:0 0 0 3px rgba(124,92,255,.10);
+    }
+
+    .library-status{
+      min-height:22px;
+      margin:5px 0 15px;
+      color:#718096;
+      font-size:13px;
+    }
+
+    .library-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+
+    .file-card{
+      display:flex;
+      flex-direction:column;
+      min-width:0;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:15px;
+      padding:21px;
+      box-shadow:0 9px 28px rgba(76,29,149,.045);
+      transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+    }
+
+    .file-card:hover{
+      transform:translateY(-3px);
+      border-color:#c8bdfd;
+      box-shadow:0 16px 35px rgba(76,29,149,.09);
+    }
+
+    .file-card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .file-category{
+      display:inline-flex;
+      align-items:center;
+      max-width:70%;
+      padding:5px 9px;
+      border-radius:999px;
+      background:#eeeaff;
+      color:#6847e8;
+      font-size:10px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .file-number{
+      color:#9aa5b5;
+      font-size:11px;
+      font-weight:700;
+    }
+
+    .file-card h3{
+      margin:0 0 8px;
+      font-size:17px;
+      line-height:1.35;
+      overflow-wrap:anywhere;
+    }
+
+    .file-description{
+      margin:0;
+      min-height:42px;
+      color:#68788f;
+      font-size:13px;
+      line-height:1.6;
+    }
+
+    .file-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:18px 0;
+    }
+
+    .file-meta span{
+      padding:5px 8px;
+      border-radius:7px;
+      background:#f6f7fb;
+      color:#68778d;
+      font-size:11px;
+      border:1px solid #edf0f5;
+    }
+
+    .file-card-footer{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:auto;
+      padding-top:16px;
+      border-top:1px solid #edf0f5;
+    }
+
+    .file-downloads{
+      color:#68778d;
+      font-size:12px;
+    }
+
+    .file-view{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:9px 13px;
+      border-radius:8px;
+      background:linear-gradient(135deg,#7c5cff,#6847e8);
+      color:#fff;
+      font-size:12px;
+      font-weight:800;
+      box-shadow:0 6px 15px rgba(124,92,255,.18);
+    }
+
+    .file-view:hover{
+      transform:translateY(-1px);
+    }
+
+    .library-empty{
+      padding:55px 25px;
+      text-align:center;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:15px;
+      color:#68788f;
+    }
+
+    .library-empty strong{
+      display:block;
+      color:#172033;
+      font-size:17px;
+      margin-bottom:7px;
+    }
+
+    .library-loading{
+      padding:45px;
+      text-align:center;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:15px;
+      color:#718096;
+    }
+
+    .pagination{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:7px;
+      margin-top:30px;
+      flex-wrap:wrap;
+    }
+
+    .page-btn{
+      min-width:38px;
+      height:38px;
+      padding:0 11px;
+      border:1px solid #d6deea;
+      border-radius:8px;
+      background:#fff;
+      color:#596a82;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .page-btn:hover{
+      border-color:#b8a8ff;
+      color:#6847e8;
+    }
+
+    .page-btn.active{
+      border-color:#7c5cff;
+      background:#7c5cff;
+      color:#fff;
+    }
+
+    .page-btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
+    @media(max-width:900px){
+      .library-grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .library-toolbar{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .library-toolbar .library-search{
+        grid-column:1/-1;
+      }
+    }
+
+    @media(max-width:600px){
+      .library-grid{
+        grid-template-columns:1fr;
+      }
+
+      .library-toolbar{
+        grid-template-columns:1fr;
+      }
+
+      .library-toolbar .library-search{
+        grid-column:auto;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <header class="site-header">
 
-  <a
-    class="logo"
-    href="index.html"
-  >
+  <a class="logo" href="index.html">
     <span class="logo-mark">K</span>
     KaroPays
   </a>
 
   <nav class="desktop-nav">
-
-    <a href="payout-rates.html">
-      Payout Rates
-    </a>
-
-    <a href="payment-proof.html">
-      Payment Proof
-    </a>
-
-    <a href="prize-winners.html">
-      Prize Winners
-    </a>
-
-    <a href="premium.html">
-      Premium
-    </a>
-
-    <a href="login.html">
-      Sign in
-    </a>
-
-    <a
-      class="nav-cta"
-      href="register.html"
-    >
-      Register
-    </a>
-
+    <a href="payout-rates.html">Payout Rates</a>
+    <a href="payment-proof.html">Payment Proof</a>
+    <a href="prize-winners.html">Prize Winners</a>
+    <a href="premium.html">Premium</a>
+    <a href="login.html">Sign in</a>
+    <a class="nav-cta" href="register.html">Register</a>
   </nav>
 
 </header>
@@ -64,91 +281,70 @@
 
 <main class="legal-page">
 
-  <div class="section-label">
-    LIBRARY
-  </div>
+  <div class="section-label">Library</div>
 
-  <h1>
-    Browse files
-  </h1>
+  <h1>Browse files</h1>
 
   <p class="lead">
     Discover resources shared by KaroPays creators.
   </p>
 
 
-  <!-- SEARCH + FILTER -->
+  <!-- =========================================
+       SEARCH / FILTER / SORT
+  ========================================== -->
 
-  <div
-    class="table-card"
-    style="margin-top:30px"
-  >
+  <div class="library-toolbar">
 
-    <div
-      style="
-        display:grid;
-        grid-template-columns:minmax(0,1fr) 220px;
-        gap:12px;
-      "
+    <input
+      id="searchInput"
+      class="library-search"
+      type="search"
+      placeholder="Search files..."
+      autocomplete="off"
     >
 
-      <input
-        id="search"
-        type="search"
-        placeholder="Search files..."
-        autocomplete="off"
-      >
+    <select id="categoryFilter" class="library-select">
+      <option value="">All categories</option>
+    </select>
 
-      <select id="category">
-
-        <option value="All">
-          All categories
-        </option>
-
-        <option value="Presets">
-          Presets
-        </option>
-
-        <option value="Templates">
-          Templates
-        </option>
-
-        <option value="Wallpapers">
-          Wallpapers
-        </option>
-
-        <option value="Resources">
-          Resources
-        </option>
-
-        <option value="Other">
-          Other
-        </option>
-
-      </select>
-
-    </div>
-
-
-    <p
-      id="browseMessage"
-      class="form-message"
-      style="margin-top:15px"
-    >
-      Loading files...
-    </p>
-
-
-    <div
-      id="filesGrid"
-      class="rule-grid"
-      style="margin-top:20px"
-    ></div>
+    <select id="sortSelect" class="library-select">
+      <option value="newest">Newest</option>
+      <option value="downloads">Most downloaded</option>
+      <option value="name">Name A–Z</option>
+    </select>
 
   </div>
 
+
+  <div id="libraryStatus" class="library-status">
+    Loading files...
+  </div>
+
+
+  <!-- =========================================
+       FILES
+  ========================================== -->
+
+  <div id="fileGrid" class="library-grid">
+
+    <div class="library-loading">
+      Loading KaroPays files...
+    </div>
+
+  </div>
+
+
+  <!-- =========================================
+       PAGINATION
+  ========================================== -->
+
+  <div id="pagination" class="pagination"></div>
+
 </main>
 
+
+<!-- SUPABASE -->
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -157,360 +353,634 @@
 
 <script>
 
-/* =========================================
-   ELEMENTS
-========================================= */
+  /* =========================================
+     KAROPAYS FILE LIBRARY
+  ========================================== */
 
-const searchInput =
-  document.getElementById("search");
+  const searchInput =
+    document.getElementById("searchInput");
 
-const categoryInput =
-  document.getElementById("category");
+  const categoryFilter =
+    document.getElementById("categoryFilter");
 
-const filesGrid =
-  document.getElementById("filesGrid");
+  const sortSelect =
+    document.getElementById("sortSelect");
 
-const browseMessage =
-  document.getElementById("browseMessage");
+  const fileGrid =
+    document.getElementById("fileGrid");
 
+  const pagination =
+    document.getElementById("pagination");
 
-/* =========================================
-   STATE
-========================================= */
-
-let allFiles = [];
-
-
-/* =========================================
-   LOAD FILES
-========================================= */
-
-loadFiles();
+  const libraryStatus =
+    document.getElementById("libraryStatus");
 
 
-async function loadFiles() {
+  const PAGE_SIZE = 9;
 
-  browseMessage.textContent =
-    "Loading files...";
+  let currentPage = 1;
+
+  let searchTimer = null;
 
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
+  /* =========================================
+     LOAD CATEGORIES
+  ========================================== */
 
+  async function loadCategories(){
+
+    const { data, error } = await supabaseClient
       .from("files")
+      .select("category")
+      .eq("status", "active");
 
-      .select(`
-        id,
-        file_name,
-        description,
-        category,
-        downloads,
-        earnings,
-        status,
-        created_at,
-        file_size
-      `)
+    if(error){
+      console.error("Category loading error:", error);
+      return;
+    }
 
-      .eq(
-        "status",
-        "active"
+    const categories = [
+      ...new Set(
+        (data || [])
+          .map(row => row.category)
+          .filter(Boolean)
+          .map(category => String(category).trim())
+          .filter(Boolean)
       )
-
-      .order(
-        "created_at",
-        {
-          ascending: false
-        }
-      );
-
-
-  if (error) {
-
-    console.error(
-      "Browse files error:",
-      error
+    ].sort((a,b) =>
+      a.localeCompare(b)
     );
 
 
-    browseMessage.textContent =
-      "Could not load files: " +
-      error.message;
+    categoryFilter.innerHTML =
+      '<option value="">All categories</option>';
 
-    return;
+
+    categories.forEach(category => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = category;
+      option.textContent = category;
+
+      categoryFilter.appendChild(option);
+
+    });
 
   }
 
 
-  allFiles =
-    data || [];
+  /* =========================================
+     ESCAPE HTML
+  ========================================== */
+
+  function escapeHtml(value){
+
+    return String(value ?? "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
+
+  }
 
 
-  renderFiles();
+  /* =========================================
+     FORMAT FILE SIZE
+  ========================================== */
 
-}
+  function formatBytes(bytes){
 
+    if(bytes === null || bytes === undefined){
+      return "Unknown size";
+    }
 
-/* =========================================
-   SEARCH / FILTER
-========================================= */
+    const number = Number(bytes);
 
-searchInput.addEventListener(
-  "input",
-  renderFiles
-);
+    if(!Number.isFinite(number)){
+      return "Unknown size";
+    }
 
+    if(number < 1024){
+      return number + " B";
+    }
 
-categoryInput.addEventListener(
-  "change",
-  renderFiles
-);
+    if(number < 1024 * 1024){
+      return (number / 1024).toFixed(1) + " KB";
+    }
 
+    if(number < 1024 * 1024 * 1024){
+      return (number / (1024 * 1024)).toFixed(1) + " MB";
+    }
 
-/* =========================================
-   RENDER
-========================================= */
+    return (number / (1024 * 1024 * 1024)).toFixed(2) + " GB";
 
-function renderFiles() {
-
-  const search =
-    searchInput.value
-      .trim()
-      .toLowerCase();
-
-
-  const category =
-    categoryInput.value;
+  }
 
 
-  const filtered =
-    allFiles.filter(
-      file => {
+  /* =========================================
+     LOAD FILES
+  ========================================== */
 
-        const name =
-          String(
-            file.file_name || ""
-          ).toLowerCase();
+  async function loadFiles(){
 
+    fileGrid.innerHTML = `
+      <div class="library-loading">
+        Loading KaroPays files...
+      </div>
+    `;
 
-        const description =
-          String(
-            file.description || ""
-          ).toLowerCase();
+    pagination.innerHTML = "";
 
-
-        const matchesSearch =
-          !search ||
-          name.includes(search) ||
-          description.includes(search);
+    libraryStatus.textContent =
+      "Loading files...";
 
 
-        const matchesCategory =
-          category === "All" ||
-          file.category === category;
+    const search =
+      searchInput.value.trim();
+
+    const category =
+      categoryFilter.value;
+
+    const sort =
+      sortSelect.value;
 
 
-        return (
-          matchesSearch &&
-          matchesCategory
+    let query = supabaseClient
+      .from("files")
+      .select(
+        "id,file_name,file_size,description,category,ad_level,downloads,status,created_at",
+        { count: "exact" }
+      )
+      .eq("status","active");
+
+
+    /* =========================================
+       SEARCH
+    ========================================== */
+
+    if(search){
+
+      /*
+       * Remove characters that could interfere
+       * with PostgREST OR syntax.
+       */
+
+      const safeSearch =
+        search
+          .replace(/[,%()]/g," ")
+          .replace(/\s+/g," ")
+          .trim()
+          .slice(0,80);
+
+
+      if(safeSearch){
+
+        query = query.or(
+          `file_name.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,category.ilike.%${safeSearch}%`
         );
 
       }
-    );
+
+    }
 
 
-  if (!filtered.length) {
+    /* =========================================
+       CATEGORY
+    ========================================== */
 
-    filesGrid.innerHTML = `
+    if(category){
 
-      <div class="empty">
+      query = query.eq(
+        "category",
+        category
+      );
 
-        No files found.
-
-      </div>
-
-    `;
-
-
-    browseMessage.textContent =
-      allFiles.length
-        ? "No files match your search."
-        : "No active files have been uploaded yet.";
+    }
 
 
-    return;
+    /* =========================================
+       SORT
+    ========================================== */
 
-  }
+    if(sort === "downloads"){
+
+      query = query
+        .order("downloads", {
+          ascending:false,
+          nullsFirst:false
+        })
+        .order("created_at", {
+          ascending:false
+        });
+
+    }else if(sort === "name"){
+
+      query = query
+        .order("file_name", {
+          ascending:true
+        });
+
+    }else{
+
+      query = query
+        .order("created_at", {
+          ascending:false
+        });
+
+    }
 
 
-  browseMessage.textContent =
-    `${filtered.length} file${filtered.length === 1 ? "" : "s"} found.`;
+    /* =========================================
+       PAGINATION
+    ========================================== */
+
+    const from =
+      (currentPage - 1) * PAGE_SIZE;
+
+    const to =
+      from + PAGE_SIZE - 1;
 
 
-  filesGrid.innerHTML =
+    query = query.range(from,to);
 
-    filtered.map(
-      file => `
 
-        <article
-          class="feature"
-          style="
-            display:flex;
-            flex-direction:column;
-          "
-        >
+    const {
+      data,
+      error,
+      count
+    } = await query;
 
-          <span class="eyebrow">
-            ${esc(
-              file.category ||
-              "Other"
-            )}
+
+    if(error){
+
+      console.error(
+        "File loading error:",
+        error
+      );
+
+      fileGrid.innerHTML = `
+        <div class="library-empty">
+          <strong>Unable to load files</strong>
+          <span>
+            Please refresh the page and try again.
           </span>
+        </div>
+      `;
+
+      libraryStatus.textContent =
+        "There was a problem loading the library.";
+
+      return;
+
+    }
 
 
-          <h3>
-            ${esc(
-              file.file_name ||
-              "Unnamed file"
-            )}
-          </h3>
+    renderFiles(data || [], count || 0);
 
-
-          <p>
-            ${esc(
-              file.description ||
-              "No description provided."
-            )}
-          </p>
-
-
-          <div
-            class="mini-row"
-            style="margin-top:auto"
-          >
-
-            <span>
-              Downloads
-            </span>
-
-            <b>
-              ${Number(
-                file.downloads || 0
-              ).toLocaleString()}
-            </b>
-
-          </div>
-
-
-          <div
-            class="mini-row"
-          >
-
-            <span>
-              File size
-            </span>
-
-            <b>
-              ${formatBytes(
-                file.file_size
-              )}
-            </b>
-
-          </div>
-
-
-          <a
-            class="btn small"
-            href="file.html?id=${encodeURIComponent(file.id)}"
-            style="margin-top:15px"
-          >
-            View file
-          </a>
-
-        </article>
-
-      `
-    ).join("");
-
-}
-
-
-/* =========================================
-   FILE SIZE
-========================================= */
-
-function formatBytes(
-  value
-) {
-
-  const bytes =
-    Number(value || 0);
-
-
-  if (!bytes) {
-    return "0 B";
   }
 
 
-  const units = [
-    "B",
-    "KB",
-    "MB",
-    "GB",
-    "TB"
-  ];
+  /* =========================================
+     RENDER FILES
+  ========================================== */
+
+  function renderFiles(files,count){
+
+    if(files.length === 0){
+
+      fileGrid.innerHTML = `
+        <div class="library-empty" style="grid-column:1/-1">
+          <strong>No files found</strong>
+          <span>
+            Try another search or category.
+          </span>
+        </div>
+      `;
+
+      libraryStatus.textContent =
+        "0 files found.";
+
+      pagination.innerHTML = "";
+
+      return;
+
+    }
 
 
-  const index =
-    Math.floor(
-      Math.log(bytes) /
-      Math.log(1024)
-    );
+    const totalPages =
+      Math.ceil(count / PAGE_SIZE);
 
 
-  return (
-    bytes /
-    Math.pow(
-      1024,
-      index
-    )
-  ).toFixed(
-    index === 0
-      ? 0
-      : 2
-  ) +
-  " " +
-  units[index];
+    const first =
+      ((currentPage - 1) * PAGE_SIZE) + 1;
 
-}
+    const last =
+      Math.min(
+        currentPage * PAGE_SIZE,
+        count
+      );
 
 
-/* =========================================
-   HTML ESCAPE
-========================================= */
+    libraryStatus.textContent =
+      `Showing ${first}–${last} of ${count} file${count === 1 ? "" : "s"}`;
 
-function esc(
-  value
-) {
 
-  return String(value)
+    fileGrid.innerHTML =
+      files.map((file,index) => {
 
-    .replace(
-      /[&<>'"]/g,
-      character => ({
+        const name =
+          file.file_name || "Unnamed file";
 
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        "'": "&#039;",
-        '"': "&quot;"
+        const description =
+          file.description ||
+          "No description provided.";
 
-      }[character])
-    );
+        const category =
+          file.category ||
+          "Other";
 
-}
+        const downloads =
+          Number(file.downloads || 0);
+
+
+        return `
+          <article class="file-card">
+
+            <div class="file-card-top">
+
+              <span class="file-category">
+                ${escapeHtml(category)}
+              </span>
+
+              <span class="file-number">
+                #${first + index}
+              </span>
+
+            </div>
+
+
+            <h3>
+              ${escapeHtml(name)}
+            </h3>
+
+
+            <p class="file-description">
+              ${escapeHtml(description)}
+            </p>
+
+
+            <div class="file-meta">
+
+              <span>
+                ${escapeHtml(category)}
+              </span>
+
+              <span>
+                ${formatBytes(file.file_size)}
+              </span>
+
+              <span>
+                Ad Level ${Number(file.ad_level || 1)}
+              </span>
+
+            </div>
+
+
+            <div class="file-card-footer">
+
+              <span class="file-downloads">
+                ${downloads.toLocaleString()} download${downloads === 1 ? "" : "s"}
+              </span>
+
+              <a
+                class="file-view"
+                href="file.html?id=${encodeURIComponent(file.id)}"
+              >
+                View file
+              </a>
+
+            </div>
+
+          </article>
+        `;
+
+      }).join("");
+
+
+    renderPagination(totalPages);
+
+  }
+
+
+  /* =========================================
+     PAGINATION
+  ========================================== */
+
+  function renderPagination(totalPages){
+
+    pagination.innerHTML = "";
+
+
+    if(totalPages <= 1){
+      return;
+    }
+
+
+    const previous =
+      document.createElement("button");
+
+    previous.className =
+      "page-btn";
+
+    previous.textContent =
+      "‹";
+
+    previous.disabled =
+      currentPage === 1;
+
+    previous.onclick = () => {
+
+      if(currentPage > 1){
+
+        currentPage--;
+
+        loadFiles();
+
+        window.scrollTo({
+          top:0,
+          behavior:"smooth"
+        });
+
+      }
+
+    };
+
+
+    pagination.appendChild(previous);
+
+
+    /*
+     * Show a compact number of pages.
+     */
+
+    let start =
+      Math.max(1,currentPage - 2);
+
+    let end =
+      Math.min(totalPages,currentPage + 2);
+
+
+    if(currentPage <= 3){
+      end = Math.min(5,totalPages);
+    }
+
+    if(currentPage >= totalPages - 2){
+      start = Math.max(1,totalPages - 4);
+    }
+
+
+    for(let page=start; page<=end; page++){
+
+      const button =
+        document.createElement("button");
+
+      button.className =
+        "page-btn" +
+        (page === currentPage ? " active" : "");
+
+      button.textContent =
+        page;
+
+
+      button.onclick = () => {
+
+        if(page === currentPage){
+          return;
+        }
+
+        currentPage =
+          page;
+
+        loadFiles();
+
+        window.scrollTo({
+          top:0,
+          behavior:"smooth"
+        });
+
+      };
+
+
+      pagination.appendChild(button);
+
+    }
+
+
+    const next =
+      document.createElement("button");
+
+    next.className =
+      "page-btn";
+
+    next.textContent =
+      "›";
+
+    next.disabled =
+      currentPage === totalPages;
+
+
+    next.onclick = () => {
+
+      if(currentPage < totalPages){
+
+        currentPage++;
+
+        loadFiles();
+
+        window.scrollTo({
+          top:0,
+          behavior:"smooth"
+        });
+
+      }
+
+    };
+
+
+    pagination.appendChild(next);
+
+  }
+
+
+  /* =========================================
+     SEARCH
+  ========================================== */
+
+  searchInput.addEventListener(
+    "input",
+    () => {
+
+      clearTimeout(searchTimer);
+
+      searchTimer =
+        setTimeout(() => {
+
+          currentPage = 1;
+
+          loadFiles();
+
+        },300);
+
+    }
+  );
+
+
+  /* =========================================
+     CATEGORY
+  ========================================== */
+
+  categoryFilter.addEventListener(
+    "change",
+    () => {
+
+      currentPage = 1;
+
+      loadFiles();
+
+    }
+  );
+
+
+  /* =========================================
+     SORT
+  ========================================== */
+
+  sortSelect.addEventListener(
+    "change",
+    () => {
+
+      currentPage = 1;
+
+      loadFiles();
+
+    }
+  );
+
+
+  /* =========================================
+     START
+  ========================================== */
+
+  (async function(){
+
+    await loadCategories();
+
+    await loadFiles();
+
+  })();
 
 </script>
 
