@@ -7,255 +7,6 @@
   <title>Browse Files — KaroPays</title>
 
   <link rel="stylesheet" href="assets/css/pro.css">
-
-  <style>
-    /* =========================================
-       KAROPAYS PUBLIC FILE LIBRARY
-    ========================================= */
-
-    .library-toolbar{
-      display:grid;
-      grid-template-columns:1fr 190px 190px;
-      gap:12px;
-      margin:30px 0 24px;
-    }
-
-    .library-search,
-    .library-select{
-      width:100%;
-      padding:13px 14px;
-      border:1px solid #d6deea;
-      border-radius:9px;
-      background:#fff;
-      color:#172033;
-      font:inherit;
-      outline:none;
-    }
-
-    .library-search:focus,
-    .library-select:focus{
-      border-color:#9b87ff;
-      box-shadow:0 0 0 3px rgba(124,92,255,.10);
-    }
-
-    .library-status{
-      min-height:22px;
-      margin:5px 0 15px;
-      color:#718096;
-      font-size:13px;
-    }
-
-    .library-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:16px;
-    }
-
-    .file-card{
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:15px;
-      padding:21px;
-      box-shadow:0 9px 28px rgba(76,29,149,.045);
-      transition:
-        transform .18s ease,
-        box-shadow .18s ease,
-        border-color .18s ease;
-    }
-
-    .file-card:hover{
-      transform:translateY(-3px);
-      border-color:#c8bdfd;
-      box-shadow:0 16px 35px rgba(76,29,149,.09);
-    }
-
-    .file-card-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:16px;
-    }
-
-    .file-category{
-      display:inline-flex;
-      align-items:center;
-      max-width:70%;
-      padding:5px 9px;
-      border-radius:999px;
-      background:#eeeaff;
-      color:#6847e8;
-      font-size:10px;
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.4px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .file-number{
-      color:#9aa5b5;
-      font-size:11px;
-      font-weight:700;
-    }
-
-    .file-card h3{
-      margin:0 0 8px;
-      font-size:17px;
-      line-height:1.35;
-      overflow-wrap:anywhere;
-    }
-
-    .file-description{
-      margin:0;
-      min-height:42px;
-      color:#68788f;
-      font-size:13px;
-      line-height:1.6;
-    }
-
-    .file-meta{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin:18px 0;
-    }
-
-    .file-meta span{
-      padding:5px 8px;
-      border-radius:7px;
-      background:#f6f7fb;
-      color:#68778d;
-      font-size:11px;
-      border:1px solid #edf0f5;
-    }
-
-    .file-card-footer{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-top:auto;
-      padding-top:16px;
-      border-top:1px solid #edf0f5;
-    }
-
-    .file-downloads{
-      color:#68778d;
-      font-size:12px;
-    }
-
-    .file-view{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:9px 13px;
-      border-radius:8px;
-      background:linear-gradient(135deg,#7c5cff,#6847e8);
-      color:#fff;
-      font-size:12px;
-      font-weight:800;
-      box-shadow:0 6px 15px rgba(124,92,255,.18);
-    }
-
-    .file-view:hover{
-      transform:translateY(-1px);
-    }
-
-    .library-empty{
-      padding:55px 25px;
-      text-align:center;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:15px;
-      color:#68788f;
-    }
-
-    .library-empty strong{
-      display:block;
-      color:#172033;
-      font-size:17px;
-      margin-bottom:7px;
-    }
-
-    .library-loading{
-      padding:45px;
-      text-align:center;
-      background:#fff;
-      border:1px solid var(--line);
-      border-radius:15px;
-      color:#718096;
-    }
-
-    .pagination{
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:7px;
-      margin-top:30px;
-      flex-wrap:wrap;
-    }
-
-    .page-btn{
-      min-width:38px;
-      height:38px;
-      padding:0 11px;
-      border:1px solid #d6deea;
-      border-radius:8px;
-      background:#fff;
-      color:#596a82;
-      font-weight:700;
-      cursor:pointer;
-    }
-
-    .page-btn:hover{
-      border-color:#b8a8ff;
-      color:#6847e8;
-    }
-
-    .page-btn.active{
-      border-color:#7c5cff;
-      background:#7c5cff;
-      color:#fff;
-    }
-
-    .page-btn:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-    }
-
-    @media(max-width:900px){
-      .library-grid{
-        grid-template-columns:repeat(2,1fr);
-      }
-
-      .library-toolbar{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .library-toolbar .library-search{
-        grid-column:1/-1;
-      }
-    }
-
-    @media(max-width:600px){
-      .library-grid{
-        grid-template-columns:1fr;
-      }
-
-      .library-toolbar{
-        grid-template-columns:1fr;
-      }
-
-      .library-toolbar .library-search{
-        grid-column:auto;
-      }
-    }
-  </style>
 </head>
 
 <body>
@@ -281,7 +32,9 @@
 
 <main class="legal-page">
 
-  <div class="section-label">Library</div>
+  <div class="section-label">
+    LIBRARY
+  </div>
 
   <h1>Browse files</h1>
 
@@ -290,58 +43,185 @@
   </p>
 
 
-  <!-- =========================================
-       SEARCH / FILTER / SORT
-  ========================================== -->
+  <!-- SEARCH / FILTER -->
 
-  <div class="library-toolbar">
+  <div
+    class="table-card"
+    style="margin-top:30px;"
+  >
 
-    <input
-      id="searchInput"
-      class="library-search"
-      type="search"
-      placeholder="Search files..."
-      autocomplete="off"
+    <div
+      style="
+        display:grid;
+        grid-template-columns:2fr 1fr;
+        gap:12px;
+      "
     >
 
-    <select id="categoryFilter" class="library-select">
-      <option value="">All categories</option>
-    </select>
+      <input
+        id="search"
+        type="search"
+        placeholder="Search files..."
+        autocomplete="off"
+        style="
+          width:100%;
+          padding:14px;
+          border:1px solid #d6deea;
+          border-radius:9px;
+          font:inherit;
+        "
+      >
 
-    <select id="sortSelect" class="library-select">
-      <option value="newest">Newest</option>
-      <option value="downloads">Most downloaded</option>
-      <option value="name">Name A–Z</option>
-    </select>
+      <select
+        id="category"
+        style="
+          width:100%;
+          padding:14px;
+          border:1px solid #d6deea;
+          border-radius:9px;
+          background:#fff;
+          font:inherit;
+        "
+      >
 
-  </div>
+        <option value="All">
+          All categories
+        </option>
 
+        <option value="Presets">
+          Presets
+        </option>
 
-  <div id="libraryStatus" class="library-status">
-    Loading files...
-  </div>
+        <option value="Templates">
+          Templates
+        </option>
 
+        <option value="Wallpapers">
+          Wallpapers
+        </option>
 
-  <!-- =========================================
-       FILES
-  ========================================== -->
+        <option value="Resources">
+          Resources
+        </option>
 
-  <div id="fileGrid" class="library-grid">
+        <option value="Other">
+          Other
+        </option>
 
-    <div class="library-loading">
-      Loading KaroPays files...
+      </select>
+
     </div>
 
   </div>
 
 
-  <!-- =========================================
-       PAGINATION
-  ========================================== -->
+  <p
+    id="message"
+    class="form-message"
+    style="margin-top:20px;"
+  >
+    Loading files...
+  </p>
 
-  <div id="pagination" class="pagination"></div>
+
+  <!-- REAL FILES -->
+
+  <div
+    id="fileGrid"
+    class="rule-grid"
+    style="margin-top:20px;"
+  ></div>
+
 
 </main>
+
+
+<footer>
+
+  <div class="footer-main">
+
+    <div>
+
+      <a class="logo" href="index.html">
+        <span class="logo-mark">K</span>
+        <span>KaroPays</span>
+      </a>
+
+      <p>
+        File hosting and creator monetization.
+      </p>
+
+    </div>
+
+
+    <div>
+
+      <h4>Platform</h4>
+
+      <a href="browse.html">
+        Browse files
+      </a>
+
+      <a href="upload.html">
+        Upload
+      </a>
+
+      <a href="payout-rates.html">
+        Payout rates
+      </a>
+
+      <a href="premium.html">
+        Premium
+      </a>
+
+    </div>
+
+
+    <div>
+
+      <h4>Company</h4>
+
+      <a href="payment-proof.html">
+        Payment proof
+      </a>
+
+      <a href="prize-winners.html">
+        Prize winners
+      </a>
+
+      <a href="program-rules.html">
+        Program rules
+      </a>
+
+      <a href="content-removal.html">
+        Content removal
+      </a>
+
+    </div>
+
+
+    <div>
+
+      <h4>Legal</h4>
+
+      <a href="terms.html">
+        Terms
+      </a>
+
+      <a href="privacy.html">
+        Privacy
+      </a>
+
+    </div>
+
+  </div>
+
+
+  <div class="footer-bottom">
+    © 2026 KaroPays. All rights reserved.
+  </div>
+
+</footer>
 
 
 <!-- SUPABASE -->
@@ -353,634 +233,353 @@
 
 <script>
 
-  /* =========================================
-     KAROPAYS FILE LIBRARY
-  ========================================== */
+const searchInput =
+  document.getElementById("search");
 
-  const searchInput =
-    document.getElementById("searchInput");
+const categoryInput =
+  document.getElementById("category");
 
-  const categoryFilter =
-    document.getElementById("categoryFilter");
+const fileGrid =
+  document.getElementById("fileGrid");
 
-  const sortSelect =
-    document.getElementById("sortSelect");
-
-  const fileGrid =
-    document.getElementById("fileGrid");
-
-  const pagination =
-    document.getElementById("pagination");
-
-  const libraryStatus =
-    document.getElementById("libraryStatus");
+const message =
+  document.getElementById("message");
 
 
-  const PAGE_SIZE = 9;
-
-  let currentPage = 1;
-
-  let searchTimer = null;
+let allFiles = [];
 
 
-  /* =========================================
-     LOAD CATEGORIES
-  ========================================== */
+/* =========================================
+   LOAD REAL FILES
+========================================= */
 
-  async function loadCategories(){
+async function loadFiles() {
 
-    const { data, error } = await supabaseClient
-      .from("files")
-      .select("category")
-      .eq("status", "active");
+  message.textContent =
+    "Loading files...";
 
-    if(error){
-      console.error("Category loading error:", error);
-      return;
-    }
+  fileGrid.innerHTML = "";
 
-    const categories = [
-      ...new Set(
-        (data || [])
-          .map(row => row.category)
-          .filter(Boolean)
-          .map(category => String(category).trim())
-          .filter(Boolean)
-      )
-    ].sort((a,b) =>
-      a.localeCompare(b)
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+
+    .from("files")
+
+    .select(`
+      id,
+      file_name,
+      description,
+      category,
+      file_size,
+      downloads,
+      created_at,
+      status
+    `)
+
+    .eq(
+      "status",
+      "active"
+    )
+
+    .order(
+      "created_at",
+      {
+        ascending: false
+      }
     );
 
 
-    categoryFilter.innerHTML =
-      '<option value="">All categories</option>';
+  if (error) {
 
+    console.error(
+      "Browse error:",
+      error
+    );
 
-    categories.forEach(category => {
-
-      const option =
-        document.createElement("option");
-
-      option.value = category;
-      option.textContent = category;
-
-      categoryFilter.appendChild(option);
-
-    });
-
-  }
-
-
-  /* =========================================
-     ESCAPE HTML
-  ========================================== */
-
-  function escapeHtml(value){
-
-    return String(value ?? "")
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;")
-      .replace(/'/g,"&#039;");
-
-  }
-
-
-  /* =========================================
-     FORMAT FILE SIZE
-  ========================================== */
-
-  function formatBytes(bytes){
-
-    if(bytes === null || bytes === undefined){
-      return "Unknown size";
-    }
-
-    const number = Number(bytes);
-
-    if(!Number.isFinite(number)){
-      return "Unknown size";
-    }
-
-    if(number < 1024){
-      return number + " B";
-    }
-
-    if(number < 1024 * 1024){
-      return (number / 1024).toFixed(1) + " KB";
-    }
-
-    if(number < 1024 * 1024 * 1024){
-      return (number / (1024 * 1024)).toFixed(1) + " MB";
-    }
-
-    return (number / (1024 * 1024 * 1024)).toFixed(2) + " GB";
-
-  }
-
-
-  /* =========================================
-     LOAD FILES
-  ========================================== */
-
-  async function loadFiles(){
+    message.textContent =
+      "Could not load files.";
 
     fileGrid.innerHTML = `
-      <div class="library-loading">
-        Loading KaroPays files...
+      <div class="empty">
+        ${esc(error.message)}
       </div>
     `;
 
-    pagination.innerHTML = "";
-
-    libraryStatus.textContent =
-      "Loading files...";
+    return;
+  }
 
 
-    const search =
-      searchInput.value.trim();
-
-    const category =
-      categoryFilter.value;
-
-    const sort =
-      sortSelect.value;
+  allFiles =
+    data || [];
 
 
-    let query = supabaseClient
-      .from("files")
-      .select(
-        "id,file_name,file_size,description,category,ad_level,downloads,status,created_at",
-        { count: "exact" }
-      )
-      .eq("status","active");
+  renderFiles();
+
+}
 
 
-    /* =========================================
-       SEARCH
-    ========================================== */
+/* =========================================
+   FILTER
+========================================= */
 
-    if(search){
+function renderFiles() {
 
-      /*
-       * Remove characters that could interfere
-       * with PostgREST OR syntax.
-       */
+  const search =
+    searchInput.value
+      .trim()
+      .toLowerCase();
 
-      const safeSearch =
-        search
-          .replace(/[,%()]/g," ")
-          .replace(/\s+/g," ")
-          .trim()
-          .slice(0,80);
+  const category =
+    categoryInput.value;
 
 
-      if(safeSearch){
+  const filtered =
+    allFiles.filter(file => {
 
-        query = query.or(
-          `file_name.ilike.%${safeSearch}%,description.ilike.%${safeSearch}%,category.ilike.%${safeSearch}%`
-        );
+      const name =
+        String(
+          file.file_name || ""
+        ).toLowerCase();
 
-      }
+      const description =
+        String(
+          file.description || ""
+        ).toLowerCase();
 
-    }
+      const fileCategory =
+        file.category || "Other";
 
 
-    /* =========================================
-       CATEGORY
-    ========================================== */
+      const matchesSearch =
+        !search ||
+        name.includes(search) ||
+        description.includes(search);
 
-    if(category){
 
-      query = query.eq(
-        "category",
-        category
+      const matchesCategory =
+        category === "All" ||
+        fileCategory === category;
+
+
+      return (
+        matchesSearch &&
+        matchesCategory
       );
 
-    }
+    });
 
 
-    /* =========================================
-       SORT
-    ========================================== */
-
-    if(sort === "downloads"){
-
-      query = query
-        .order("downloads", {
-          ascending:false,
-          nullsFirst:false
-        })
-        .order("created_at", {
-          ascending:false
-        });
-
-    }else if(sort === "name"){
-
-      query = query
-        .order("file_name", {
-          ascending:true
-        });
-
-    }else{
-
-      query = query
-        .order("created_at", {
-          ascending:false
-        });
-
-    }
+  message.textContent =
+    `${filtered.length} file${filtered.length === 1 ? "" : "s"} found`;
 
 
-    /* =========================================
-       PAGINATION
-    ========================================== */
+  if (!filtered.length) {
 
-    const from =
-      (currentPage - 1) * PAGE_SIZE;
+    fileGrid.innerHTML = `
 
-    const to =
-      from + PAGE_SIZE - 1;
+      <div class="empty">
 
+        <h3>
+          No files found
+        </h3>
 
-    query = query.range(from,to);
+        <p>
+          Try another search or category.
+        </p>
 
+      </div>
 
-    const {
-      data,
-      error,
-      count
-    } = await query;
+    `;
 
-
-    if(error){
-
-      console.error(
-        "File loading error:",
-        error
-      );
-
-      fileGrid.innerHTML = `
-        <div class="library-empty">
-          <strong>Unable to load files</strong>
-          <span>
-            Please refresh the page and try again.
-          </span>
-        </div>
-      `;
-
-      libraryStatus.textContent =
-        "There was a problem loading the library.";
-
-      return;
-
-    }
-
-
-    renderFiles(data || [], count || 0);
+    return;
 
   }
 
 
-  /* =========================================
-     RENDER FILES
-  ========================================== */
+  fileGrid.innerHTML =
+    filtered
+      .map(renderFile)
+      .join("");
 
-  function renderFiles(files,count){
-
-    if(files.length === 0){
-
-      fileGrid.innerHTML = `
-        <div class="library-empty" style="grid-column:1/-1">
-          <strong>No files found</strong>
-          <span>
-            Try another search or category.
-          </span>
-        </div>
-      `;
-
-      libraryStatus.textContent =
-        "0 files found.";
-
-      pagination.innerHTML = "";
-
-      return;
-
-    }
+}
 
 
-    const totalPages =
-      Math.ceil(count / PAGE_SIZE);
+/* =========================================
+   FILE CARD
+========================================= */
+
+function renderFile(file) {
+
+  return `
+
+    <article class="feature">
+
+      <span class="eyebrow">
+        ${esc(file.category || "Other")}
+      </span>
 
 
-    const first =
-      ((currentPage - 1) * PAGE_SIZE) + 1;
-
-    const last =
-      Math.min(
-        currentPage * PAGE_SIZE,
-        count
-      );
+      <h3>
+        ${esc(
+          file.file_name ||
+          "Unnamed file"
+        )}
+      </h3>
 
 
-    libraryStatus.textContent =
-      `Showing ${first}–${last} of ${count} file${count === 1 ? "" : "s"}`;
+      <p>
 
-
-    fileGrid.innerHTML =
-      files.map((file,index) => {
-
-        const name =
-          file.file_name || "Unnamed file";
-
-        const description =
+        ${esc(
           file.description ||
-          "No description provided.";
+          "No description provided."
+        )}
 
-        const category =
-          file.category ||
-          "Other";
-
-        const downloads =
-          Number(file.downloads || 0);
+      </p>
 
 
-        return `
-          <article class="file-card">
+      <div
+        class="mini-row"
+        style="
+          display:flex;
+          justify-content:space-between;
+          gap:10px;
+          margin-top:15px;
+        "
+      >
 
-            <div class="file-card-top">
+        <span>
+          Downloads
+        </span>
 
-              <span class="file-category">
-                ${escapeHtml(category)}
-              </span>
+        <b>
+          ${Number(
+            file.downloads || 0
+          ).toLocaleString()}
+        </b>
 
-              <span class="file-number">
-                #${first + index}
-              </span>
-
-            </div>
-
-
-            <h3>
-              ${escapeHtml(name)}
-            </h3>
-
-
-            <p class="file-description">
-              ${escapeHtml(description)}
-            </p>
+      </div>
 
 
-            <div class="file-meta">
+      <div
+        style="
+          margin-top:10px;
+          color:#718096;
+          font-size:12px;
+        "
+      >
 
-              <span>
-                ${escapeHtml(category)}
-              </span>
+        ${bytes(file.file_size)}
 
-              <span>
-                ${formatBytes(file.file_size)}
-              </span>
-
-              <span>
-                Ad Level ${Number(file.ad_level || 1)}
-              </span>
-
-            </div>
+      </div>
 
 
-            <div class="file-card-footer">
+      <a
+        class="btn small"
+        href="file.html?id=${encodeURIComponent(file.id)}"
+        style="margin-top:16px;display:inline-flex;"
+      >
+        View file
+      </a>
 
-              <span class="file-downloads">
-                ${downloads.toLocaleString()} download${downloads === 1 ? "" : "s"}
-              </span>
+    </article>
 
-              <a
-                class="file-view"
-                href="file.html?id=${encodeURIComponent(file.id)}"
-              >
-                View file
-              </a>
+  `;
 
-            </div>
-
-          </article>
-        `;
-
-      }).join("");
+}
 
 
-    renderPagination(totalPages);
+/* =========================================
+   EVENTS
+========================================= */
 
+searchInput.addEventListener(
+  "input",
+  renderFiles
+);
+
+
+categoryInput.addEventListener(
+  "change",
+  renderFiles
+);
+
+
+/* =========================================
+   HELPERS
+========================================= */
+
+function bytes(value) {
+
+  const n =
+    Number(value || 0);
+
+
+  if (!n) {
+    return "0 B";
   }
 
 
-  /* =========================================
-     PAGINATION
-  ========================================== */
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB",
+    "TB"
+  ];
 
-  function renderPagination(totalPages){
 
-    pagination.innerHTML = "";
+  const index =
+    Math.min(
+      Math.floor(
+        Math.log(n) /
+        Math.log(1024)
+      ),
+      units.length - 1
+    );
 
 
-    if(totalPages <= 1){
-      return;
-    }
+  return (
+    n /
+    Math.pow(1024, index)
+  ).toFixed(
+    index === 0 ? 0 : 2
+  ) +
+  " " +
+  units[index];
 
+}
 
-    const previous =
-      document.createElement("button");
 
-    previous.className =
-      "page-btn";
+function esc(value) {
 
-    previous.textContent =
-      "‹";
+  return String(value)
 
-    previous.disabled =
-      currentPage === 1;
+    .replace(
+      /[&<>'"]/g,
 
-    previous.onclick = () => {
+      character => ({
 
-      if(currentPage > 1){
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "'": "&#039;",
+        '"': "&quot;"
 
-        currentPage--;
+      }[character])
 
-        loadFiles();
+    );
 
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
+}
 
-      }
 
-    };
+/* =========================================
+   START
+========================================= */
 
-
-    pagination.appendChild(previous);
-
-
-    /*
-     * Show a compact number of pages.
-     */
-
-    let start =
-      Math.max(1,currentPage - 2);
-
-    let end =
-      Math.min(totalPages,currentPage + 2);
-
-
-    if(currentPage <= 3){
-      end = Math.min(5,totalPages);
-    }
-
-    if(currentPage >= totalPages - 2){
-      start = Math.max(1,totalPages - 4);
-    }
-
-
-    for(let page=start; page<=end; page++){
-
-      const button =
-        document.createElement("button");
-
-      button.className =
-        "page-btn" +
-        (page === currentPage ? " active" : "");
-
-      button.textContent =
-        page;
-
-
-      button.onclick = () => {
-
-        if(page === currentPage){
-          return;
-        }
-
-        currentPage =
-          page;
-
-        loadFiles();
-
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
-
-      };
-
-
-      pagination.appendChild(button);
-
-    }
-
-
-    const next =
-      document.createElement("button");
-
-    next.className =
-      "page-btn";
-
-    next.textContent =
-      "›";
-
-    next.disabled =
-      currentPage === totalPages;
-
-
-    next.onclick = () => {
-
-      if(currentPage < totalPages){
-
-        currentPage++;
-
-        loadFiles();
-
-        window.scrollTo({
-          top:0,
-          behavior:"smooth"
-        });
-
-      }
-
-    };
-
-
-    pagination.appendChild(next);
-
-  }
-
-
-  /* =========================================
-     SEARCH
-  ========================================== */
-
-  searchInput.addEventListener(
-    "input",
-    () => {
-
-      clearTimeout(searchTimer);
-
-      searchTimer =
-        setTimeout(() => {
-
-          currentPage = 1;
-
-          loadFiles();
-
-        },300);
-
-    }
-  );
-
-
-  /* =========================================
-     CATEGORY
-  ========================================== */
-
-  categoryFilter.addEventListener(
-    "change",
-    () => {
-
-      currentPage = 1;
-
-      loadFiles();
-
-    }
-  );
-
-
-  /* =========================================
-     SORT
-  ========================================== */
-
-  sortSelect.addEventListener(
-    "change",
-    () => {
-
-      currentPage = 1;
-
-      loadFiles();
-
-    }
-  );
-
-
-  /* =========================================
-     START
-  ========================================== */
-
-  (async function(){
-
-    await loadCategories();
-
-    await loadFiles();
-
-  })();
+loadFiles();
 
 </script>
 
