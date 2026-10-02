@@ -1,1 +1,518 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Browse Files — KaroPays</title><link rel="stylesheet" href="assets/css/pro.css"></head><body><header class="site-header"><a class="logo" href="index.html"><span class="logo-mark">K</span>KaroPays</a><nav class="desktop-nav"><a href="payout-rates.html">Payout Rates</a><a href="payment-proof.html">Payment Proof</a><a href="prize-winners.html">Prize Winners</a><a href="premium.html">Premium</a><a href="login.html">Sign in</a><a class="nav-cta" href="register.html">Register</a></nav></header><main class="legal-page"><div class="section-label">Library</div><h1>Browse files</h1><p class="lead">Discover resources shared by KaroPays creators.</p><div class="table-card"><input style="width:100%;padding:14px;border:1px solid #d6deea;border-radius:9px" placeholder="Search files..."><div class="rule-grid" style="margin-top:20px"><div><b>Creator Resource Pack</b><p>Resources · 1,248 downloads</p></div><div><b>Wallpaper Collection</b><p>Wallpapers · 824 downloads</p></div><div><b>Template Kit</b><p>Templates · 412 downloads</p></div></div></div></main></body></html>
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1"
+  >
+
+  <title>Browse Files — KaroPays</title>
+
+  <link
+    rel="stylesheet"
+    href="assets/css/pro.css"
+  >
+</head>
+
+<body>
+
+<header class="site-header">
+
+  <a
+    class="logo"
+    href="index.html"
+  >
+    <span class="logo-mark">K</span>
+    KaroPays
+  </a>
+
+  <nav class="desktop-nav">
+
+    <a href="payout-rates.html">
+      Payout Rates
+    </a>
+
+    <a href="payment-proof.html">
+      Payment Proof
+    </a>
+
+    <a href="prize-winners.html">
+      Prize Winners
+    </a>
+
+    <a href="premium.html">
+      Premium
+    </a>
+
+    <a href="login.html">
+      Sign in
+    </a>
+
+    <a
+      class="nav-cta"
+      href="register.html"
+    >
+      Register
+    </a>
+
+  </nav>
+
+</header>
+
+
+<main class="legal-page">
+
+  <div class="section-label">
+    LIBRARY
+  </div>
+
+  <h1>
+    Browse files
+  </h1>
+
+  <p class="lead">
+    Discover resources shared by KaroPays creators.
+  </p>
+
+
+  <!-- SEARCH + FILTER -->
+
+  <div
+    class="table-card"
+    style="margin-top:30px"
+  >
+
+    <div
+      style="
+        display:grid;
+        grid-template-columns:minmax(0,1fr) 220px;
+        gap:12px;
+      "
+    >
+
+      <input
+        id="search"
+        type="search"
+        placeholder="Search files..."
+        autocomplete="off"
+      >
+
+      <select id="category">
+
+        <option value="All">
+          All categories
+        </option>
+
+        <option value="Presets">
+          Presets
+        </option>
+
+        <option value="Templates">
+          Templates
+        </option>
+
+        <option value="Wallpapers">
+          Wallpapers
+        </option>
+
+        <option value="Resources">
+          Resources
+        </option>
+
+        <option value="Other">
+          Other
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <p
+      id="browseMessage"
+      class="form-message"
+      style="margin-top:15px"
+    >
+      Loading files...
+    </p>
+
+
+    <div
+      id="filesGrid"
+      class="rule-grid"
+      style="margin-top:20px"
+    ></div>
+
+  </div>
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase-config.js"></script>
+
+
+<script>
+
+/* =========================================
+   ELEMENTS
+========================================= */
+
+const searchInput =
+  document.getElementById("search");
+
+const categoryInput =
+  document.getElementById("category");
+
+const filesGrid =
+  document.getElementById("filesGrid");
+
+const browseMessage =
+  document.getElementById("browseMessage");
+
+
+/* =========================================
+   STATE
+========================================= */
+
+let allFiles = [];
+
+
+/* =========================================
+   LOAD FILES
+========================================= */
+
+loadFiles();
+
+
+async function loadFiles() {
+
+  browseMessage.textContent =
+    "Loading files...";
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+
+      .from("files")
+
+      .select(`
+        id,
+        file_name,
+        description,
+        category,
+        downloads,
+        earnings,
+        status,
+        created_at,
+        file_size
+      `)
+
+      .eq(
+        "status",
+        "active"
+      )
+
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+
+  if (error) {
+
+    console.error(
+      "Browse files error:",
+      error
+    );
+
+
+    browseMessage.textContent =
+      "Could not load files: " +
+      error.message;
+
+    return;
+
+  }
+
+
+  allFiles =
+    data || [];
+
+
+  renderFiles();
+
+}
+
+
+/* =========================================
+   SEARCH / FILTER
+========================================= */
+
+searchInput.addEventListener(
+  "input",
+  renderFiles
+);
+
+
+categoryInput.addEventListener(
+  "change",
+  renderFiles
+);
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function renderFiles() {
+
+  const search =
+    searchInput.value
+      .trim()
+      .toLowerCase();
+
+
+  const category =
+    categoryInput.value;
+
+
+  const filtered =
+    allFiles.filter(
+      file => {
+
+        const name =
+          String(
+            file.file_name || ""
+          ).toLowerCase();
+
+
+        const description =
+          String(
+            file.description || ""
+          ).toLowerCase();
+
+
+        const matchesSearch =
+          !search ||
+          name.includes(search) ||
+          description.includes(search);
+
+
+        const matchesCategory =
+          category === "All" ||
+          file.category === category;
+
+
+        return (
+          matchesSearch &&
+          matchesCategory
+        );
+
+      }
+    );
+
+
+  if (!filtered.length) {
+
+    filesGrid.innerHTML = `
+
+      <div class="empty">
+
+        No files found.
+
+      </div>
+
+    `;
+
+
+    browseMessage.textContent =
+      allFiles.length
+        ? "No files match your search."
+        : "No active files have been uploaded yet.";
+
+
+    return;
+
+  }
+
+
+  browseMessage.textContent =
+    `${filtered.length} file${filtered.length === 1 ? "" : "s"} found.`;
+
+
+  filesGrid.innerHTML =
+
+    filtered.map(
+      file => `
+
+        <article
+          class="feature"
+          style="
+            display:flex;
+            flex-direction:column;
+          "
+        >
+
+          <span class="eyebrow">
+            ${esc(
+              file.category ||
+              "Other"
+            )}
+          </span>
+
+
+          <h3>
+            ${esc(
+              file.file_name ||
+              "Unnamed file"
+            )}
+          </h3>
+
+
+          <p>
+            ${esc(
+              file.description ||
+              "No description provided."
+            )}
+          </p>
+
+
+          <div
+            class="mini-row"
+            style="margin-top:auto"
+          >
+
+            <span>
+              Downloads
+            </span>
+
+            <b>
+              ${Number(
+                file.downloads || 0
+              ).toLocaleString()}
+            </b>
+
+          </div>
+
+
+          <div
+            class="mini-row"
+          >
+
+            <span>
+              File size
+            </span>
+
+            <b>
+              ${formatBytes(
+                file.file_size
+              )}
+            </b>
+
+          </div>
+
+
+          <a
+            class="btn small"
+            href="file.html?id=${encodeURIComponent(file.id)}"
+            style="margin-top:15px"
+          >
+            View file
+          </a>
+
+        </article>
+
+      `
+    ).join("");
+
+}
+
+
+/* =========================================
+   FILE SIZE
+========================================= */
+
+function formatBytes(
+  value
+) {
+
+  const bytes =
+    Number(value || 0);
+
+
+  if (!bytes) {
+    return "0 B";
+  }
+
+
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB",
+    "TB"
+  ];
+
+
+  const index =
+    Math.floor(
+      Math.log(bytes) /
+      Math.log(1024)
+    );
+
+
+  return (
+    bytes /
+    Math.pow(
+      1024,
+      index
+    )
+  ).toFixed(
+    index === 0
+      ? 0
+      : 2
+  ) +
+  " " +
+  units[index];
+
+}
+
+
+/* =========================================
+   HTML ESCAPE
+========================================= */
+
+function esc(
+  value
+) {
+
+  return String(value)
+
+    .replace(
+      /[&<>'"]/g,
+      character => ({
+
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        "'": "&#039;",
+        '"': "&quot;"
+
+      }[character])
+    );
+
+}
+
+</script>
+
+</body>
+</html>
