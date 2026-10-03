@@ -1097,7 +1097,7 @@ async function loadPayouts() {
   const { data: requests, error: requestError } =
     await supabaseClient
       .from("payout_requests")
-      .select("id,amount,method,payment_details,status,created_at")
+      .select("id,payout_code,amount,method,payment_details,status,created_at")
       .eq("creator_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -1116,16 +1116,31 @@ async function loadPayouts() {
     const date = r.created_at
       ? new Date(r.created_at).toLocaleDateString()
       : "—";
+    const payoutCode = r.payout_code || (r.id ? "KP-PAY-" + String(r.id).replaceAll("-", "").slice(0, 8).toUpperCase() : "—");
+
     return `
-      <div class="payout-row">
+      <div class="payout-row" style="align-items:center;">
         <div>
           <strong>${money(r.amount)}</strong>
           <div class="eyebrow">${esc(r.method || "unknown")} · ${esc(date)}</div>
+          <div style="margin-top:6px;font-size:12px;color:#64748b;">Payout ID: <strong>${esc(payoutCode)}</strong></div>
         </div>
-        <div class="payout-status">${esc(r.status || "pending")}</div>
+        <div style="text-align:right;">
+          <div class="payout-status">${esc(r.status || "pending")}</div>
+          <button type="button" class="secondary" style="margin-top:7px;padding:7px 10px;font-size:11px;" onclick="copyPayoutId('${esc(payoutCode)}')">Copy ID</button>
+        </div>
       </div>
     `;
   }).join("");
+}
+
+async function copyPayoutId(payoutId) {
+  try {
+    await navigator.clipboard.writeText(payoutId);
+    $("payoutMessage").textContent = "Payout ID copied: " + payoutId;
+  } catch (error) {
+    console.error("Copy payout ID error:", error);
+  }
 }
 
 $("payoutMethod").addEventListener("change", function() {
@@ -1170,8 +1185,11 @@ $("payoutForm").addEventListener("submit", async function(event) {
 
     $("payoutAmount").value = "";
     $("paymentDetails").value = "";
-    $("payoutMessage").textContent =
-      `✓ Payout request submitted for ${money(data?.amount || amount)}.`;
+    const payoutId = data?.payout_id || data?.payout_code || "—";
+    $("payoutMessage").innerHTML =
+      `✓ Payout request submitted for <strong>${money(data?.amount || amount)}</strong>.<br>` +
+      `Your Payout ID: <strong>${esc(payoutId)}</strong><br>` +
+      `<small>Please save this ID for payment support.</small>`;
 
     await loadPayouts();
   } catch (error) {
@@ -1236,13 +1254,11 @@ function msg(text) {
 
 function money(value) {
 
-  const amount = Number(value || 0);
-
-  if (amount === 0) {
-    return "$0.00";
-  }
-
-  return "$" + amount.toFixed(4);
+  return (
+    "$" +
+    Number(value || 0)
+      .toFixed(2)
+  );
 
 }
 
