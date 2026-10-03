@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Payouts — KaroPays</title>
+<link rel="stylesheet" href="assets/css/pro.css">
+<style>
+body{background:#f7f8fc}.admin-wrap{max-width:1180px;margin:auto;padding:48px 22px 70px}
+.admin-top{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.admin-top h1{margin:8px 0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:28px 0}
+.stat{background:#fff;border:1px solid #dfe5ef;border-radius:14px;padding:20px}.stat small{display:block;color:#64748b;margin-bottom:8px}.stat strong{font-size:1.7rem}
+.toolbar{background:#fff;border:1px solid #dfe5ef;border-radius:14px;padding:16px;display:flex;gap:12px;flex-wrap:wrap}
+.toolbar input,.toolbar select{padding:11px 13px;border:1px solid #d5ddea;border-radius:9px;background:#fff;font:inherit}.toolbar input{flex:1;min-width:220px}
+.table-card{background:#fff;border:1px solid #dfe5ef;border-radius:14px;overflow:hidden;margin-top:18px}.table-scroll{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}th,td{text-align:left;padding:15px 16px;border-bottom:1px solid #edf0f5;vertical-align:middle}
+th{font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:#64748b;background:#fafbfe}tr:last-child td{border-bottom:0}
+.payout-id{font-weight:700}.muted{color:#64748b;font-size:.88rem}.status{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:.8rem;font-weight:700;text-transform:capitalize;background:#eef2ff}
+.actions{display:flex;gap:7px;flex-wrap:wrap}.actions button{border:1px solid #d5ddea;background:#fff;border-radius:8px;padding:8px 10px;cursor:pointer;font:inherit}
+.actions .paid{background:#111827;color:#fff;border-color:#111827}.actions .reject{color:#b91c1c}.empty{padding:45px;text-align:center;color:#64748b}
+.notice{margin-top:18px;padding:14px 16px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}
+.detail{background:#fff;border:1px solid #dfe5ef;border-radius:14px;padding:22px;margin-top:18px;display:none}.detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.detail-item{padding:14px;background:#f8fafc;border-radius:10px}.detail-item small{display:block;color:#64748b;margin-bottom:5px}
+@media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.detail-grid{grid-template-columns:1fr}}@media(max-width:520px){.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site-header">
+<a class="logo" href="index.html"><span class="logo-mark">K</span>KaroPays</a>
+<nav class="desktop-nav"><a href="creator/dashboard.html">Creator Dashboard</a><a href="#" id="signOut">Sign out</a></nav>
+</header>
+<main class="admin-wrap">
+<div class="admin-top"><div><div class="section-label">ADMIN PAYOUTS</div><h1>Payout requests</h1><p class="lead">Review creator payout requests and update their status.</p></div><button class="secondary" id="refreshBtn">Refresh</button></div>
+<div id="message"></div>
+<section class="stats">
+<div class="stat"><small>Pending</small><strong id="pendingCount">0</strong></div>
+<div class="stat"><small>Approved</small><strong id="approvedCount">0</strong></div>
+<div class="stat"><small>Paid</small><strong id="paidCount">0</strong></div>
+<div class="stat"><small>Pending value</small><strong id="pendingValue">$0.00</strong></div>
+</section>
+<div class="toolbar"><input id="search" placeholder="Search payout ID or creator ID"><select id="statusFilter"><option value="all">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="paid">Paid</option><option value="rejected">Rejected</option></select></div>
+<section class="table-card"><div class="table-scroll"><table><thead><tr><th>Payout ID</th><th>Creator ID</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody id="payoutRows"><tr><td colspan="7" class="empty">Loading payout requests...</td></tr></tbody></table></div></section>
+<section class="detail" id="detail"><div class="section-label">PAYOUT DETAILS</div><h2 id="detailTitle">Payout</h2><div class="detail-grid">
+<div class="detail-item"><small>Payout ID</small><strong id="dCode">—</strong></div><div class="detail-item"><small>Creator ID</small><strong id="dCreator">—</strong></div>
+<div class="detail-item"><small>Amount</small><strong id="dAmount">—</strong></div><div class="detail-item"><small>Method</small><strong id="dMethod">—</strong></div>
+<div class="detail-item"><small>Payment details</small><strong id="dPayment">—</strong></div><div class="detail-item"><small>Status</small><strong id="dStatus">—</strong></div>
+</div></section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script>
+const $=id=>document.getElementById(id);let allPayouts=[];
+function esc(v){return String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;",'"':"&quot;"}[c]))}
+function money(v){return "$"+Number(v||0).toFixed(2)}
+function code(r){return r.payout_code||"KP-PAY-"+String(r.id||"").replace(/-/g,"").slice(0,8).toUpperCase()}
+function msg(t){$("message").innerHTML='<div class="notice">'+esc(t)+'</div>'}
+async function load(){
+ $("payoutRows").innerHTML='<tr><td colspan="7" class="empty">Loading payout requests...</td></tr>';
+ const {data,error}=await supabaseClient.from("payout_requests").select("id,payout_code,creator_id,amount,method,payment_details,status,created_at").order("created_at",{ascending:false});
+ if(error){console.error(error);$("payoutRows").innerHTML='<tr><td colspan="7" class="empty">Could not load payout requests.</td></tr>';msg("You do not have permission to view admin payout requests yet. Configure the admin RLS policy.");return}
+ allPayouts=data||[];render()
+}
+function render(){
+ const q=$("search").value.trim().toLowerCase(),f=$("statusFilter").value;
+ const rows=allPayouts.filter(r=>(!q||code(r).toLowerCase().includes(q)||String(r.creator_id||"").toLowerCase().includes(q))&&(f==="all"||r.status===f));
+ const p=allPayouts.filter(r=>r.status==="pending");
+ $("pendingCount").textContent=p.length;$("approvedCount").textContent=allPayouts.filter(r=>r.status==="approved").length;$("paidCount").textContent=allPayouts.filter(r=>r.status==="paid").length;$("pendingValue").textContent=money(p.reduce((s,r)=>s+Number(r.amount||0),0));
+ if(!rows.length){$("payoutRows").innerHTML='<tr><td colspan="7" class="empty">No payout requests found.</td></tr>';return}
+ $("payoutRows").innerHTML=rows.map(r=>{const d=r.created_at?new Date(r.created_at).toLocaleString():"—";return `<tr>
+<td><div class="payout-id">${esc(code(r))}</div></td><td><span class="muted">${esc(r.creator_id)}</span></td><td><strong>${money(r.amount)}</strong></td><td>${esc(r.method||"—")}</td>
+<td><span class="status">${esc(r.status||"pending")}</span></td><td class="muted">${esc(d)}</td><td><div class="actions">
+<button onclick="viewPayout('${esc(r.id)}')">View</button>${r.status==="pending"?`<button onclick="setStatus('${esc(r.id)}','approved')">Approve</button>`:""}${r.status==="approved"?`<button class="paid" onclick="setStatus('${esc(r.id)}','paid')">Mark paid</button>`:""}${r.status==="pending"||r.status==="approved"?`<button class="reject" onclick="setStatus('${esc(r.id)}','rejected')">Reject</button>`:""}
+</div></td></tr>`}).join("")
+}
+window.viewPayout=id=>{const r=allPayouts.find(x=>x.id===id);if(!r)return;$("detail").style.display="block";$("detailTitle").textContent="Payout "+code(r);$("dCode").textContent=code(r);$("dCreator").textContent=r.creator_id||"—";$("dAmount").textContent=money(r.amount);$("dMethod").textContent=r.method||"—";$("dPayment").textContent=r.payment_details||"—";$("dStatus").textContent=r.status||"pending";$("detail").scrollIntoView({behavior:"smooth"})}
+window.setStatus=async(id,status)=>{if(!confirm("Update this payout to "+status+"?"))return;const{error}=await supabaseClient.from("payout_requests").update({status}).eq("id",id);if(error){console.error(error);msg("Could not update this payout. Check the admin UPDATE RLS policy.");return}await load()}
+$("search").addEventListener("input",render);$("statusFilter").addEventListener("change",render);$("refreshBtn").addEventListener("click",load);
+$("signOut").addEventListener("click",async e=>{e.preventDefault();await supabaseClient.auth.signOut();location.replace("login.html")});
+(async()=>{const{data:{session}}=await supabaseClient.auth.getSession();if(!session){location.replace("login.html");return}await load()})();
+</script>
+</body>
+</html>
