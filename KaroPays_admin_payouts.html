@@ -32,6 +32,10 @@ th{font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:#64748b;
 <main class="admin-wrap">
 <div class="admin-top"><div><div class="section-label">ADMIN PAYOUTS</div><h1>Payout requests</h1><p class="lead">Review creator payout requests and update their status.</p></div><button class="secondary" id="refreshBtn">Refresh</button></div>
 <div id="message"></div>
+<div class="notice" style="margin-top:18px">
+  <strong>Admin access required.</strong>
+  This page must be protected by Supabase RLS. The browser UI is not used as the security boundary.
+</div>
 <section class="stats">
 <div class="stat"><small>Pending</small><strong id="pendingCount">0</strong></div>
 <div class="stat"><small>Approved</small><strong id="approvedCount">0</strong></div>
@@ -41,7 +45,7 @@ th{font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;color:#64748b;
 <div class="toolbar"><input id="search" placeholder="Search payout ID or creator ID"><select id="statusFilter"><option value="all">All statuses</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="paid">Paid</option><option value="rejected">Rejected</option></select></div>
 <section class="table-card"><div class="table-scroll"><table><thead><tr><th>Payout ID</th><th>Creator ID</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody id="payoutRows"><tr><td colspan="7" class="empty">Loading payout requests...</td></tr></tbody></table></div></section>
 <section class="detail" id="detail"><div class="section-label">PAYOUT DETAILS</div><h2 id="detailTitle">Payout</h2><div class="detail-grid">
-<div class="detail-item"><small>Payout ID</small><strong id="dCode">—</strong></div><div class="detail-item"><small>Creator ID</small><strong id="dCreator">—</strong></div>
+<div class="detail-item"><small>Payout ID</small><strong id="dCode">—</strong> <button class="secondary" id="copyCode" type="button">Copy</button></div><div class="detail-item"><small>Creator ID</small><strong id="dCreator">—</strong></div>
 <div class="detail-item"><small>Amount</small><strong id="dAmount">—</strong></div><div class="detail-item"><small>Method</small><strong id="dMethod">—</strong></div>
 <div class="detail-item"><small>Payment details</small><strong id="dPayment">—</strong></div><div class="detail-item"><small>Status</small><strong id="dStatus">—</strong></div>
 </div></section>
@@ -57,7 +61,7 @@ function msg(t){$("message").innerHTML='<div class="notice">'+esc(t)+'</div>'}
 async function load(){
  $("payoutRows").innerHTML='<tr><td colspan="7" class="empty">Loading payout requests...</td></tr>';
  const {data,error}=await supabaseClient.from("payout_requests").select("id,payout_code,creator_id,amount,method,payment_details,status,created_at").order("created_at",{ascending:false});
- if(error){console.error(error);$("payoutRows").innerHTML='<tr><td colspan="7" class="empty">Could not load payout requests.</td></tr>';msg("You do not have permission to view admin payout requests yet. Configure the admin RLS policy.");return}
+ if(error){console.error(error);$("payoutRows").innerHTML='<tr><td colspan="7" class="empty">Could not load payout requests.</td></tr>';msg("Admin access is required to view payout requests. Please sign in with an authorized admin account.");return}
  allPayouts=data||[];render()
 }
 function render(){
@@ -72,7 +76,7 @@ function render(){
 <button onclick="viewPayout('${esc(r.id)}')">View</button>${r.status==="pending"?`<button onclick="setStatus('${esc(r.id)}','approved')">Approve</button>`:""}${r.status==="approved"?`<button class="paid" onclick="setStatus('${esc(r.id)}','paid')">Mark paid</button>`:""}${r.status==="pending"||r.status==="approved"?`<button class="reject" onclick="setStatus('${esc(r.id)}','rejected')">Reject</button>`:""}
 </div></td></tr>`}).join("")
 }
-window.viewPayout=id=>{const r=allPayouts.find(x=>x.id===id);if(!r)return;$("detail").style.display="block";$("detailTitle").textContent="Payout "+code(r);$("dCode").textContent=code(r);$("dCreator").textContent=r.creator_id||"—";$("dAmount").textContent=money(r.amount);$("dMethod").textContent=r.method||"—";$("dPayment").textContent=r.payment_details||"—";$("dStatus").textContent=r.status||"pending";$("detail").scrollIntoView({behavior:"smooth"})}
+window.viewPayout=id=>{const r=allPayouts.find(x=>x.id===id);if(!r)return;$("detail").style.display="block";$("detailTitle").textContent="Payout "+code(r);$("dCode").textContent=code(r);$("dCreator").textContent=r.creator_id||"—";$("dAmount").textContent=money(r.amount);$("dMethod").textContent=r.method||"—";$("dPayment").textContent=r.payment_details||"—";$("dStatus").textContent=r.status||"pending";$("copyCode").onclick=()=>navigator.clipboard?.writeText(code(r));$("detail").scrollIntoView({behavior:"smooth"})}
 window.setStatus=async(id,status)=>{if(!confirm("Update this payout to "+status+"?"))return;const{error}=await supabaseClient.from("payout_requests").update({status}).eq("id",id);if(error){console.error(error);msg("Could not update this payout. Check the admin UPDATE RLS policy.");return}await load()}
 $("search").addEventListener("input",render);$("statusFilter").addEventListener("change",render);$("refreshBtn").addEventListener("click",load);
 $("signOut").addEventListener("click",async e=>{e.preventDefault();await supabaseClient.auth.signOut();location.replace("login.html")});
