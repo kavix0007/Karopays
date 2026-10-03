@@ -1236,11 +1236,13 @@ function msg(text) {
 
 function money(value) {
 
-  return (
-    "$" +
-    Number(value || 0)
-      .toFixed(2)
-  );
+  const amount = Number(value || 0);
+
+  if (amount === 0) {
+    return "$0.00";
+  }
+
+  return "$" + amount.toFixed(4);
 
 }
 
