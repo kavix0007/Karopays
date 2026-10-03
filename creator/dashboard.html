@@ -17,6 +17,20 @@
     href="../assets/css/pro.css"
   >
 
+  <style>
+    .payout-card{overflow:hidden}
+    .payout-balance-box{border:1px solid var(--line);padding:14px 18px;min-width:180px}
+    .payout-balance-box small{display:block;margin-bottom:5px}
+    .payout-balance-box strong{font-size:1.5rem}
+    .payout-card .panel{border:1px solid var(--line);padding:20px}
+    .payout-card label{display:block;margin:0 0 14px}
+    .payout-card input,.payout-card select{width:100%;box-sizing:border-box;margin-top:7px;padding:11px;border:1px solid var(--line);background:transparent;color:inherit;border-radius:8px}
+    .payout-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.95rem}
+    .payout-row:last-child{border-bottom:0}
+    .payout-status{font-weight:600;text-transform:capitalize}
+    @media(max-width:760px){.payout-grid{grid-template-columns:1fr!important}}
+  </style>
+
 </head>
 
 
@@ -96,7 +110,7 @@
       </small>
 
       <h2 id="totalEarnings">
-        ₹0.00000000
+        $0.00
       </h2>
 
     </div>
@@ -122,7 +136,7 @@
       </small>
 
       <h2 id="availableBalance">
-        ₹0.00000000
+        $0.00
       </h2>
 
     </div>
@@ -130,6 +144,48 @@
   </div>
 
 
+
+  <!-- PAYOUTS -->
+  <section class="table-card payout-card" style="margin-top:30px;">
+    <div class="section-head" style="display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;">
+      <div>
+        <div class="section-label">CREATOR PAYOUTS</div>
+        <h2 style="margin-bottom:6px;">Withdraw your earnings</h2>
+        <p class="lead" style="margin:0;">Minimum payout: <strong>$5.00 USD</strong></p>
+      </div>
+      <div class="payout-balance-box">
+        <small>Available to withdraw</small>
+        <strong id="payoutAvailable">$0.00</strong>
+      </div>
+    </div>
+
+    <div class="payout-grid" style="display:grid;grid-template-columns:minmax(280px,1fr) minmax(280px,1fr);gap:24px;margin-top:24px;">
+      <form id="payoutForm" class="panel" style="margin:0;">
+        <h3>Request payout</h3>
+        <label>Amount (USD)
+          <input id="payoutAmount" type="number" min="5" step="0.01" placeholder="5.00" required>
+        </label>
+        <label>Payment method
+          <select id="payoutMethod" required>
+            <option value="upi">UPI</option>
+            <option value="paypal">PayPal</option>
+          </select>
+        </label>
+        <label id="paymentDetailsLabel">UPI ID
+          <input id="paymentDetails" type="text" maxlength="320" placeholder="yourname@upi" required>
+        </label>
+        <p id="payoutMessage" class="form-message"></p>
+        <button class="primary" id="payoutSubmit" type="submit">Request payout</button>
+      </form>
+
+      <div class="panel" style="margin:0;">
+        <h3>Payout history</h3>
+        <div id="payoutHistory">
+          <p class="lead">Loading payout history...</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- FILES -->
 
@@ -339,6 +395,7 @@ async function init() {
 
 
     await load();
+    await loadPayouts();
 
   } catch (error) {
 
@@ -1016,6 +1073,117 @@ $("confirmDelete")
   );
 
 
+
+/* =========================================
+   PAYOUTS
+========================================= */
+
+async function loadPayouts() {
+  if (!user) return;
+
+  const { data: balance, error: balanceError } =
+    await supabaseClient.rpc("get_available_balance", {
+      p_creator_id: user.id
+    });
+
+  if (balanceError) {
+    console.error("Payout balance error:", balanceError);
+    $("payoutAvailable").textContent = "$0.00";
+  } else {
+    const amount = Number(balance || 0);
+    $("payoutAvailable").textContent = money(amount);
+  }
+
+  const { data: requests, error: requestError } =
+    await supabaseClient
+      .from("payout_requests")
+      .select("id,amount,method,payment_details,status,created_at")
+      .eq("creator_id", user.id)
+      .order("created_at", { ascending: false });
+
+  if (requestError) {
+    console.error("Payout history error:", requestError);
+    $("payoutHistory").innerHTML = `<p class="lead">Could not load payout history.</p>`;
+    return;
+  }
+
+  if (!requests || !requests.length) {
+    $("payoutHistory").innerHTML = `<p class="lead">No payout requests yet.</p>`;
+    return;
+  }
+
+  $("payoutHistory").innerHTML = requests.map(r => {
+    const date = r.created_at
+      ? new Date(r.created_at).toLocaleDateString()
+      : "—";
+    return `
+      <div class="payout-row">
+        <div>
+          <strong>${money(r.amount)}</strong>
+          <div class="eyebrow">${esc(r.method || "unknown")} · ${esc(date)}</div>
+        </div>
+        <div class="payout-status">${esc(r.status || "pending")}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+$("payoutMethod").addEventListener("change", function() {
+  const method = this.value;
+  $("paymentDetailsLabel").firstChild.textContent =
+    method === "paypal" ? "PayPal email" : "UPI ID";
+  $("paymentDetails").placeholder =
+    method === "paypal" ? "you@example.com" : "yourname@upi";
+  $("paymentDetails").type = method === "paypal" ? "email" : "text";
+});
+
+$("payoutForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+
+  const amount = Number($("payoutAmount").value);
+  const method = $("payoutMethod").value;
+  const details = $("paymentDetails").value.trim();
+  const button = $("payoutSubmit");
+
+  if (!Number.isFinite(amount) || amount < 5) {
+    $("payoutMessage").textContent = "Minimum payout is $5.00.";
+    return;
+  }
+
+  if (!details) {
+    $("payoutMessage").textContent = "Payment details are required.";
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "Submitting...";
+  $("payoutMessage").textContent = "";
+
+  try {
+    const { data, error } = await supabaseClient.rpc("request_payout", {
+      p_amount: amount,
+      p_method: method,
+      p_payment_details: details
+    });
+
+    if (error) throw error;
+
+    $("payoutAmount").value = "";
+    $("paymentDetails").value = "";
+    $("payoutMessage").textContent =
+      `✓ Payout request submitted for ${money(data?.amount || amount)}.`;
+
+    await loadPayouts();
+  } catch (error) {
+    console.error("Payout request error:", error);
+    $("payoutMessage").textContent =
+      error?.message || "Could not submit payout request.";
+  } finally {
+    button.disabled = false;
+    button.textContent = "Request payout";
+  }
+});
+
 /* =========================================
    SIGN OUT
 ========================================= */
@@ -1069,9 +1237,9 @@ function msg(text) {
 function money(value) {
 
   return (
-    "₹" +
+    "$" +
     Number(value || 0)
-      .toFixed(8)
+      .toFixed(2)
   );
 
 }
