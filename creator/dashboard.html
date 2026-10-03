@@ -1103,7 +1103,25 @@ async function loadPayouts() {
 
   if (requestError) {
     console.error("Payout history error:", requestError);
-    $("payoutHistory").innerHTML = `<p class="lead">Could not load payout history.</p>`;
+
+    const message = requestError?.message || "Unknown Supabase error";
+    const details = requestError?.details || "";
+    const hint = requestError?.hint || "";
+    const code = requestError?.code || "";
+
+    $("payoutHistory").innerHTML = `
+      <div style="padding:14px;border:1px solid #fecaca;background:#fff7f7;border-radius:10px;">
+        <p class="lead" style="margin:0;color:#b91c1c;">
+          Could not load payout history.
+        </p>
+        <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#7f1d1d;word-break:break-word;">
+          <strong>Supabase error:</strong> ${esc(message)}
+          ${code ? `<br><strong>Code:</strong> ${esc(code)}` : ""}
+          ${details ? `<br><strong>Details:</strong> ${esc(details)}` : ""}
+          ${hint ? `<br><strong>Hint:</strong> ${esc(hint)}` : ""}
+        </div>
+      </div>
+    `;
     return;
   }
 
