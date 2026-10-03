@@ -1097,31 +1097,13 @@ async function loadPayouts() {
   const { data: requests, error: requestError } =
     await supabaseClient
       .from("payout_requests")
-      .select("id,amount,method,status,created_at")
+      .select("id,amount,method,payment_details,status,created_at")
       .eq("creator_id", user.id)
       .order("created_at", { ascending: false });
 
   if (requestError) {
     console.error("Payout history error:", requestError);
-
-    const message = requestError?.message || "Unknown Supabase error";
-    const details = requestError?.details || "";
-    const hint = requestError?.hint || "";
-    const code = requestError?.code || "";
-
-    $("payoutHistory").innerHTML = `
-      <div style="padding:14px;border:1px solid #fecaca;background:#fff7f7;border-radius:10px;">
-        <p class="lead" style="margin:0;color:#b91c1c;">
-          Could not load payout history.
-        </p>
-        <div style="margin-top:10px;font-size:12px;line-height:1.6;color:#7f1d1d;word-break:break-word;">
-          <strong>Supabase error:</strong> ${esc(message)}
-          ${code ? `<br><strong>Code:</strong> ${esc(code)}` : ""}
-          ${details ? `<br><strong>Details:</strong> ${esc(details)}` : ""}
-          ${hint ? `<br><strong>Hint:</strong> ${esc(hint)}` : ""}
-        </div>
-      </div>
-    `;
+    $("payoutHistory").innerHTML = `<p class="lead">Could not load payout history.</p>`;
     return;
   }
 
@@ -1134,33 +1116,16 @@ async function loadPayouts() {
     const date = r.created_at
       ? new Date(r.created_at).toLocaleDateString()
       : "—";
-    const payoutCode = r.id
-      ? "KP-PAY-" + String(r.id).replaceAll("-", "").slice(0, 8).toUpperCase()
-      : "—";
-
     return `
-      <div class="payout-row" style="align-items:center;">
+      <div class="payout-row">
         <div>
           <strong>${money(r.amount)}</strong>
           <div class="eyebrow">${esc(r.method || "unknown")} · ${esc(date)}</div>
-          <div style="margin-top:6px;font-size:12px;color:#64748b;">Payout ID: <strong>${esc(payoutCode)}</strong></div>
         </div>
-        <div style="text-align:right;">
-          <div class="payout-status">${esc(r.status || "pending")}</div>
-          <button type="button" class="secondary" style="margin-top:7px;padding:7px 10px;font-size:11px;" onclick="copyPayoutId('${esc(payoutCode)}')">Copy ID</button>
-        </div>
+        <div class="payout-status">${esc(r.status || "pending")}</div>
       </div>
     `;
   }).join("");
-}
-
-async function copyPayoutId(payoutId) {
-  try {
-    await navigator.clipboard.writeText(payoutId);
-    $("payoutMessage").textContent = "Payout ID copied: " + payoutId;
-  } catch (error) {
-    console.error("Copy payout ID error:", error);
-  }
 }
 
 $("payoutMethod").addEventListener("change", function() {
@@ -1205,11 +1170,8 @@ $("payoutForm").addEventListener("submit", async function(event) {
 
     $("payoutAmount").value = "";
     $("paymentDetails").value = "";
-    const payoutId = data?.payout_id || data?.payout_code || "—";
-    $("payoutMessage").innerHTML =
-      `✓ Payout request submitted for <strong>${money(data?.amount || amount)}</strong>.<br>` +
-      `Your Payout ID: <strong>${esc(payoutId)}</strong><br>` +
-      `<small>Please save this ID for payment support.</small>`;
+    $("payoutMessage").textContent =
+      `✓ Payout request submitted for ${money(data?.amount || amount)}.`;
 
     await loadPayouts();
   } catch (error) {
