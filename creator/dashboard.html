@@ -1117,8 +1117,6 @@ async function loadPayouts() {
       ? new Date(r.created_at).toLocaleDateString()
       : "—";
     const payoutId = r.payout_code || `KP-PAY-${String(r.id || "").replace(/-/g, "").slice(0, 8).toUpperCase()}`;
-    const creatorId = r.creator_id || user.id;
-    const paymentDetails = r.payment_details || "—";
     return `
       <div class="payout-row" style="align-items:flex-start;gap:18px;">
         <div style="min-width:0;flex:1;">
@@ -1128,8 +1126,6 @@ async function loadPayouts() {
             <div><strong>Payout ID:</strong> <span style="font-family:monospace;">${esc(payoutId)}</span>
               <button type="button" class="copy-payout-id" data-payout-id="${esc(payoutId)}" style="margin-left:6px;padding:3px 8px;border:1px solid #dbe1f0;border-radius:6px;background:#fff;cursor:pointer;">Copy</button>
             </div>
-            <div><strong>Creator ID:</strong> <span style="font-family:monospace;word-break:break-all;">${esc(creatorId)}</span></div>
-            <div><strong>Payment:</strong> ${esc(paymentDetails)}</div>
           </div>
         </div>
         <div class="payout-status">${esc(r.status || "pending")}</div>
