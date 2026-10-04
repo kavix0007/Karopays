@@ -494,8 +494,19 @@ async function load() {
     money(totalEarnings);
 
 
-  $("availableBalance").textContent =
-    money(totalEarnings);
+  // Available balance is the real withdrawable balance from Supabase.
+  // Do not show total earnings here because payouts must reduce it.
+  const { data: availableBalance, error: availableBalanceError } =
+    await supabaseClient.rpc("get_available_balance", {
+      p_creator_id: user.id
+    });
+
+  if (availableBalanceError) {
+    console.error("Available balance error:", availableBalanceError);
+    $("availableBalance").textContent = "$0.00";
+  } else {
+    $("availableBalance").textContent = money(Number(availableBalance || 0));
+  }
 
 
   render(files || []);
@@ -1254,18 +1265,13 @@ function msg(text) {
 ========================================= */
 
 function money(value) {
-  const amount = Number(value || 0);
 
-  if (!Number.isFinite(amount) || amount === 0) {
-    return "$0.00";
-  }
+  return (
+    "$" +
+    Number(value || 0)
+      .toFixed(2)
+  );
 
-  // Show small earnings accurately instead of rounding them to $0.00.
-  if (Math.abs(amount) < 0.01) {
-    return "$" + amount.toFixed(6);
-  }
-
-  return "$" + amount.toFixed(2);
 }
 
 
