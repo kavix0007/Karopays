@@ -1254,13 +1254,18 @@ function msg(text) {
 ========================================= */
 
 function money(value) {
+  const amount = Number(value || 0);
 
-  return (
-    "$" +
-    Number(value || 0)
-      .toFixed(2)
-  );
+  if (!Number.isFinite(amount) || amount === 0) {
+    return "$0.00";
+  }
 
+  // Show small earnings accurately instead of rounding them to $0.00.
+  if (Math.abs(amount) < 0.01) {
+    return "$" + amount.toFixed(6);
+  }
+
+  return "$" + amount.toFixed(2);
 }
 
 
