@@ -92,7 +92,7 @@ function error(){
 
   Downloader
       ↓
-  record-download Edge Function
+  smooth-api Edge Function
       ↓
   Downloader IP → Country
       ↓
@@ -117,7 +117,7 @@ $('download').onclick=async()=>{
 
     const{data:result,error:recordError}=
       await supabaseClient.functions.invoke(
-        'record-download',
+        'smooth-api',
         {body:{file_id:file.id}}
       );
 
