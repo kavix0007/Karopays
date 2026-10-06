@@ -184,6 +184,50 @@ a{text-decoration:none;color:inherit}
   .kp-file-actions{justify-content:flex-start}
 }
 
+
+/* KaroPays V5 UI polish — visual additions only */
+.kp-top-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.kp-announcement{
+  margin:0 0 18px;background:#fff;border:1px solid var(--kp-line);
+  border-left:4px solid var(--kp-primary);border-radius:16px;padding:15px 17px;
+  box-shadow:var(--kp-shadow);display:flex;align-items:center;gap:13px;
+}
+.kp-announcement-icon{width:38px;height:38px;flex:0 0 38px;border-radius:11px;background:var(--kp-primary-soft);color:var(--kp-primary);display:grid;place-items:center;font-weight:900}
+.kp-announcement-body{min-width:0;flex:1}
+.kp-announcement-body strong{display:block;font-size:14px;margin-bottom:3px}
+.kp-announcement-body span{display:block;color:var(--kp-muted);font-size:12px;line-height:1.45}
+.kp-announcement-link{white-space:nowrap;color:var(--kp-primary);font-size:12px;font-weight:800}
+.kp-share-modal-list{max-height:55vh;overflow:auto}
+.kp-share-file{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--kp-line)}
+.kp-share-file:last-child{border-bottom:0}
+.kp-share-file-name{font-size:13px;font-weight:750;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kp-share-file-sub{font-size:11px;color:var(--kp-muted);margin-top:3px}
+.kp-share-actions{display:flex;gap:7px;flex:0 0 auto}
+.kp-balance{min-height:100%;padding:24px!important;display:flex;flex-direction:column;justify-content:flex-start;overflow:hidden}
+.kp-balance h2{line-height:1.05!important;margin:9px 0 6px!important}
+.kp-balance p{line-height:1.4!important;margin:0!important;min-height:19px}
+.kp-balance .kp-btn{margin-top:15px!important;width:max-content!important;max-width:100%;display:inline-flex;align-items:center;justify-content:center}
+.kp-balance .kp-mini-grid{margin-top:auto!important;padding-top:18px;width:100%}
+.kp-payout-grid{align-items:start;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+.kp-payout-grid>*{min-width:0}
+.kp-payout-grid .kp-form{width:100%}
+.kp-payout-grid .kp-form input,.kp-payout-grid .kp-form select{max-width:100%}
+.kp-payout-history-box{min-width:0;overflow:hidden}
+.kp-payout-history-box #payoutHistory{max-height:330px;overflow:auto;padding-right:3px}
+.kp-payout-history-box .kp-record{min-width:0}
+.kp-leader-name{font-size:12px}
+.kp-share-top{display:inline-flex;align-items:center;gap:7px}
+@media(max-width:760px){
+  .kp-top-tools{width:100%}
+  .kp-top-tools .kp-btn{flex:1;min-width:0;text-align:center}
+  .kp-announcement{align-items:flex-start}
+  .kp-announcement-link{display:none}
+  .kp-balance{min-height:330px}
+  .kp-balance .kp-mini-grid{margin-top:18px!important}
+  .kp-payout-grid{grid-template-columns:1fr!important}
+  .kp-payout-history-box #payoutHistory{max-height:none}
+}
+
 </style>
 </head>
 
@@ -243,11 +287,22 @@ a{text-decoration:none;color:inherit}
         <h1>Creator Dashboard</h1>
         <p id="creatorEmail">Loading account...</p>
       </div>
-      <div class="kp-actions">
+      <div class="kp-actions kp-top-tools">
+        <button class="kp-btn" id="shareFilesBtn" type="button">↗ Share Files</button>
+        <a class="kp-btn" href="../leaderboard.html">▥ Leaderboard</a>
         <a class="kp-btn" href="../payout-rates.html">Payout Rates</a>
         <a class="kp-btn primary" href="../upload.html">+ Upload File</a>
       </div>
     </div>
+
+    <section class="kp-announcement" aria-label="Announcement">
+      <div class="kp-announcement-icon">!</div>
+      <div class="kp-announcement-body">
+        <strong>Announcement</strong>
+        <span>KaroPays Creator Competition is live. Rankings for <b>Most Earned</b> and <b>Most Referrals</b> will be featured for the 15 November 2026 finale.</span>
+      </div>
+      <a class="kp-announcement-link" href="../leaderboard.html">View leaderboard →</a>
+    </section>
 
     <section class="kp-stats">
       <div class="kp-card kp-stat">
@@ -361,7 +416,7 @@ a{text-decoration:none;color:inherit}
           <p class="kp-msg" id="payoutMessage"></p>
           <button class="kp-btn primary" id="payoutSubmit" type="submit">Request payout</button>
         </form>
-        <div>
+        <div class="kp-payout-history-box">
           <h3 style="margin-top:0">Payout history</h3>
           <div id="payoutHistory"><div class="kp-empty">Loading...</div></div>
         </div>
@@ -370,6 +425,19 @@ a{text-decoration:none;color:inherit}
   </div>
 </main>
 
+
+<div class="kp-modal" id="shareModal" aria-hidden="true">
+  <div class="kp-modal-box">
+    <div class="kp-modal-head">
+      <h2>Share your files</h2>
+      <button class="kp-modal-close" type="button" data-close="shareModal">×</button>
+    </div>
+    <div class="kp-modal-body">
+      <p style="margin-top:0;color:var(--kp-muted);font-size:13px">Choose a file to copy or share its public KaroPays link.</p>
+      <div class="kp-share-modal-list" id="shareFilesList"></div>
+    </div>
+  </div>
+</div>
 
 <div class="kp-modal" id="editModal" aria-hidden="true">
   <div class="kp-modal-box">
@@ -669,6 +737,51 @@ document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",
 document.querySelectorAll(".kp-modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)closeModal(m.id)}));
 document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".kp-modal.open").forEach(m=>closeModal(m.id))});
 
+/* ---------- Share files ---------- */
+$("shareFilesBtn").addEventListener("click",()=>{
+  renderShareFiles();
+  openModal("shareModal");
+});
+
+function renderShareFiles(){
+  const active=files.filter(f=>String(f.status||"").toLowerCase()==="active");
+  $("shareFilesList").innerHTML=active.length ? active.map(f=>`
+    <div class="kp-share-file">
+      <div style="min-width:0">
+        <div class="kp-share-file-name">${esc(f.file_name||"Unnamed file")}</div>
+        <div class="kp-share-file-sub">${Number(f.downloads||0).toLocaleString()} downloads · Ad Level ${Number(f.ad_level||1)}</div>
+      </div>
+      <div class="kp-share-actions">
+        <button class="kp-btn small" type="button" data-share-copy="${esc(f.id)}">Copy</button>
+        <button class="kp-btn small primary" type="button" data-share-native="${esc(f.id)}">Share</button>
+      </div>
+    </div>
+  `).join("") : '<div class="kp-empty">No active files available to share.</div>';
+
+  $("shareFilesList").querySelectorAll("[data-share-copy]").forEach(btn=>{
+    btn.addEventListener("click",()=>shareFile(btn.dataset.shareCopy,false));
+  });
+  $("shareFilesList").querySelectorAll("[data-share-native]").forEach(btn=>{
+    btn.addEventListener("click",()=>shareFile(btn.dataset.shareNative,true));
+  });
+}
+
+async function shareFile(id,native){
+  const f=files.find(x=>x.id===id);
+  if(!f)return;
+  const url=new URL("../file.html?id="+encodeURIComponent(id),location.href).href;
+  try{
+    if(native && navigator.share){
+      await navigator.share({title:f.file_name||"KaroPays file",url});
+      return;
+    }
+    await navigator.clipboard.writeText(url);
+    toast("✓ File link copied.");
+  }catch(err){
+    if(err?.name!=="AbortError") toast("Could not share this file.",true);
+  }
+}
+
 /* ---------- Competition leaderboard ---------- */
 async function renderCompetition(){
   const end=new Date("2026-11-15T23:59:59+05:30");
@@ -693,7 +806,7 @@ async function renderCompetition(){
     const ids=[...new Set([...earnedRows.map(x=>x.id),...refRows.map(x=>x.id)])];
     let profiles={};
     if(ids.length){
-      const {data:ps}=await supabaseClient.from("profiles").select("id,username,display_name").in("id",ids);
+      const {data:ps}=await supabaseClient.from("profiles").select("id,username").in("id",ids);
       (ps||[]).forEach(p=>profiles[p.id]=p);
     }
 
@@ -712,7 +825,7 @@ async function renderCompetition(){
 }
 
 function leaderRow(i,p,value){
-  const name=p?.display_name||p?.username||"Creator";
+  const name=p?.username ? "@"+p.username : "Creator";
   return `<div class="kp-leader-row"><div class="kp-rank">#${i+1}</div><div class="kp-leader-name">${esc(name)}</div><div class="kp-leader-value">${esc(value)}</div></div>`;
 }
 function updateCountdown(end){
