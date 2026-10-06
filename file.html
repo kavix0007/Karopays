@@ -6,197 +6,793 @@
 <title>File — KaroPays</title>
 <link rel="stylesheet" href="assets/css/pro.css">
 </head>
+
 <body>
+
 <header class="site-header">
-<a class="logo" href="index.html"><span class="logo-mark">K</span>KaroPays</a>
-<nav class="desktop-nav">
-<a href="payout-rates.html">Payout Rates</a>
-<a href="payment-proof.html">Payment Proof</a>
-<a href="premium.html">Premium</a>
-<a href="login.html">Sign in</a>
-</nav>
+  <a class="logo" href="index.html">
+    <span class="logo-mark">K</span>KaroPays
+  </a>
+
+  <nav class="desktop-nav">
+    <a href="payout-rates.html">Payout Rates</a>
+    <a href="payment-proof.html">Payment Proof</a>
+    <a href="premium.html">Premium</a>
+    <a href="login.html">Sign in</a>
+  </nav>
 </header>
 
-<main class="legal-page">
-<div id="state">
-<div class="section-label">KAROPAYS FILE</div>
-<h1>Loading file...</h1>
-<p class="lead">Please wait.</p>
-</div>
 
-<section id="content" style="display:none">
-<div class="file-hero">
-<div class="eyebrow" id="cat">FILE</div>
-<h1 id="name"></h1>
-<p class="lead" id="desc"></p>
-<div class="file-meta" id="meta"></div>
-<div class="actions">
-<button class="primary" id="download">Download file</button>
-<button class="secondary" id="share">Share file</button>
-</div>
-<p id="message" class="form-message"></p>
-</div>
-<div class="ad-box">ADVERTISEMENT</div>
-</section>
+<main class="legal-page">
+
+  <div id="state">
+    <div class="section-label">KAROPAYS FILE</div>
+    <h1>Loading file...</h1>
+    <p class="lead">Please wait.</p>
+  </div>
+
+
+  <section id="content" style="display:none">
+
+    <div class="file-hero">
+
+      <div class="eyebrow" id="cat">
+        FILE
+      </div>
+
+      <h1 id="name"></h1>
+
+      <p class="lead" id="desc"></p>
+
+      <div class="file-meta" id="meta"></div>
+
+      <div class="actions">
+
+        <button
+          class="primary"
+          id="download"
+          type="button"
+        >
+          Download file
+        </button>
+
+        <button
+          class="secondary"
+          id="share"
+          type="button"
+        >
+          Share file
+        </button>
+
+      </div>
+
+      <p
+        id="message"
+        class="form-message"
+      ></p>
+
+    </div>
+
+    <div class="ad-box">
+      ADVERTISEMENT
+    </div>
+
+  </section>
+
 </main>
 
+
+<!-- ======================================================
+     SUPABASE
+====================================================== -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="assets/js/supabase-config.js"></script>
+
+
 <script>
-const id=new URLSearchParams(location.search).get('id');
-let file;
-const $=x=>document.getElementById(x);
 
-load();
+"use strict";
 
-async function load(){
-  if(!id)return error();
 
-  const{data:f,error:e}=await supabaseClient
-    .from('files')
-    .select('id,file_name,file_size,description,category,ad_level,downloads,status,storage_path')
-    .eq('id',id)
-    .eq('status','active')
-    .single();
-
-  if(e||!f)return error();
-
-  file=f;
-
-  $('name').textContent=f.file_name||'Unnamed file';
-  $('desc').textContent=f.description||'No description provided.';
-  $('cat').textContent=f.category||'FILE';
-
-  $('meta').innerHTML=`
-    <span>${esc(f.category||'Other')}</span>
-    <span>${bytes(f.file_size)}</span>
-    <span>${(+f.downloads||0).toLocaleString()} downloads</span>
-    <span>Ad Level ${+f.ad_level||1}</span>
-  `;
-
-  $('state').style.display='none';
-  $('content').style.display='block';
-}
-
-function error(){
-  $('state').innerHTML=`
-    <div class="section-label">FILE</div>
-    <h1>File unavailable</h1>
-    <p class="lead">This file does not exist or is no longer available.</p>
-    <a class="primary" href="index.html">Back to KaroPays</a>
-  `;
-}
+/* =========================================================
+   CONFIGURATION
+========================================================= */
 
 /*
-  SECURE DOWNLOAD FLOW:
+ * This MUST be the deployed Edge Function that you tested
+ * successfully.
+ *
+ * Do NOT use:
+ *
+ * record-download
+ *
+ * Do NOT use:
+ *
+ * record_download
+ *
+ * We use ONLY:
+ *
+ * smooth-api
+ */
+const DOWNLOAD_FUNCTION = "smooth-api";
 
-  Downloader
-      ↓
-  smooth-api Edge Function
-      ↓
-  Downloader IP → Country
-      ↓
-  File Ad Level
-      ↓
-  payout_rates
-      ↓
-  download_earnings
 
-  The browser sends ONLY file_id.
-  It cannot choose country, rate, ad level or earning.
-*/
+/*
+ * File ID from URL:
+ *
+ * file.html?id=xxxxxxxx
+ */
+const id =
+  new URLSearchParams(
+    window.location.search
+  ).get("id");
 
-$('download').onclick=async()=>{
-  if(!file)return;
 
-  const b=$('download');
-  b.disabled=true;
-  b.textContent='Preparing download...';
+/*
+ * Current file
+ */
+let file = null;
 
-  try{
 
-    const{data:result,error:recordError}=
-      await supabaseClient.functions.invoke(
-        'smooth-api',
-        {body:{file_id:file.id}}
-      );
+/*
+ * Short DOM helper
+ */
+const $ = (id) =>
+  document.getElementById(id);
 
-    if(recordError)throw recordError;
 
-    if(!result||result.success!==true){
-      throw new Error(
-        'The download could not be recorded, so the file was not downloaded.'
-      );
-    }
+/* =========================================================
+   START
+========================================================= */
 
-    const{data:signed,error:signedError}=
+loadFile();
+
+
+/* =========================================================
+   LOAD FILE
+========================================================= */
+
+async function loadFile() {
+
+  if (!id) {
+    showError();
+    return;
+  }
+
+
+  try {
+
+    const {
+      data: f,
+      error: e
+    } =
       await supabaseClient
-        .storage
-        .from('files')
-        .createSignedUrl(file.storage_path,120);
+        .from("files")
+        .select(
+          `
+          id,
+          file_name,
+          file_size,
+          description,
+          category,
+          ad_level,
+          downloads,
+          status,
+          storage_path
+          `
+        )
+        .eq(
+          "id",
+          id
+        )
+        .eq(
+          "status",
+          "active"
+        )
+        .single();
 
-    if(signedError||!signed?.signedUrl){
-      throw signedError||
-        new Error('Could not create a download link.');
+
+    if (e) {
+
+      console.error(
+        "File lookup error:",
+        e
+      );
+
+      showError();
+      return;
     }
 
-    $('message').textContent=
-      '✓ Download recorded. Your download is starting...';
 
-    location.href=signed.signedUrl;
+    if (!f) {
 
-  }catch(e){
-    console.error('KaroPays download error:',e);
+      showError();
+      return;
+    }
 
-    $('message').textContent=
-      e?.message||'Could not start the download.';
 
-    b.disabled=false;
-    b.textContent='Download file';
+    file = f;
+
+
+    /*
+     * File information
+     */
+    $("name").textContent =
+      f.file_name ||
+      "Unnamed file";
+
+
+    $("desc").textContent =
+      f.description ||
+      "No description provided.";
+
+
+    $("cat").textContent =
+      f.category ||
+      "FILE";
+
+
+    /*
+     * File metadata
+     */
+    $("meta").innerHTML = `
+      <span>
+        ${esc(f.category || "Other")}
+      </span>
+
+      <span>
+        ${bytes(f.file_size)}
+      </span>
+
+      <span>
+        ${(Number(f.downloads) || 0).toLocaleString()}
+        downloads
+      </span>
+
+      <span>
+        Ad Level ${Number(f.ad_level) || 1}
+      </span>
+    `;
+
+
+    /*
+     * Show content
+     */
+    $("state").style.display =
+      "none";
+
+    $("content").style.display =
+      "block";
+
+
+  } catch (error) {
+
+    console.error(
+      "Unexpected file loading error:",
+      error
+    );
+
+    showError();
   }
-};
-
-$('share').onclick=async()=>{
-  try{
-    if(navigator.share){
-      await navigator.share({
-        title:file?.file_name||'KaroPays file',
-        url:location.href
-      });
-    }else{
-      await navigator.clipboard.writeText(location.href);
-      $('message').textContent=
-        '✓ File link copied to clipboard.';
-    }
-  }catch(e){
-    if(e.name!=='AbortError'){
-      $('message').textContent='Could not share the file.';
-    }
-  }
-};
-
-function bytes(n){
-  n=+n||0;
-  if(!n)return'0 B';
-
-  const u=['B','KB','MB','GB','TB'];
-  const i=Math.floor(Math.log(n)/Math.log(1024));
-
-  return(n/1024**i).toFixed(i?2:0)+' '+u[i];
 }
 
-function esc(v){
-  return String(v).replace(
-    /[&<>'"]/g,
-    c=>({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      "'":'&#039;',
-      '"':'&quot;'
-    }[c])
-  );
+
+/* =========================================================
+   FILE ERROR
+========================================================= */
+
+function showError() {
+
+  $("state").innerHTML = `
+
+    <div class="section-label">
+      FILE
+    </div>
+
+    <h1>
+      File unavailable
+    </h1>
+
+    <p class="lead">
+      This file does not exist or is no longer available.
+    </p>
+
+    <a
+      class="primary"
+      href="index.html"
+    >
+      Back to KaroPays
+    </a>
+
+  `;
 }
+
+
+/* =========================================================
+   DOWNLOAD
+========================================================= */
+
+/*
+ * SECURITY FLOW
+ *
+ * Browser
+ *    ↓
+ * smooth-api
+ *    ↓
+ * Check file
+ *    ↓
+ * Downloader IP
+ *    ↓
+ * Country
+ *    ↓
+ * Ad level
+ *    ↓
+ * payout_rates
+ *    ↓
+ * download_attempts
+ *    ↓
+ * download_earnings
+ *    ↓
+ * File statistics
+ *    ↓
+ * Signed URL
+ *    ↓
+ * Download
+ *
+ *
+ * The browser sends ONLY:
+ *
+ * file_id
+ *
+ *
+ * Browser cannot choose:
+ *
+ * - country
+ * - payout rate
+ * - earning
+ * - creator
+ */
+
+
+$("download").onclick =
+  async function () {
+
+    if (!file) {
+      return;
+    }
+
+
+    const button =
+      $("download");
+
+
+    button.disabled =
+      true;
+
+
+    button.textContent =
+      "Preparing download...";
+
+
+    $("message").textContent =
+      "";
+
+
+    try {
+
+      /* =================================================
+         STEP 1
+         CREATE SIGNED URL
+      ================================================= */
+
+      /*
+       * We create the signed URL before recording the
+       * earning.
+       *
+       * This prevents recording an earning if the file
+       * cannot actually be accessed.
+       */
+
+      const {
+        data: signed,
+        error: signedError
+      } =
+        await supabaseClient
+          .storage
+          .from("files")
+          .createSignedUrl(
+            file.storage_path,
+            120
+          );
+
+
+      if (
+        signedError ||
+        !signed ||
+        !signed.signedUrl
+      ) {
+
+        console.error(
+          "Signed URL error:",
+          signedError
+        );
+
+
+        throw new Error(
+          signedError?.message ||
+          "Could not create a download link."
+        );
+      }
+
+
+      console.log(
+        "Signed URL created successfully."
+      );
+
+
+      /* =================================================
+         STEP 2
+         RECORD DOWNLOAD
+      ================================================= */
+
+      console.log(
+        "Calling Edge Function:",
+        DOWNLOAD_FUNCTION
+      );
+
+
+      const {
+        data: result,
+        error: recordError
+      } =
+        await supabaseClient
+          .functions
+          .invoke(
+            DOWNLOAD_FUNCTION,
+            {
+              body: {
+                file_id: file.id
+              }
+            }
+          );
+
+
+      /* =================================================
+         EDGE FUNCTION ERROR
+      ================================================= */
+
+      if (recordError) {
+
+        console.error(
+          "Edge Function error object:",
+          recordError
+        );
+
+
+        /*
+         * Try to read the actual response body.
+         *
+         * Supabase sometimes gives only:
+         *
+         * "Edge Function returned a non-2xx status code"
+         *
+         * The response body can contain the real reason.
+         */
+
+        let backendError =
+          recordError.message ||
+          "The download service rejected the request.";
+
+
+        try {
+
+          if (
+            recordError.context &&
+            typeof recordError.context.json ===
+              "function"
+          ) {
+
+            const errorBody =
+              await recordError.context.json();
+
+
+            console.error(
+              "Edge Function response:",
+              errorBody
+            );
+
+
+            if (
+              errorBody &&
+              errorBody.error
+            ) {
+
+              backendError =
+                errorBody.error;
+
+
+              if (
+                errorBody.details
+              ) {
+
+                backendError +=
+                  " — " +
+                  errorBody.details;
+              }
+
+            }
+
+          }
+
+        } catch (
+          parseError
+        ) {
+
+          console.error(
+            "Could not parse Edge Function error:",
+            parseError
+          );
+
+        }
+
+
+        throw new Error(
+          backendError
+        );
+      }
+
+
+      /* =================================================
+         LOG SUCCESS RESPONSE
+      ================================================= */
+
+      console.log(
+        "smooth-api response:",
+        result
+      );
+
+
+      /* =================================================
+         CHECK RESPONSE
+      ================================================= */
+
+      if (
+        !result ||
+        result.success !== true
+      ) {
+
+        throw new Error(
+          result?.error ||
+          "The download could not be recorded."
+        );
+      }
+
+
+      /* =================================================
+         SUCCESS MESSAGE
+      ================================================= */
+
+      $("message").textContent =
+        "✓ Download recorded. Your download is starting...";
+
+
+      /*
+       * Update displayed download count locally.
+       */
+      if (
+        typeof result.downloads ===
+        "number"
+      ) {
+
+        file.downloads =
+          result.downloads;
+
+
+        $("meta").innerHTML = `
+          <span>
+            ${esc(file.category || "Other")}
+          </span>
+
+          <span>
+            ${bytes(file.file_size)}
+          </span>
+
+          <span>
+            ${Number(file.downloads).toLocaleString()}
+            downloads
+          </span>
+
+          <span>
+            Ad Level ${Number(file.ad_level) || 1}
+          </span>
+        `;
+
+      }
+
+
+      /* =================================================
+         START REAL DOWNLOAD
+      ================================================= */
+
+      /*
+       * IMPORTANT:
+       *
+       * The file is downloaded ONLY after the
+       * Edge Function says success:true.
+       */
+
+      window.location.href =
+        signed.signedUrl;
+
+
+    } catch (error) {
+
+      console.error(
+        "KaroPays download error:",
+        error
+      );
+
+
+      /*
+       * Show the actual backend error.
+       */
+      $("message").textContent =
+        error?.message ||
+        "Could not start the download.";
+
+
+      /*
+       * Allow user to try again.
+       */
+      button.disabled =
+        false;
+
+
+      button.textContent =
+        "Download file";
+    }
+
+  };
+
+
+/* =========================================================
+   SHARE
+========================================================= */
+
+$("share").onclick =
+  async function () {
+
+    try {
+
+      if (
+        navigator.share
+      ) {
+
+        await navigator.share({
+
+          title:
+            file?.file_name ||
+            "KaroPays file",
+
+          url:
+            window.location.href
+
+        });
+
+      } else {
+
+        await navigator.clipboard.writeText(
+          window.location.href
+        );
+
+
+        $("message").textContent =
+          "✓ File link copied to clipboard.";
+      }
+
+
+    } catch (error) {
+
+      /*
+       * User cancelling native share is not an error.
+       */
+      if (
+        error?.name !==
+        "AbortError"
+      ) {
+
+        console.error(
+          "Share error:",
+          error
+        );
+
+
+        $("message").textContent =
+          "Could not share the file.";
+      }
+
+    }
+
+  };
+
+
+/* =========================================================
+   FILE SIZE
+========================================================= */
+
+function bytes(n) {
+
+  n =
+    Number(n) || 0;
+
+
+  if (!n) {
+    return "0 B";
+  }
+
+
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB",
+    "TB"
+  ];
+
+
+  const index =
+    Math.floor(
+      Math.log(n) /
+      Math.log(1024)
+    );
+
+
+  const safeIndex =
+    Math.min(
+      index,
+      units.length - 1
+    );
+
+
+  return (
+    n /
+    1024 ** safeIndex
+  ).toFixed(
+    safeIndex ? 2 : 0
+  ) +
+  " " +
+  units[safeIndex];
+
+}
+
+
+/* =========================================================
+   HTML ESCAPE
+========================================================= */
+
+function esc(value) {
+
+  return String(value)
+    .replace(
+      /[&<>'"]/g,
+      function (c) {
+
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#039;",
+          '"': "&quot;"
+        }[c];
+
+      }
+    );
+
+}
+
 </script>
+
 </body>
 </html>
