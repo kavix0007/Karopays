@@ -32,29 +32,65 @@
   </style>
 
 
-<style id="karopays-saas-dashboard">
-:root{--kp-bg:#f6f7fb;--kp-surface:#fff;--kp-ink:#171923;--kp-muted:#747b8c;--kp-line:#e8eaf1;--kp-blue:#526dff;--kp-blue-dark:#3f57e8;--kp-blue-soft:#eef1ff;--kp-shadow:0 8px 28px rgba(26,35,75,.055);--kp-radius:18px}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
-.site-header{height:72px;position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--kp-line);padding:0 30px;display:flex;align-items:center;justify-content:space-between}
-.site-header .logo{display:flex;align-items:center;gap:11px;color:var(--kp-ink);font-size:20px;font-weight:850;letter-spacing:-.7px;text-decoration:none}
-.logo-mark{display:inline-flex!important;align-items:center;justify-content:center;width:38px;height:38px;border-radius:12px;background:var(--kp-blue);color:#fff!important;font-weight:900;font-size:24px;box-shadow:0 5px 12px rgba(82,109,255,.25)}
-.desktop-nav{display:flex;align-items:center;gap:10px}.desktop-nav a{font-size:13px;font-weight:650;color:#596174;text-decoration:none;padding:10px 12px;border-radius:10px}.desktop-nav a:hover{background:#f2f4fa;color:var(--kp-blue)}
-.legal-page{max-width:none;width:auto;margin:0 0 0 244px;padding:34px clamp(20px,3vw,44px) 64px;min-height:calc(100vh - 72px)}
-.kp-sidebar{position:fixed;z-index:40;left:0;top:72px;bottom:0;width:244px;padding:24px 14px;background:#fff;border-right:1px solid var(--kp-line);overflow-y:auto}
-.kp-side-label{padding:10px 12px 8px;color:#a0a6b4;font-size:10px;font-weight:800;letter-spacing:1.25px}
-.kp-side-link{display:flex;align-items:center;gap:12px;padding:11px 13px;margin:3px 0;border-radius:11px;color:#636b7d;text-decoration:none;font-size:13px;font-weight:650;transition:.18s}
-.kp-side-link:hover,.kp-side-link.active{background:var(--kp-blue-soft);color:var(--kp-blue)}.kp-side-icon{width:21px;text-align:center;font-size:17px}
-.kp-side-bottom{margin-top:26px;padding:16px 13px;border:1px solid #e7eaff;background:linear-gradient(145deg,#f7f8ff,#eef1ff);border-radius:14px}.kp-side-bottom strong{font-size:13px;display:block;margin-bottom:4px}.kp-side-bottom p{font-size:11px;color:var(--kp-muted);margin:0 0 12px}.kp-side-bottom a{display:block;text-align:center;background:var(--kp-blue);color:white;text-decoration:none;border-radius:9px;padding:9px;font-size:12px;font-weight:750}
-.section-label,.eyebrow{font-size:10px;letter-spacing:1.25px;font-weight:800;color:var(--kp-blue)}.legal-page>h1{font-size:clamp(28px,3vw,36px);letter-spacing:-1.3px;line-height:1.15;margin:8px 0;font-weight:850}.lead{color:var(--kp-muted);font-size:13px;line-height:1.7}#creatorEmail{margin:0 0 26px}
-.rule-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:25px 0 30px}.rule-grid>div{background:var(--kp-surface);border:1px solid var(--kp-line);border-radius:var(--kp-radius);padding:22px 23px;box-shadow:var(--kp-shadow);position:relative;overflow:hidden}.rule-grid>div:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--kp-blue)}.rule-grid small{font-size:12px;color:var(--kp-muted);font-weight:650}.rule-grid h2{font-size:clamp(23px,2.4vw,30px);letter-spacing:-.8px;margin:9px 0 0;font-weight:850}
-.table-card{background:#fff;border:1px solid var(--kp-line);border-radius:var(--kp-radius);padding:24px;box-shadow:var(--kp-shadow);margin-top:22px!important}.section-head h2,.table-card>h2{font-size:19px;letter-spacing:-.45px;margin:0 0 8px;font-weight:800}.payout-card .section-label{margin-bottom:6px}.payout-card .panel{background:#fafbff;border:1px solid var(--kp-line)!important;border-radius:14px;padding:20px!important}.payout-card h3{font-size:15px;margin:0 0 17px;font-weight:800}
-.payout-balance-box{border:1px solid #dfe4ff!important;border-radius:14px;background:#f6f7ff;min-width:190px;padding:15px 18px!important}.payout-balance-box small{color:var(--kp-muted);font-size:11px;font-weight:700}.payout-balance-box strong{font-size:24px;color:var(--kp-blue);letter-spacing:-.7px}.payout-card label{font-size:12px;color:#51596b;font-weight:700}.payout-card input,.payout-card select{border:1px solid #dfe3ed!important;background:white!important;color:var(--kp-ink)!important;border-radius:10px!important;padding:12px!important;outline:none}.payout-card input:focus,.payout-card select:focus{border-color:var(--kp-blue)!important;box-shadow:0 0 0 3px rgba(82,109,255,.12)}
-.primary,.payout-card button.primary{display:inline-flex;justify-content:center;align-items:center;background:var(--kp-blue)!important;color:white!important;border:0!important;border-radius:10px!important;padding:11px 16px!important;text-decoration:none;font-weight:750;font-size:12px;cursor:pointer;box-shadow:0 5px 12px rgba(82,109,255,.17);transition:.18s}.primary:hover,.payout-card button.primary:hover{background:var(--kp-blue-dark)!important;transform:translateY(-1px)}
-.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid #e0e4ee;border-radius:9px;padding:8px 11px;background:#fff;color:#525a6b;text-decoration:none;font-size:12px;font-weight:700;cursor:pointer}.btn:hover{border-color:#c8d0ff;color:var(--kp-blue);background:#f8f9ff}.btn.ghost{background:#fff}
-.delete-btn,.delete-confirm-btn{border-radius:9px!important}.dashboard-file{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:18px 0!important;border-bottom:1px solid var(--kp-line)!important}.dashboard-file:last-child{border-bottom:0!important}.dashboard-file h3{font-size:15px;margin:5px 0 8px;letter-spacing:-.2px}.file-meta{display:flex;flex-wrap:wrap;gap:7px}.file-meta span{font-size:11px;color:#697185;background:#f5f6fa;padding:5px 8px;border-radius:7px}.dashboard-file-actions{margin-top:0!important;flex-shrink:0}.empty{padding:36px 18px;text-align:center;color:var(--kp-muted);background:#fafbff;border:1px dashed #dfe3ed;border-radius:13px}.form-message{font-size:12px;color:var(--kp-muted);line-height:1.5}.payout-row{border-bottom:1px solid var(--kp-line)!important}.payout-status{font-size:11px;background:#f1f3f8;color:#555f73;padding:5px 9px;border-radius:99px;white-space:nowrap}.delete-modal-card{border-radius:18px!important}
-@media(max-width:1050px){.legal-page{margin-left:215px;padding:28px 22px 50px}.kp-sidebar{width:215px}.site-header{padding:0 22px}.rule-grid{gap:12px}.rule-grid>div{padding:18px}}
-@media(max-width:760px){.site-header{height:62px;padding:0 16px}.site-header .logo{font-size:18px}.logo-mark{width:34px;height:34px}.desktop-nav a:not(#signOut){display:none}.desktop-nav a{padding:8px}.kp-sidebar{top:62px;width:65px;padding:17px 7px}.kp-side-label,.kp-side-text,.kp-side-bottom{display:none!important}.kp-side-link{justify-content:center;padding:12px 4px;gap:0;font-size:0;border-radius:12px}.kp-side-icon{font-size:19px;width:auto}.legal-page{margin-left:65px;padding:24px 13px 40px;min-height:calc(100vh - 62px)}.legal-page>h1{font-size:27px}.rule-grid{grid-template-columns:1fr;gap:10px;margin:20px 0}.rule-grid>div{padding:17px 19px}.rule-grid h2{font-size:25px}.table-card{padding:17px;margin-top:17px!important;border-radius:15px}.section-head{align-items:flex-start!important}.payout-balance-box{min-width:0;width:100%}.payout-grid{grid-template-columns:1fr!important;gap:14px!important}.dashboard-file{display:block;padding:17px 0!important}.dashboard-file-actions{margin-top:13px!important}.dashboard-file-actions .btn,.dashboard-file-actions button{padding:8px 10px!important}.file-meta{gap:5px}.file-meta span{font-size:10px}}
-@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+<style id="karopays-dashboard-v2">
+:root{--k-bg:#f6f7fb;--k-card:#fff;--k-text:#151824;--k-muted:#667085;--k-border:#e8ebf3;--k-blue:#526dff;--k-purple:#7546f7;--k-soft:#eff1ff;--k-green:#16b978;--k-shadow:0 5px 22px rgba(33,42,85,.055)}
+*{box-sizing:border-box}
+body{margin:0!important;background:var(--k-bg)!important;color:var(--k-text)!important;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important}
+.site-header{height:72px!important;position:sticky;top:0;z-index:100;background:rgba(255,255,255,.97)!important;backdrop-filter:blur(18px);border-bottom:1px solid var(--k-border)!important;padding:0 28px!important;display:flex;align-items:center;justify-content:space-between}
+.site-header .logo{font-size:20px!important;font-weight:850!important;letter-spacing:-.65px;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--k-text)}
+.logo-mark{width:39px!important;height:39px!important;border-radius:13px!important;background:linear-gradient(140deg,var(--k-blue),var(--k-purple))!important;color:#fff!important;display:inline-flex!important;align-items:center;justify-content:center;font-weight:900;font-size:23px;box-shadow:0 5px 12px #526dff38}
+.desktop-nav{display:flex;align-items:center;gap:7px}
+.desktop-nav a{font-size:12px!important;font-weight:700!important;color:#5e6679!important;text-decoration:none;padding:10px 12px;border-radius:10px}
+.desktop-nav a:hover{background:#f0f2ff;color:var(--k-blue)!important}
+.legal-page{max-width:none!important;width:auto!important;margin:0 0 0 252px!important;padding:29px clamp(20px,2.5vw,38px) 60px!important;min-height:calc(100vh - 72px);overflow:hidden}
+.kp-sidebar{position:fixed;z-index:80;left:0;top:72px;bottom:0;width:252px;padding:22px 13px;background:#fff;border-right:1px solid var(--k-border);overflow-y:auto;display:flex;flex-direction:column}
+.kp-side-label{padding:12px 12px 7px;color:#a0a7b6;font-size:10px;font-weight:850;letter-spacing:1.1px}
+.kp-side-link{display:flex;align-items:center;gap:12px;padding:11px 13px;margin:2px 0;border-radius:11px;color:#303849;text-decoration:none;font-size:13px;font-weight:650;transition:background .15s,color .15s}
+.kp-side-link:hover,.kp-side-link.active{background:#e9edff;color:#304bff}
+.kp-side-icon{width:22px;flex:0 0 22px;text-align:center;font-size:17px}
+.kp-side-divider{height:1px;background:var(--k-border);margin:12px 8px}
+.kp-side-bottom{margin-top:auto;padding:16px 13px;border-radius:15px;background:linear-gradient(145deg,#6557ff,#7643ef);color:white;box-shadow:0 8px 18px #6b50f52a}
+.kp-side-bottom strong{font-size:14px;display:block;margin-bottom:5px}
+.kp-side-bottom p{font-size:11px;line-height:1.5;color:#f1efff;margin:0 0 13px}
+.kp-side-bottom a{display:block;text-align:center;background:#fff;color:#6048ed;text-decoration:none;border-radius:10px;padding:10px;font-size:12px;font-weight:800}
+.kp-welcome{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 0 21px}
+.kp-welcome h1{font-size:29px!important;line-height:1.2;letter-spacing:-1.1px;margin:0 0 6px!important;font-weight:850}
+.kp-welcome p{margin:0;color:var(--k-muted);font-size:14px}
+.kp-eyebrow{font-size:10px;letter-spacing:1.1px;text-transform:uppercase;color:var(--k-blue);font-weight:850;margin-bottom:9px}
+.kp-date{border:1px solid var(--k-border);border-radius:11px;background:white;padding:11px 13px;font-size:12px;color:#4b5568;font-weight:700}
+.rule-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px!important;margin:20px 0 17px!important}
+.rule-grid>div{position:relative;background:var(--k-card)!important;border:1px solid var(--k-border)!important;border-radius:16px!important;padding:20px 21px!important;box-shadow:var(--k-shadow)!important;overflow:hidden}
+.rule-grid>div:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--k-blue),var(--k-purple))}
+.rule-grid small{font-size:12px!important;color:var(--k-muted)!important;font-weight:650}
+.rule-grid h2{font-size:29px!important;letter-spacing:-.8px;margin:9px 0 0!important;font-weight:850!important;color:#101321}
+.table-card{background:var(--k-card)!important;border:1px solid var(--k-border)!important;border-radius:16px!important;padding:21px!important;box-shadow:var(--k-shadow)!important;margin-top:16px!important}
+.table-card h2,.section-head h2{font-size:17px!important;font-weight:800!important;letter-spacing:-.4px}
+.section-label{font-size:10px!important;letter-spacing:1.1px;color:var(--k-blue)!important;font-weight:850!important}
+.payout-card .panel{background:#fafbff!important;border:1px solid var(--k-border)!important;border-radius:13px!important;padding:18px!important}
+.payout-card h3{font-size:14px!important;font-weight:800!important}
+.payout-balance-box{background:#f3f4ff!important;border:1px solid #e0e4ff!important;border-radius:13px!important;padding:14px 17px!important}
+.payout-balance-box small{font-size:11px!important;color:var(--k-muted)!important}.payout-balance-box strong{font-size:23px!important;color:var(--k-blue)!important}
+.payout-card input,.payout-card select{border:1px solid #dfe3ed!important;border-radius:10px!important;background:white!important;padding:11px 12px!important;color:var(--k-text)!important}
+.primary,.payout-card button.primary{background:linear-gradient(120deg,var(--k-blue),var(--k-purple))!important;color:#fff!important;border:0!important;border-radius:10px!important;padding:11px 16px!important;font-size:12px!important;font-weight:800!important;box-shadow:0 5px 12px #526dff2a;cursor:pointer}
+.btn{border:1px solid #e0e4ee!important;border-radius:9px!important;padding:8px 11px!important;background:white!important;color:#4e586b!important;font-size:12px!important;font-weight:700!important}
+.dashboard-file{border-bottom:1px solid var(--k-border)!important;padding:17px 0!important;display:flex;justify-content:space-between;align-items:center;gap:18px}
+.dashboard-file h3{font-size:14px!important;font-weight:800!important}
+.file-meta{display:flex;gap:6px;flex-wrap:wrap}.file-meta span{font-size:10px!important;background:#f3f5fa!important;border-radius:7px!important;color:#687185!important;padding:5px 8px!important}
+.payout-row{border-bottom:1px solid var(--k-border)!important}
+.payout-status{border-radius:99px!important;font-size:10px!important;padding:5px 9px!important}
+#analytics{height:1px}
+@media(max-width:1100px){.legal-page{margin-left:220px!important;padding:24px 20px 48px!important}.kp-sidebar{width:220px}.rule-grid{gap:11px!important}.rule-grid>div{padding:17px!important}}
+@media(max-width:760px){
+ .site-header{height:62px!important;padding:0 14px!important}.site-header .logo{font-size:17px!important}.logo-mark{width:34px!important;height:34px!important}
+ .desktop-nav a:not(#signOut){display:none}.desktop-nav a{padding:8px}
+ .kp-sidebar{top:62px;width:64px;padding:14px 6px}.kp-side-label,.kp-side-text,.kp-side-bottom,.kp-side-divider{display:none!important}
+ .kp-side-link{justify-content:center;padding:12px 3px;gap:0;font-size:0}.kp-side-icon{font-size:19px;width:auto;flex:initial}
+ .legal-page{margin-left:64px!important;padding:21px 12px 36px!important;min-height:calc(100vh - 62px)}
+ .kp-welcome{display:block}.kp-welcome h1{font-size:24px!important}.kp-date{display:inline-block;margin-top:13px}
+ .rule-grid{grid-template-columns:1fr!important;gap:10px!important;margin:17px 0!important}.rule-grid>div{padding:16px 18px!important}.rule-grid h2{font-size:25px!important}
+ .table-card{padding:15px!important;margin-top:13px!important}.dashboard-file{display:block}.dashboard-file-actions{margin-top:12px!important}
+ .payout-grid{grid-template-columns:1fr!important;gap:12px!important}.payout-balance-box{min-width:0;width:100%}
+}
 </style>
 
 </head>
@@ -104,19 +140,19 @@
 
 
 
-<aside class="kp-sidebar" aria-label="Creator navigation">
+<aside class="kp-sidebar" aria-label="KaroPays creator navigation">
   <div class="kp-side-label kp-side-text">WORKSPACE</div>
-  <a class="kp-side-link active" href="#overview"><span class="kp-side-icon">▦</span><span class="kp-side-text">Dashboard</span></a>
-  <a class="kp-side-link" href="#filesContainer"><span class="kp-side-icon">▤</span><span class="kp-side-text">My files</span></a>
-  <a class="kp-side-link" href="../upload.html"><span class="kp-side-icon">＋</span><span class="kp-side-text">Upload file</span></a>
-  <a class="kp-side-link" href="#analytics"><span class="kp-side-icon">⌁</span><span class="kp-side-text">Analytics</span></a>
-  <div class="kp-side-label kp-side-text">EARNINGS</div>
-  <a class="kp-side-link" href="#payouts"><span class="kp-side-icon">＄</span><span class="kp-side-text">Payouts</span></a>
-  <a class="kp-side-link" href="../payout-rates.html"><span class="kp-side-icon">↗</span><span class="kp-side-text">Payout rates</span></a>
-  <div class="kp-side-label kp-side-text">DISCOVER</div>
-  <a class="kp-side-link" href="../premium.html"><span class="kp-side-icon">✦</span><span class="kp-side-text">Premium</span></a>
-  <a class="kp-side-link" href="../payment-proof.html"><span class="kp-side-icon">✓</span><span class="kp-side-text">Payment proof</span></a>
-  <div class="kp-side-bottom"><strong>Grow with KaroPays</strong><p>Share your files and track creator earnings in one place.</p><a href="../upload.html">Upload a file&nbsp; ↗</a></div>
+  <a class="kp-side-link active" href="#overview"><span class="kp-side-icon">⌂</span><span class="kp-side-text">Dashboard</span></a>
+  <a class="kp-side-link" href="#filesContainer"><span class="kp-side-icon">▤</span><span class="kp-side-text">My Files</span></a>
+  <a class="kp-side-link" href="../upload.html"><span class="kp-side-icon">＋</span><span class="kp-side-text">Upload File</span></a>
+  <a class="kp-side-link" href="#analytics"><span class="kp-side-icon">▥</span><span class="kp-side-text">Analytics</span></a>
+  <a class="kp-side-link" href="#payouts"><span class="kp-side-icon">▣</span><span class="kp-side-text">Payouts</span></a>
+  <a class="kp-side-link" href="../referrals.html"><span class="kp-side-icon">♧</span><span class="kp-side-text">Referrals</span></a>
+  <a class="kp-side-link" href="../settings.html"><span class="kp-side-icon">⚙</span><span class="kp-side-text">Settings</span></a>
+  <div class="kp-side-divider"></div>
+  <a class="kp-side-link" href="../browse.html"><span class="kp-side-icon">◎</span><span class="kp-side-text">Browse Files</span></a>
+  <a class="kp-side-link" href="../help.html"><span class="kp-side-icon">?</span><span class="kp-side-text">Help &amp; Support</span></a>
+  <div class="kp-side-bottom"><strong>♛ Upgrade to Premium</strong><p>Get higher earnings, advanced analytics and more.</p><a href="../premium.html">Upgrade Now&nbsp; →</a></div>
 </aside>
 
 <main class="legal-page" id="overview">
