@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KaroPays Admin</title>
+<link rel="stylesheet" href="assets/css/pro.css">
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7f8fc;color:#0f172a;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif}
+a{text-decoration:none;color:inherit}.hidden{display:none!important}
+.auth-page{min-height:100vh;display:grid;place-items:center;padding:24px}
+.auth-card{width:min(430px,100%);background:#fff;border:1px solid #dfe5ef;border-radius:18px;padding:32px;box-shadow:0 18px 50px rgba(15,23,42,.07)}
+.brand{font-size:22px;font-weight:800;margin-bottom:30px}.brand span{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#6d4aff;color:#fff;margin-right:8px}
+.auth-card h1{margin:0 0 8px;font-size:30px}.muted{color:#64748b}.field{margin:18px 0}.field label{display:block;font-weight:600;margin-bottom:7px}
+.field input{width:100%;padding:12px 13px;border:1px solid #d5ddea;border-radius:9px;font:inherit}.primary{width:100%;border:0;border-radius:9px;padding:12px 15px;background:#6d4aff;color:#fff;font-weight:700;cursor:pointer}.primary:disabled{opacity:.6}
+.error{margin:15px 0;padding:12px;border-radius:9px;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+.admin-shell{min-height:100vh}.topbar{height:70px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}
+.logo{font-size:20px;font-weight:800}.logo-mark{display:inline-grid;place-items:center;width:32px;height:32px;background:#6d4aff;color:#fff;border-radius:9px;margin-right:7px}
+.top-actions{display:flex;gap:10px;align-items:center}.top-actions button,.secondary{border:1px solid #d5ddea;background:#fff;border-radius:8px;padding:9px 12px;cursor:pointer;font:inherit}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 70px)}.sidebar{background:#fff;border-right:1px solid #e5e7eb;padding:22px 14px}
+.navbtn{display:block;width:100%;text-align:left;border:0;background:transparent;padding:11px 13px;border-radius:9px;cursor:pointer;font:inherit;color:#475569;margin-bottom:5px}
+.navbtn.active,.navbtn:hover{background:#f0edff;color:#5b3ee8;font-weight:700}
+.content{padding:30px;max-width:1500px;width:100%;margin:auto}.page-head{display:flex;justify-content:space-between;gap:20px;align-items:end;flex-wrap:wrap}
+.page-head h1{margin:5px 0}.label{font-size:12px;letter-spacing:.08em;font-weight:800;color:#6d4aff}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:25px 0}
+.stat{background:#fff;border:1px solid #dfe5ef;border-radius:13px;padding:18px}.stat small{display:block;color:#64748b;margin-bottom:8px}.stat strong{font-size:25px}
+.panel{background:#fff;border:1px solid #dfe5ef;border-radius:14px;overflow:hidden;margin-top:18px}.toolbar{padding:15px;border-bottom:1px solid #edf0f5;display:flex;gap:10px;flex-wrap:wrap}
+.toolbar input,.toolbar select{padding:10px 12px;border:1px solid #d5ddea;border-radius:8px;font:inherit}.toolbar input{flex:1;min-width:220px}
+.scroll{overflow:auto}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:14px 15px;border-bottom:1px solid #edf0f5;text-align:left}th{font-size:12px;text-transform:uppercase;color:#64748b;background:#fafbfe}tr:last-child td{border-bottom:0}
+.badge{display:inline-flex;padding:5px 9px;border-radius:999px;background:#eef2ff;font-size:12px;font-weight:700}.money{font-weight:700}.empty{text-align:center;padding:45px;color:#64748b}
+.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{border:1px solid #d5ddea;background:#fff;border-radius:7px;padding:7px 9px;cursor:pointer}.actions .ok{background:#111827;color:#fff;border-color:#111827}.actions .danger{color:#b91c1c}
+.notice{margin-top:15px;padding:12px 14px;border:1px solid #fed7aa;background:#fff7ed;color:#9a3412;border-radius:9px}
+.modal{position:fixed;inset:0;background:rgba(15,23,42,.42);display:none;place-items:center;padding:20px;z-index:50}.modal.open{display:grid}.modal-card{background:#fff;width:min(700px,100%);max-height:90vh;overflow:auto;border-radius:15px;padding:24px}.modal-head{display:flex;justify-content:space-between;gap:10px}.close{border:0;background:#f1f5f9;border-radius:8px;padding:7px 10px;cursor:pointer}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.detail{background:#f8fafc;border-radius:10px;padding:13px}.detail small{display:block;color:#64748b;margin-bottom:5px}
+.file-status{cursor:pointer}.small{font-size:12px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid #e5e7eb;display:flex;gap:5px;overflow:auto}.navbtn{min-width:max-content}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:550px){.stats{grid-template-columns:1fr}.content{padding:18px}.detail-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<section id="loginPage" class="auth-page">
+  <div class="auth-card">
+    <div class="brand"><span>K</span>KaroPays</div>
+    <h1>Admin sign in</h1>
+    <p class="muted">Sign in with your KaroPays admin account.</p>
+    <div id="loginError"></div>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input id="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+      <button class="primary" id="loginBtn">Sign in</button>
+    </form>
+  </div>
+</section>
+
+<section id="adminPage" class="admin-shell hidden">
+<header class="topbar">
+  <div class="logo"><span class="logo-mark">K</span>KaroPays Admin</div>
+  <div class="top-actions"><span id="adminEmail" class="muted"></span><button id="signOut">Sign out</button></div>
+</header>
+<div class="layout">
+<aside class="sidebar">
+  <button class="navbtn active" data-section="dashboard">Dashboard</button>
+  <button class="navbtn" data-section="payouts">Payouts</button>
+  <button class="navbtn" data-section="files">Files</button>
+  <button class="navbtn" data-section="earnings">Download earnings</button>
+</aside>
+
+<main class="content">
+<section id="dashboard" class="section">
+  <div class="page-head"><div><div class="label">ADMIN DASHBOARD</div><h1>Overview</h1><p class="muted">Manage KaroPays creators, files and payouts.</p></div><button class="secondary" id="refreshAll">Refresh</button></div>
+  <div id="globalMessage"></div>
+  <div class="stats">
+    <div class="stat"><small>Total files</small><strong id="statFiles">0</strong></div>
+    <div class="stat"><small>Total downloads</small><strong id="statDownloads">0</strong></div>
+    <div class="stat"><small>Pending payouts</small><strong id="statPending">0</strong></div>
+    <div class="stat"><small>Pending value</small><strong id="statValue">$0.00</strong></div>
+  </div>
+  <div class="panel"><div style="padding:20px"><h2 style="margin:0 0 8px">Admin account</h2><div class="muted" id="adminId"></div></div></div>
+</section>
+
+<section id="payouts" class="section hidden">
+  <div class="page-head"><div><div class="label">CREATOR PAYOUTS</div><h1>Payout requests</h1><p class="muted">Review and update creator payments.</p></div></div>
+  <div class="panel">
+    <div class="toolbar"><input id="payoutSearch" placeholder="Search payout ID or creator ID"><select id="payoutFilter"><option value="all">All statuses</option><option>pending</option><option>approved</option><option>paid</option><option>rejected</option></select></div>
+    <div class="scroll"><table><thead><tr><th>Payout ID</th><th>Creator ID</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="payoutRows"></tbody></table></div>
+  </div>
+</section>
+
+<section id="files" class="section hidden">
+  <div class="page-head"><div><div class="label">FILE MANAGEMENT</div><h1>Creator files</h1><p class="muted">View uploaded files, owners, downloads and status.</p></div></div>
+  <div class="panel">
+    <div class="toolbar"><input id="fileSearch" placeholder="Search file name, creator ID or category"><select id="fileFilter"><option value="all">All statuses</option><option value="active">active</option><option value="pending">pending</option><option value="disabled">disabled</option></select></div>
+    <div class="scroll"><table><thead><tr><th>File</th><th>Creator ID</th><th>Category</th><th>Downloads</th><th>Ad level</th><th>Status</th><th>Actions</th></tr></thead><tbody id="fileRows"></tbody></table></div>
+  </div>
+</section>
+
+<section id="earnings" class="section hidden">
+  <div class="page-head"><div><div class="label">EARNINGS</div><h1>Download earnings</h1><p class="muted">Inspect earnings generated by downloads.</p></div></div>
+  <div class="panel">
+    <div class="toolbar"><input id="earningsSearch" placeholder="Search file ID or creator ID"></div>
+    <div class="scroll"><table><thead><tr><th>Date</th><th>File ID</th><th>Creator ID</th><th>Country</th><th>Ad level</th><th>Rate / 1000</th><th>Earned</th></tr></thead><tbody id="earningRows"></tbody></table></div>
+  </div>
+</section>
+</main>
+</div>
+</section>
+
+<div id="modal" class="modal"><div class="modal-card"><div class="modal-head"><h2 id="modalTitle" style="margin:0">Details</h2><button class="close" id="closeModal">Close</button></div><div id="modalBody"></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script>
+const ADMIN_ID="7f73edbd-6af3-45de-bdfd-fbdeed87fe6c";
+let payouts=[],files=[],earnings=[];
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;",'"':"&quot;"}[c]));
+const money=v=>"$"+Number(v||0).toFixed(4);
+const payoutCode=r=>r.payout_code||"KP-PAY-"+String(r.id||"").replace(/-/g,"").slice(0,8).toUpperCase();
+function showError(text){$("loginError").innerHTML='<div class="error">'+esc(text)+'</div>'}
+function showGlobal(text){$("globalMessage").innerHTML='<div class="notice">'+esc(text)+'</div>'}
+function clearGlobal(){$("globalMessage").innerHTML=""}
+
+async function isAdmin(){
+  const {data,error}=await supabaseClient.from("admin_users").select("user_id").eq("user_id",ADMIN_ID).maybeSingle();
+  if(error)return false;
+  return !!data;
+}
+async function start(){
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session){$("loginPage").classList.remove("hidden");$("adminPage").classList.add("hidden");return}
+  const ok=await isAdmin();
+  if(!ok){await supabaseClient.auth.signOut();$("loginPage").classList.remove("hidden");$("adminPage").classList.add("hidden");showError("This account is not authorized as an admin.");return}
+  $("loginPage").classList.add("hidden");$("adminPage").classList.remove("hidden");
+  $("adminEmail").textContent=session.user.email||"";
+  $("adminId").textContent="Admin account: "+session.user.id;
+  await refreshAll();
+}
+
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();showError("");$("loginBtn").disabled=true;$("loginBtn").textContent="Signing in...";
+  const {error}=await supabaseClient.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
+  $("loginBtn").disabled=false;$("loginBtn").textContent="Sign in";
+  if(error){showError(error.message);return}await start();
+});
+$("signOut").addEventListener("click",async()=>{await supabaseClient.auth.signOut();location.reload()});
+
+document.querySelectorAll(".navbtn").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll(".navbtn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+ document.querySelectorAll(".section").forEach(x=>x.classList.add("hidden"));$(btn.dataset.section).classList.remove("hidden");
+}));
+
+async function loadPayouts(){
+ const {data,error}=await supabaseClient.from("payout_requests").select("id,payout_code,creator_id,amount,method,payment_details,status,created_at").order("created_at",{ascending:false});
+ if(error){payouts=[];return error}payouts=data||[];return null;
+}
+async function loadFiles(){
+ const {data,error}=await supabaseClient.from("files").select("id,file_name,file_size,description,category,downloads,status,storage_path,ad_level,creator_id").order("created_at",{ascending:false});
+ if(error){files=[];return error}files=data||[];return null;
+}
+async function loadEarnings(){
+ const {data,error}=await supabaseClient.from("download_earnings").select("file_id,creator_id,country_code,ad_level,payout_rate,earning,created_at").order("created_at",{ascending:false}).limit(500);
+ if(error){earnings=[];return error}earnings=data||[];return null;
+}
+async function refreshAll(){
+ clearGlobal();
+ const [pe,fe,ee]=await Promise.all([loadPayouts(),loadFiles(),loadEarnings()]);
+ if(pe||fe||ee)showGlobal("Some admin data could not be loaded. Check the corresponding admin RLS permissions.");
+ $("statFiles").textContent=files.length;
+ $("statDownloads").textContent=files.reduce((s,f)=>s+Number(f.downloads||0),0);
+ const pending=payouts.filter(p=>p.status==="pending");
+ $("statPending").textContent=pending.length;
+ $("statValue").textContent="$"+pending.reduce((s,p)=>s+Number(p.amount||0),0).toFixed(2);
+ renderPayouts();renderFiles();renderEarnings();
+}
+function renderPayouts(){
+ const q=$("payoutSearch").value.toLowerCase(),f=$("payoutFilter").value;
+ const rows=payouts.filter(r=>(f==="all"||r.status===f)&&(!q||payoutCode(r).toLowerCase().includes(q)||String(r.creator_id).toLowerCase().includes(q)));
+ $("payoutRows").innerHTML=rows.length?rows.map(r=>`<tr><td><b>${esc(payoutCode(r))}</b></td><td class="small">${esc(r.creator_id)}</td><td class="money">$${Number(r.amount||0).toFixed(2)}</td><td>${esc(r.method)}</td><td><span class="badge">${esc(r.status)}</span></td><td class="small">${esc(new Date(r.created_at).toLocaleString())}</td><td><div class="actions"><button onclick="viewPayout('${r.id}')">View</button>${r.status==="pending"?`<button onclick="updatePayout('${r.id}','approved')">Approve</button><button class="danger" onclick="updatePayout('${r.id}','rejected')">Reject</button>`:""}${r.status==="approved"?`<button class="ok" onclick="updatePayout('${r.id}','paid')">Mark paid</button>`:""}</div></td></tr>`).join(""):'<tr><td colspan="7" class="empty">No payout requests found.</td></tr>';
+}
+function renderFiles(){
+ const q=$("fileSearch").value.toLowerCase(),f=$("fileFilter").value;
+ const rows=files.filter(r=>(f==="all"||r.status===f)&&(!q||String(r.file_name).toLowerCase().includes(q)||String(r.creator_id).toLowerCase().includes(q)||String(r.category).toLowerCase().includes(q)));
+ $("fileRows").innerHTML=rows.length?rows.map(r=>`<tr><td><b>${esc(r.file_name)}</b><div class="small muted">${Number(r.file_size||0).toLocaleString()} bytes</div></td><td class="small">${esc(r.creator_id)}</td><td>${esc(r.category||"—")}</td><td>${Number(r.downloads||0)}</td><td>${esc(r.ad_level)}</td><td><span class="badge">${esc(r.status)}</span></td><td><div class="actions"><button onclick="viewFile('${r.id}')">View</button></div></td></tr>`).join(""):'<tr><td colspan="7" class="empty">No files found.</td></tr>';
+}
+function renderEarnings(){
+ const q=$("earningsSearch").value.toLowerCase();
+ const rows=earnings.filter(r=>!q||String(r.file_id).toLowerCase().includes(q)||String(r.creator_id).toLowerCase().includes(q));
+ $("earningRows").innerHTML=rows.length?rows.map(r=>`<tr><td class="small">${esc(new Date(r.created_at).toLocaleString())}</td><td class="small">${esc(r.file_id)}</td><td class="small">${esc(r.creator_id)}</td><td>${esc(r.country_code)}</td><td>${esc(r.ad_level)}</td><td>$${Number(r.payout_rate||0).toFixed(4)}</td><td class="money">$${Number(r.earning||0).toFixed(4)}</td></tr>`).join(""):'<tr><td colspan="7" class="empty">No earnings found.</td></tr>';
+}
+window.viewPayout=id=>{const r=payouts.find(x=>x.id===id);if(!r)return;openModal("Payout "+payoutCode(r),`<div class="detail-grid"><div class="detail"><small>Payout ID</small><b>${esc(payoutCode(r))}</b></div><div class="detail"><small>Status</small><b>${esc(r.status)}</b></div><div class="detail"><small>Creator ID</small><b>${esc(r.creator_id)}</b></div><div class="detail"><small>Amount</small><b>$${Number(r.amount||0).toFixed(2)}</b></div><div class="detail"><small>Method</small><b>${esc(r.method)}</b></div><div class="detail"><small>Payment details</small><b>${esc(r.payment_details||"—")}</b></div></div>`)};
+window.viewFile=id=>{const r=files.find(x=>x.id===id);if(!r)return;openModal("File details",`<div class="detail-grid"><div class="detail"><small>File name</small><b>${esc(r.file_name)}</b></div><div class="detail"><small>File ID</small><b>${esc(r.id)}</b></div><div class="detail"><small>Creator ID</small><b>${esc(r.creator_id)}</b></div><div class="detail"><small>Category</small><b>${esc(r.category||"—")}</b></div><div class="detail"><small>Downloads</small><b>${Number(r.downloads||0)}</b></div><div class="detail"><small>Ad level</small><b>${esc(r.ad_level)}</b></div><div class="detail"><small>Status</small><b>${esc(r.status)}</b></div><div class="detail"><small>Storage path</small><b>${esc(r.storage_path||"—")}</b></div><div class="detail" style="grid-column:1/-1"><small>Description</small><b>${esc(r.description||"—")}</b></div></div>`)};
+window.updatePayout=async(id,status)=>{if(!confirm("Change payout status to "+status+"?"))return;const{error}=await supabaseClient.from("payout_requests").update({status}).eq("id",id);if(error){showGlobal("Could not update payout. Admin UPDATE permission is required.");return}await refreshAll()};
+function openModal(title,body){$("modalTitle").textContent=title;$("modalBody").innerHTML=body;$("modal").classList.add("open")}
+$("closeModal").onclick=()=>$("modal").classList.remove("open");$("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("open")});
+$("payoutSearch").addEventListener("input",renderPayouts);$("payoutFilter").addEventListener("change",renderPayouts);$("fileSearch").addEventListener("input",renderFiles);$("fileFilter").addEventListener("change",renderFiles);$("earningsSearch").addEventListener("input",renderEarnings);$("refreshAll").addEventListener("click",refreshAll);
+start();
+</script>
+</body>
+</html>

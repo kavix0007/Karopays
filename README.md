@@ -1,22 +1,19 @@
-# KaroPays V2 — Professional UI
+# KaroPays — Consistent Dashboard Theme
 
-A polished light SaaS/file-hosting design inspired by the visual direction in the supplied references: clean white cards, blue gradients, restrained shadows, professional navigation, pricing/rate tables and policy layouts.
+This package applies the blue, white, and light-grey visual theme used by the creator dashboard to the site's shared `assets/css/pro.css`. Existing HTML/JavaScript content was retained wherever possible; the shared stylesheet adds overrides at the end rather than deleting the original CSS.
 
-Included:
-- Professional homepage
-- Payout Rates
-- Payment Proof
-- Prize Winners
-- Premium
-- How It Works
-- Program Rules
-- Content Removal Request
-- Browse
-- Upload
+## Included
+- Homepage, login, registration, upload, browse, file download and edit pages
 - Creator dashboard
-- Register / Sign in
-- Terms / Privacy
-- File download page
-- robots.txt / sitemap.xml / CNAME
+- Payout rates, payment proof, prize winners, premium, how-it-works, program rules, terms, privacy and content-removal pages
+- Admin pages, Supabase browser configuration, existing app script, sitemap and robots.txt
+- `assets/css/pro.css` with the shared dashboard-matched theme
 
-This is still a frontend prototype. Real authentication, storage, download validation, ad-network integration, earnings calculation, anti-fraud and payouts need a backend.
+## Deploy
+Upload the contents of this folder to the same website root, preserving the `assets/`, `creator/`, and `f/` folders. Back up your current deployment first.
+
+## Important
+- This is a visual consistency pass, not a backend audit or live production test.
+- The browser Supabase key in `assets/js/supabase-config.js` is a publishable key; never put a service-role/secret key in browser code.
+- Existing Supabase schema, RLS, payout calculations and delete behavior were not changed.
+- Test login, upload, browse, download/earnings, edit/delete and payout workflows on a staging copy before replacing your live site.

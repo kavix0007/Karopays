@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>Upload — KaroPays</title>
+
+  <link rel="stylesheet" href="assets/css/pro.css">
+</head>
+
+<body>
+
+<main class="legal-page">
+
+  <a class="logo" href="index.html">
+    <span class="logo-mark">K</span>
+    KaroPays
+  </a>
+
+  <h1>Upload a file</h1>
+
+  <p class="lead">
+    Create a monetized file page in a few steps.
+  </p>
+
+  <form class="auth-card wide-form" id="uploadForm">
+
+    <label>
+      File
+
+      <input
+        id="file"
+        type="file"
+        required
+      >
+    </label>
+
+    <label>
+      File name
+
+      <input
+        id="fileName"
+        type="text"
+        placeholder="Example: Valorant Presets Pack"
+        required
+      >
+    </label>
+
+    <label>
+      Description
+
+      <textarea
+        id="description"
+        rows="4"
+        maxlength="1000"
+        placeholder="Describe your file..."
+      ></textarea>
+    </label>
+
+    <label>
+      Category
+
+      <select id="category">
+        <option value="Presets">Presets</option>
+        <option value="Templates">Templates</option>
+        <option value="Wallpapers">Wallpapers</option>
+        <option value="Resources">Resources</option>
+        <option value="Other">Other</option>
+      </select>
+    </label>
+
+    <label>
+      Ad level
+
+      <select id="adLevel">
+
+        <option value="1">
+          1 — Low
+        </option>
+
+        <option value="2" selected>
+          2 — Medium
+        </option>
+
+        <option value="3">
+          3 — High
+        </option>
+
+        <option value="4">
+          4 — Ultra
+        </option>
+
+      </select>
+    </label>
+
+    <div
+      id="uploadProgress"
+      style="display:none;margin:15px 0;"
+    >
+      Uploading...
+    </div>
+
+    <p id="uploadMessage"></p>
+
+    <button
+      class="primary full"
+      type="submit"
+      id="uploadButton"
+    >
+      Create file page
+    </button>
+
+  </form>
+
+</main>
+
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="assets/js/supabase-config.js"></script>
+
+
+<script>
+
+const uploadForm =
+  document.getElementById("uploadForm");
+
+const uploadButton =
+  document.getElementById("uploadButton");
+
+const uploadMessage =
+  document.getElementById("uploadMessage");
+
+const uploadProgress =
+  document.getElementById("uploadProgress");
+
+
+uploadForm.addEventListener("submit", async (event) => {
+
+  event.preventDefault();
+
+
+  /*
+   * Get logged-in user
+   */
+
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser();
+
+
+  if (userError || !user) {
+
+    uploadMessage.textContent =
+      "You must be logged in to upload a file.";
+
+    return;
+  }
+
+
+  /*
+   * Get form values
+   */
+
+  const fileInput =
+    document.getElementById("file");
+
+  const selectedFile =
+    fileInput.files[0];
+
+  const fileName =
+    document.getElementById("fileName")
+      .value
+      .trim();
+
+  const description =
+    document.getElementById("description")
+      .value
+      .trim();
+
+  const category =
+    document.getElementById("category")
+      .value;
+
+  const adLevel =
+    Number(
+      document.getElementById("adLevel")
+        .value
+    );
+
+
+  /*
+   * Validate file
+   */
+
+  if (!selectedFile) {
+
+    uploadMessage.textContent =
+      "Please select a file.";
+
+    return;
+  }
+
+
+  /*
+   * Basic upload limit.
+   *
+   * We can change this later
+   * depending on your Supabase plan.
+   */
+
+  const MAX_FILE_SIZE =
+    100 * 1024 * 1024;
+
+
+  if (selectedFile.size > MAX_FILE_SIZE) {
+
+    uploadMessage.textContent =
+      "File is too large. Maximum size is 100 MB.";
+
+    return;
+  }
+
+
+  /*
+   * Disable button
+   */
+
+  uploadButton.disabled = true;
+
+  uploadButton.textContent =
+    "Uploading...";
+
+  uploadProgress.style.display =
+    "block";
+
+  uploadMessage.textContent = "";
+
+
+  /*
+   * Make a safe storage filename.
+   */
+
+  const originalName =
+    selectedFile.name;
+
+  const extension =
+    originalName.includes(".")
+      ? "." + originalName.split(".").pop()
+      : "";
+
+  const uniqueName =
+    crypto.randomUUID() + extension;
+
+
+  /*
+   * Store files inside:
+   *
+   * files/
+   *   USER_ID/
+   *      RANDOM_FILE_NAME
+   */
+
+  const storagePath =
+    user.id + "/" + uniqueName;
+
+
+  /*
+   * Upload to Supabase Storage
+   */
+
+  const {
+    error: storageError
+  } = await supabaseClient.storage
+    .from("files")
+    .upload(
+      storagePath,
+      selectedFile,
+      {
+        cacheControl: "3600",
+        upsert: false
+      }
+    );
+
+
+  if (storageError) {
+
+    console.error(storageError);
+
+    uploadMessage.textContent =
+      "Upload failed: " +
+      storageError.message;
+
+    uploadButton.disabled = false;
+
+    uploadButton.textContent =
+      "Create file page";
+
+    uploadProgress.style.display =
+      "none";
+
+    return;
+  }
+
+
+  /*
+   * Create database record
+   */
+
+  const {
+    data: fileRecord,
+    error: databaseError
+  } = await supabaseClient
+    .from("files")
+    .insert({
+
+      creator_id: user.id,
+
+      file_name: fileName,
+
+      file_size: selectedFile.size,
+
+      storage_path: storagePath,
+
+      description: description,
+
+      category: category,
+
+      ad_level: adLevel
+
+    })
+    .select()
+    .single();
+
+
+  /*
+   * If database insert fails,
+   * remove the uploaded file so
+   * we don't leave orphaned files.
+   */
+
+  if (databaseError) {
+
+    console.error(databaseError);
+
+    await supabaseClient.storage
+      .from("files")
+      .remove([storagePath]);
+
+
+    uploadMessage.textContent =
+      "Could not create the file record: " +
+      databaseError.message;
+
+    uploadButton.disabled = false;
+
+    uploadButton.textContent =
+      "Create file page";
+
+    uploadProgress.style.display =
+      "none";
+
+    return;
+  }
+
+
+  /*
+   * Success
+   */
+
+  uploadProgress.style.display =
+    "none";
+
+  uploadMessage.textContent =
+    "File uploaded successfully!";
+
+
+  uploadButton.textContent =
+    "Upload complete";
+
+
+  /*
+   * For now we send the creator
+   * back to the dashboard.
+   *
+   * The /f/xxxx file page will be
+   * built in the next step.
+   */
+
+setTimeout(() => {
+
+  window.location.href =
+    "file.html?id=" + fileRecord.id;
+
+}, 1200);
+
+});
+
+</script>
+
+</body>
+</html>
