@@ -31,6 +31,32 @@
     @media(max-width:760px){.payout-grid{grid-template-columns:1fr!important}}
   </style>
 
+
+<style id="karopays-saas-dashboard">
+:root{--kp-bg:#f6f7fb;--kp-surface:#fff;--kp-ink:#171923;--kp-muted:#747b8c;--kp-line:#e8eaf1;--kp-blue:#526dff;--kp-blue-dark:#3f57e8;--kp-blue-soft:#eef1ff;--kp-shadow:0 8px 28px rgba(26,35,75,.055);--kp-radius:18px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.5}
+.site-header{height:72px;position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--kp-line);padding:0 30px;display:flex;align-items:center;justify-content:space-between}
+.site-header .logo{display:flex;align-items:center;gap:11px;color:var(--kp-ink);font-size:20px;font-weight:850;letter-spacing:-.7px;text-decoration:none}
+.logo-mark{display:inline-flex!important;align-items:center;justify-content:center;width:38px;height:38px;border-radius:12px;background:var(--kp-blue);color:#fff!important;font-weight:900;font-size:24px;box-shadow:0 5px 12px rgba(82,109,255,.25)}
+.desktop-nav{display:flex;align-items:center;gap:10px}.desktop-nav a{font-size:13px;font-weight:650;color:#596174;text-decoration:none;padding:10px 12px;border-radius:10px}.desktop-nav a:hover{background:#f2f4fa;color:var(--kp-blue)}
+.legal-page{max-width:none;width:auto;margin:0 0 0 244px;padding:34px clamp(20px,3vw,44px) 64px;min-height:calc(100vh - 72px)}
+.kp-sidebar{position:fixed;z-index:40;left:0;top:72px;bottom:0;width:244px;padding:24px 14px;background:#fff;border-right:1px solid var(--kp-line);overflow-y:auto}
+.kp-side-label{padding:10px 12px 8px;color:#a0a6b4;font-size:10px;font-weight:800;letter-spacing:1.25px}
+.kp-side-link{display:flex;align-items:center;gap:12px;padding:11px 13px;margin:3px 0;border-radius:11px;color:#636b7d;text-decoration:none;font-size:13px;font-weight:650;transition:.18s}
+.kp-side-link:hover,.kp-side-link.active{background:var(--kp-blue-soft);color:var(--kp-blue)}.kp-side-icon{width:21px;text-align:center;font-size:17px}
+.kp-side-bottom{margin-top:26px;padding:16px 13px;border:1px solid #e7eaff;background:linear-gradient(145deg,#f7f8ff,#eef1ff);border-radius:14px}.kp-side-bottom strong{font-size:13px;display:block;margin-bottom:4px}.kp-side-bottom p{font-size:11px;color:var(--kp-muted);margin:0 0 12px}.kp-side-bottom a{display:block;text-align:center;background:var(--kp-blue);color:white;text-decoration:none;border-radius:9px;padding:9px;font-size:12px;font-weight:750}
+.section-label,.eyebrow{font-size:10px;letter-spacing:1.25px;font-weight:800;color:var(--kp-blue)}.legal-page>h1{font-size:clamp(28px,3vw,36px);letter-spacing:-1.3px;line-height:1.15;margin:8px 0;font-weight:850}.lead{color:var(--kp-muted);font-size:13px;line-height:1.7}#creatorEmail{margin:0 0 26px}
+.rule-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:25px 0 30px}.rule-grid>div{background:var(--kp-surface);border:1px solid var(--kp-line);border-radius:var(--kp-radius);padding:22px 23px;box-shadow:var(--kp-shadow);position:relative;overflow:hidden}.rule-grid>div:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--kp-blue)}.rule-grid small{font-size:12px;color:var(--kp-muted);font-weight:650}.rule-grid h2{font-size:clamp(23px,2.4vw,30px);letter-spacing:-.8px;margin:9px 0 0;font-weight:850}
+.table-card{background:#fff;border:1px solid var(--kp-line);border-radius:var(--kp-radius);padding:24px;box-shadow:var(--kp-shadow);margin-top:22px!important}.section-head h2,.table-card>h2{font-size:19px;letter-spacing:-.45px;margin:0 0 8px;font-weight:800}.payout-card .section-label{margin-bottom:6px}.payout-card .panel{background:#fafbff;border:1px solid var(--kp-line)!important;border-radius:14px;padding:20px!important}.payout-card h3{font-size:15px;margin:0 0 17px;font-weight:800}
+.payout-balance-box{border:1px solid #dfe4ff!important;border-radius:14px;background:#f6f7ff;min-width:190px;padding:15px 18px!important}.payout-balance-box small{color:var(--kp-muted);font-size:11px;font-weight:700}.payout-balance-box strong{font-size:24px;color:var(--kp-blue);letter-spacing:-.7px}.payout-card label{font-size:12px;color:#51596b;font-weight:700}.payout-card input,.payout-card select{border:1px solid #dfe3ed!important;background:white!important;color:var(--kp-ink)!important;border-radius:10px!important;padding:12px!important;outline:none}.payout-card input:focus,.payout-card select:focus{border-color:var(--kp-blue)!important;box-shadow:0 0 0 3px rgba(82,109,255,.12)}
+.primary,.payout-card button.primary{display:inline-flex;justify-content:center;align-items:center;background:var(--kp-blue)!important;color:white!important;border:0!important;border-radius:10px!important;padding:11px 16px!important;text-decoration:none;font-weight:750;font-size:12px;cursor:pointer;box-shadow:0 5px 12px rgba(82,109,255,.17);transition:.18s}.primary:hover,.payout-card button.primary:hover{background:var(--kp-blue-dark)!important;transform:translateY(-1px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid #e0e4ee;border-radius:9px;padding:8px 11px;background:#fff;color:#525a6b;text-decoration:none;font-size:12px;font-weight:700;cursor:pointer}.btn:hover{border-color:#c8d0ff;color:var(--kp-blue);background:#f8f9ff}.btn.ghost{background:#fff}
+.delete-btn,.delete-confirm-btn{border-radius:9px!important}.dashboard-file{display:flex;justify-content:space-between;align-items:center;gap:22px;padding:18px 0!important;border-bottom:1px solid var(--kp-line)!important}.dashboard-file:last-child{border-bottom:0!important}.dashboard-file h3{font-size:15px;margin:5px 0 8px;letter-spacing:-.2px}.file-meta{display:flex;flex-wrap:wrap;gap:7px}.file-meta span{font-size:11px;color:#697185;background:#f5f6fa;padding:5px 8px;border-radius:7px}.dashboard-file-actions{margin-top:0!important;flex-shrink:0}.empty{padding:36px 18px;text-align:center;color:var(--kp-muted);background:#fafbff;border:1px dashed #dfe3ed;border-radius:13px}.form-message{font-size:12px;color:var(--kp-muted);line-height:1.5}.payout-row{border-bottom:1px solid var(--kp-line)!important}.payout-status{font-size:11px;background:#f1f3f8;color:#555f73;padding:5px 9px;border-radius:99px;white-space:nowrap}.delete-modal-card{border-radius:18px!important}
+@media(max-width:1050px){.legal-page{margin-left:215px;padding:28px 22px 50px}.kp-sidebar{width:215px}.site-header{padding:0 22px}.rule-grid{gap:12px}.rule-grid>div{padding:18px}}
+@media(max-width:760px){.site-header{height:62px;padding:0 16px}.site-header .logo{font-size:18px}.logo-mark{width:34px;height:34px}.desktop-nav a:not(#signOut){display:none}.desktop-nav a{padding:8px}.kp-sidebar{top:62px;width:65px;padding:17px 7px}.kp-side-label,.kp-side-text,.kp-side-bottom{display:none!important}.kp-side-link{justify-content:center;padding:12px 4px;gap:0;font-size:0;border-radius:12px}.kp-side-icon{font-size:19px;width:auto}.legal-page{margin-left:65px;padding:24px 13px 40px;min-height:calc(100vh - 62px)}.legal-page>h1{font-size:27px}.rule-grid{grid-template-columns:1fr;gap:10px;margin:20px 0}.rule-grid>div{padding:17px 19px}.rule-grid h2{font-size:25px}.table-card{padding:17px;margin-top:17px!important;border-radius:15px}.section-head{align-items:flex-start!important}.payout-balance-box{min-width:0;width:100%}.payout-grid{grid-template-columns:1fr!important;gap:14px!important}.dashboard-file{display:block;padding:17px 0!important}.dashboard-file-actions{margin-top:13px!important}.dashboard-file-actions .btn,.dashboard-file-actions button{padding:8px 10px!important}.file-meta{gap:5px}.file-meta span{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;transition:none!important}}
+</style>
+
 </head>
 
 
@@ -77,7 +103,23 @@
 
 
 
-<main class="legal-page">
+
+<aside class="kp-sidebar" aria-label="Creator navigation">
+  <div class="kp-side-label kp-side-text">WORKSPACE</div>
+  <a class="kp-side-link active" href="#overview"><span class="kp-side-icon">▦</span><span class="kp-side-text">Dashboard</span></a>
+  <a class="kp-side-link" href="#filesContainer"><span class="kp-side-icon">▤</span><span class="kp-side-text">My files</span></a>
+  <a class="kp-side-link" href="../upload.html"><span class="kp-side-icon">＋</span><span class="kp-side-text">Upload file</span></a>
+  <a class="kp-side-link" href="#analytics"><span class="kp-side-icon">⌁</span><span class="kp-side-text">Analytics</span></a>
+  <div class="kp-side-label kp-side-text">EARNINGS</div>
+  <a class="kp-side-link" href="#payouts"><span class="kp-side-icon">＄</span><span class="kp-side-text">Payouts</span></a>
+  <a class="kp-side-link" href="../payout-rates.html"><span class="kp-side-icon">↗</span><span class="kp-side-text">Payout rates</span></a>
+  <div class="kp-side-label kp-side-text">DISCOVER</div>
+  <a class="kp-side-link" href="../premium.html"><span class="kp-side-icon">✦</span><span class="kp-side-text">Premium</span></a>
+  <a class="kp-side-link" href="../payment-proof.html"><span class="kp-side-icon">✓</span><span class="kp-side-text">Payment proof</span></a>
+  <div class="kp-side-bottom"><strong>Grow with KaroPays</strong><p>Share your files and track creator earnings in one place.</p><a href="../upload.html">Upload a file&nbsp; ↗</a></div>
+</aside>
+
+<main class="legal-page" id="overview">
 
 
   <div class="section-label">
@@ -100,6 +142,7 @@
 
 
   <!-- TOTALS -->
+  <div id="analytics" aria-hidden="true"></div>
 
   <div class="rule-grid">
 
@@ -146,7 +189,7 @@
 
 
   <!-- PAYOUTS -->
-  <section class="table-card payout-card" style="margin-top:30px;">
+  <section class="table-card payout-card" id="payouts" style="margin-top:30px;">
     <div class="section-head" style="display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;">
       <div>
         <div class="section-label">CREATOR PAYOUTS</div>
