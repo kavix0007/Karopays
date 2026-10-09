@@ -108,7 +108,6 @@ a{text-decoration:none;color:inherit}.hidden{display:none!important}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-config.js"></script>
 <script>
-const ADMIN_ID="7f73edbd-6af3-45de-bdfd-fbdeed87fe6c";
 let payouts=[],files=[],earnings=[];
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#039;",'"':"&quot;"}[c]));
@@ -118,16 +117,29 @@ function showError(text){$("loginError").innerHTML='<div class="error">'+esc(tex
 function showGlobal(text){$("globalMessage").innerHTML='<div class="notice">'+esc(text)+'</div>'}
 function clearGlobal(){$("globalMessage").innerHTML=""}
 
-async function isAdmin(){
-  const {data,error}=await supabaseClient.from("admin_users").select("user_id").eq("user_id",ADMIN_ID).maybeSingle();
-  if(error)return false;
-  return !!data;
+async function isAdmin(userId){
+  // Check the account that actually signed in; never trust a hardcoded user ID.
+  const {data,error}=await supabaseClient
+    .from("admin_users")
+    .select("user_id")
+    .eq("user_id", userId)
+    .maybeSingle();
+  if(error){
+    console.error("Admin authorization lookup failed:", error);
+    return { ok:false, reason:"Could not verify admin access. Check admin_users table access/RLS in Supabase. Details: " + error.message };
+  }
+  return { ok:!!data, reason:"This signed-in account is not listed in public.admin_users." };
 }
 async function start(){
   const {data:{session}}=await supabaseClient.auth.getSession();
   if(!session){$("loginPage").classList.remove("hidden");$("adminPage").classList.add("hidden");return}
-  const ok=await isAdmin();
-  if(!ok){await supabaseClient.auth.signOut();$("loginPage").classList.remove("hidden");$("adminPage").classList.add("hidden");showError("This account is not authorized as an admin.");return}
+  const authz=await isAdmin(session.user.id);
+  if(!authz.ok){
+    $("loginPage").classList.remove("hidden");
+    $("adminPage").classList.add("hidden");
+    showError(authz.reason);
+    return;
+  }
   $("loginPage").classList.add("hidden");$("adminPage").classList.remove("hidden");
   $("adminEmail").textContent=session.user.email||"";
   $("adminId").textContent="Admin account: "+session.user.id;
