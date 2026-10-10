@@ -5,6 +5,60 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>File — KaroPays</title>
 <link rel="stylesheet" href="assets/css/pro.css">
+
+<style>
+:root{color-scheme:light;--kp-ink:#17152b;--kp-muted:#706d82;--kp-purple:#6d4aff;--kp-purple-dark:#5435d6;--kp-border:#e9e6f3;--kp-bg:#f7f6fc;--kp-card:#fff}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
+.site-header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px clamp(18px,5vw,64px);background:rgba(255,255,255,.94);border-bottom:1px solid var(--kp-border);backdrop-filter:blur(12px)}
+.logo{display:inline-flex;align-items:center;gap:10px;color:var(--kp-ink);text-decoration:none;font-weight:850;font-size:20px;letter-spacing:-.5px}
+.logo-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#8d71ff,#6039ec);color:white;box-shadow:0 6px 16px #6d4aff30}
+.desktop-nav{display:flex;align-items:center;gap:clamp(12px,2.5vw,28px);flex-wrap:wrap}
+.desktop-nav a{color:#5c5870;text-decoration:none;font-size:13px;font-weight:650}
+.desktop-nav a:hover{color:var(--kp-purple)}
+.legal-page{width:min(1080px,calc(100% - 32px));margin:42px auto 72px}
+#state{max-width:720px;margin:64px auto;padding:40px 26px;text-align:center;background:white;border:1px solid var(--kp-border);border-radius:24px;box-shadow:0 14px 40px #2a1b5010}
+.section-label,.eyebrow{display:inline-flex;align-items:center;gap:7px;color:var(--kp-purple);font-size:11px;font-weight:850;letter-spacing:1.5px;text-transform:uppercase}
+#state h1{margin:12px 0 8px;font-size:clamp(24px,4vw,34px);letter-spacing:-1px}
+.lead{color:var(--kp-muted);line-height:1.7}
+#content{display:block}
+.file-hero{position:relative;overflow:hidden;padding:clamp(25px,5vw,52px);background:var(--kp-card);border:1px solid var(--kp-border);border-radius:28px;box-shadow:0 18px 50px #28174d0b}
+.file-hero:before{content:"";position:absolute;right:-95px;top:-135px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#8d71ff19,transparent 68%);pointer-events:none}
+.file-hero>*{position:relative}
+.file-hero h1{max-width:760px;margin:12px 0 10px;font-size:clamp(28px,5vw,46px);line-height:1.12;letter-spacing:-1.7px;overflow-wrap:anywhere}
+.file-hero .lead{max-width:720px;margin:0 0 22px}
+.file-meta{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 26px}
+.file-meta span{display:inline-flex;align-items:center;padding:7px 11px;border:1px solid var(--kp-border);border-radius:999px;background:#fbfaff;color:#5d5874;font-size:12px;font-weight:650}
+.actions{display:flex;gap:12px;flex-wrap:wrap}
+.actions button{min-height:48px;padding:0 21px;border:0;border-radius:13px;font:inherit;font-weight:800;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
+.actions button:hover{transform:translateY(-1px)}
+.actions button:disabled{opacity:.65;cursor:wait;transform:none}
+.actions .primary{background:linear-gradient(135deg,#7957ff,#5e3be7);color:white;box-shadow:0 8px 18px #6d4aff30}
+.actions .primary:hover{box-shadow:0 10px 24px #6d4aff40}
+.actions .secondary{background:#f2efff;color:#5d40dc;border:1px solid #e3dcff}
+.form-message{min-height:24px;margin:15px 0 0;color:#625d75;font-size:13px;overflow-wrap:anywhere}
+.ad-section{margin-top:24px;padding:clamp(20px,4vw,34px);border:1px solid var(--kp-border);border-radius:24px;background:linear-gradient(135deg,#fff,#fbfaff);box-shadow:0 12px 34px #28174d08}
+.ad-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
+.ad-section-head h2{margin:4px 0 4px;font-size:clamp(21px,3vw,28px);letter-spacing:-.7px}
+.ad-section-head p{margin:0;color:var(--kp-muted);font-size:13px}
+.ad-label{display:inline-flex;padding:5px 9px;border-radius:7px;background:#f0edff;color:#6b4ae7;font-size:10px;font-weight:850;letter-spacing:1px}
+.ad-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);gap:16px;align-items:stretch}
+.ad-card{min-width:0;padding:19px;border:1px solid var(--kp-border);border-radius:17px;background:#fff}
+.ad-card h3{margin:0 0 5px;font-size:16px;letter-spacing:-.2px}
+.ad-card p{margin:0;color:var(--kp-muted);font-size:12px;line-height:1.6}
+.banner-frame{display:flex;justify-content:center;align-items:center;min-height:270px;margin-top:14px;padding:10px;border:1px dashed #d9d2f5;border-radius:13px;background:#faf9ff;overflow:hidden}
+.banner-frame iframe{max-width:100%}
+.offer-card{display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,#f4f0ff,#fff 75%)}
+.offer-icon{display:grid;place-items:center;width:42px;height:42px;margin-bottom:14px;border-radius:13px;background:#e7e0ff;color:#5f40df;font-size:20px}
+.offer-link{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:47px;margin-top:22px;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg,#7957ff,#5e3be7);color:#fff;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 7px 18px #6d4aff2b}
+.offer-link:hover{background:var(--kp-purple-dark)}
+.sponsored-note{margin-top:9px!important;text-align:center;font-size:11px!important}
+.ad-footer-note{margin:18px 0 0;text-align:center;color:#8a869a;font-size:11px}
+@media(max-width:720px){.site-header{padding:12px 16px;align-items:flex-start}.logo{font-size:18px}.desktop-nav{justify-content:flex-end;gap:8px 13px;max-width:58%}.desktop-nav a{font-size:11px}.legal-page{width:min(100% - 22px,680px);margin:22px auto 42px}.file-hero{border-radius:20px;padding:24px 19px}.file-hero h1{letter-spacing:-1px}.ad-section{padding:18px 13px;border-radius:19px}.ad-section-head{display:block}.ad-section-head .ad-label{margin-bottom:10px}.ad-grid{grid-template-columns:1fr}.banner-frame{min-height:260px;padding:6px}.actions{display:grid;grid-template-columns:1fr}.actions button{width:100%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+</style>
+
 </head>
 
 <body>
@@ -73,32 +127,71 @@
 
     </div>
 
-    <section class="karopays-ad-section" aria-label="Advertisement" style="margin:24px auto;max-width:340px;text-align:center;">
-      <p style="font-size:12px;letter-spacing:.08em;color:#777;margin:0 0 10px;">ADVERTISEMENT</p>
-      <div id="karopays-banner-300x250" style="width:300px;height:250px;max-width:100%;margin:0 auto;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-        <script>
-          atOptions = {
-            'key' : '82565278dee02e769d1a15ccdd7a7b49',
-            'format' : 'iframe',
-            'height' : 250,
-            'width' : 300,
-            'params' : {}
-          };
-        </script>
-        <script src="https://www.highrevenueformat.com/82565278dee02e769d1a15ccdd7a7b49/invoke.js"></script>
+    <!-- KaroPays ad area: all supplied ad formats are enabled below. -->
+    <section class="ad-section" aria-labelledby="sponsored-heading">
+      <div class="ad-section-head">
+        <div>
+          <span class="ad-label">SPONSORED</span>
+          <h2 id="sponsored-heading">Support KaroPays</h2>
+          <p>Optional sponsored content helps support free file hosting.</p>
+        </div>
       </div>
+
+      <div class="ad-grid">
+        <article class="ad-card banner-card">
+          <h3>Sponsored banner</h3>
+          <p>Advertisement · 300 × 250</p>
+          <div class="banner-frame">
+            <div id="kp-banner-slot" style="width:300px;min-height:250px;max-width:100%;text-align:center;">
+              <script>
+                atOptions = {
+                  'key' : '82565278dee02e769d1a15ccdd7a7b49',
+                  'format' : 'iframe',
+                  'height' : 250,
+                  'width' : 300,
+                  'params' : {}
+                };
+              </script>
+              <script src="https://www.highrevenueformat.com/82565278dee02e769d1a15ccdd7a7b49/invoke.js"></script>
+            </div>
+          </div>
+        </article>
+
+        <article class="ad-card offer-card">
+          <div>
+            <div class="offer-icon" aria-hidden="true">↗</div>
+            <h3>Featured offer</h3>
+            <p>Open the sponsor's offer in a new tab. This is separate from your file download.</p>
+          </div>
+          <div>
+            <a class="offer-link" id="visit-offer" href="https://uplcm.com/4/11999748" target="_blank" rel="sponsored noopener noreferrer">
+              Visit Offer <span aria-hidden="true">↗</span>
+            </a>
+            <p class="sponsored-note">Sponsored link · Opens in a new tab</p>
+          </div>
+        </article>
+      </div>
+      <p class="ad-footer-note">Sponsored ads are separate from the requested file. Never enter payment or account details unless you trust the destination.</p>
     </section>
 
-    <section aria-label="Sponsored offer" style="margin:20px auto;text-align:center;">
-      <a
-        id="visit-offer"
-        href="https://uplcm.com/4/11999748"
-        target="_blank"
-        rel="sponsored noopener noreferrer"
-        style="display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:10px;background:#6d4aff;color:#fff;text-decoration:none;font-weight:700;"
-      >Visit Offer ↗</a>
-      <p style="font-size:12px;color:#777;margin:8px 0 0;">Sponsored offer. Opens in a new tab.</p>
-    </section>
+    <!-- Additional publisher formats supplied by the site owner. -->
+    <!-- OnClick / Popunder -->
+    <script>
+      (function(s){s.dataset.zone='11999574';s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+    </script>
+
+    <!-- Push notifications -->
+    <script src="https://5gvci.com/act/files/tag.min.js?z=11999575" data-cfasync="false" async></script>
+
+    <!-- In-page push -->
+    <script>
+      (function(s){s.dataset.zone='11999578';s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+    </script>
+
+    <!-- Vignette ad -->
+    <script>
+      (function(s){s.dataset.zone='11999580';s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+    </script>
 
   </section>
 
