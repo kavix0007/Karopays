@@ -40,21 +40,17 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 .form-message{min-height:24px;margin:15px 0 0;color:#625d75;font-size:13px;overflow-wrap:anywhere}
 .ad-section{margin-top:24px;padding:clamp(20px,4vw,34px);border:1px solid var(--kp-border);border-radius:24px;background:linear-gradient(135deg,#fff,#fbfaff);box-shadow:0 12px 34px #28174d08}
 .ad-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
-.ad-section-head h2{margin:4px 0 4px;font-size:clamp(21px,3vw,28px);letter-spacing:-.7px}
-.ad-section-head p{margin:0;color:var(--kp-muted);font-size:13px}
+.ad-section-head h2,.ad-section-head p{display:none}
 .ad-label{display:inline-flex;padding:5px 9px;border-radius:7px;background:#f0edff;color:#6b4ae7;font-size:10px;font-weight:850;letter-spacing:1px}
-.ad-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.8fr);gap:16px;align-items:stretch}
+.ad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:stretch}
 .ad-card{min-width:0;padding:19px;border:1px solid var(--kp-border);border-radius:17px;background:#fff}
 .ad-card h3{margin:0 0 5px;font-size:16px;letter-spacing:-.2px}
 .ad-card p{margin:0;color:var(--kp-muted);font-size:12px;line-height:1.6}
 .banner-frame{display:flex;justify-content:center;align-items:center;min-height:270px;margin-top:14px;padding:10px;border:1px dashed #d9d2f5;border-radius:13px;background:#faf9ff;overflow:hidden}
 .banner-frame iframe{max-width:100%}
-.offer-card{display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(145deg,#f4f0ff,#fff 75%)}
-.offer-icon{display:grid;place-items:center;width:42px;height:42px;margin-bottom:14px;border-radius:13px;background:#e7e0ff;color:#5f40df;font-size:20px}
+.offer-card{display:block}
 .offer-link{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:47px;margin-top:22px;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg,#7957ff,#5e3be7);color:#fff;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 7px 18px #6d4aff2b}
 .offer-link:hover{background:var(--kp-purple-dark)}
-.sponsored-note{margin-top:9px!important;text-align:center;font-size:11px!important}
-.ad-footer-note{margin:18px 0 0;text-align:center;color:#8a869a;font-size:11px}
 @media(max-width:720px){.site-header{padding:12px 16px;align-items:flex-start}.logo{font-size:18px}.desktop-nav{justify-content:flex-end;gap:8px 13px;max-width:58%}.desktop-nav a{font-size:11px}.legal-page{width:min(100% - 22px,680px);margin:22px auto 42px}.file-hero{border-radius:20px;padding:24px 19px}.file-hero h1{letter-spacing:-1px}.ad-section{padding:18px 13px;border-radius:19px}.ad-section-head{display:block}.ad-section-head .ad-label{margin-bottom:10px}.ad-grid{grid-template-columns:1fr}.banner-frame{min-height:260px;padding:6px}.actions{display:grid;grid-template-columns:1fr}.actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
 </style>
@@ -107,7 +103,7 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
           id="download"
           type="button"
         >
-          Download file
+          Unlock File &amp; Download
         </button>
 
         <button
@@ -127,29 +123,16 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 
     </div>
 
-    <!-- Ads are selected from the file's saved ad_level, not all enabled at once. -->
-    <section class="ad-section" aria-labelledby="sponsored-heading">
+    <!-- Only the Sponsored label is shown; placements follow the saved ad_level. -->
+    <section class="ad-section" aria-label="Sponsored">
       <div class="ad-section-head">
-        <div>
-          <span class="ad-label">SPONSORED</span>
-          <h2 id="sponsored-heading">Support KaroPays</h2>
-          <p id="ad-level-description">Ads are loading according to this creator's selected level.</p>
-        </div>
+        <span class="ad-label">Sponsored</span>
         <span id="ad-level-badge" class="ad-label">LEVEL 1 · LOW</span>
       </div>
       <div id="kp-ad-slots" class="ad-grid"></div>
-      <div class="ad-card offer-card" style="margin-top:16px">
-        <div>
-          <div class="offer-icon" aria-hidden="true">↗</div>
-          <h3>Featured offer</h3>
-          <p>Optional sponsored offer. This is separate from the requested file download.</p>
-        </div>
-        <div>
-          <a class="offer-link" id="visit-offer" href="https://uplcm.com/4/11999748" target="_blank" rel="sponsored noopener noreferrer">Visit Offer <span aria-hidden="true">↗</span></a>
-          <p class="sponsored-note">Sponsored link · Opens in a new tab</p>
-        </div>
+      <div class="offer-card" style="margin-top:16px;padding:16px;border:1px solid var(--kp-border);border-radius:16px;background:#fff">
+        <a class="offer-link" id="visit-offer" href="https://uplcm.com/4/11999748" target="_blank" rel="sponsored noopener noreferrer">Visit Offer ↗</a>
       </div>
-      <p class="ad-footer-note">Ad formats are selected by the file's saved level. Ad-network availability and behavior can vary by visitor, browser and region. Ads are not proof of a completed download.</p>
     </section>
   </section>
 
@@ -240,50 +223,63 @@ function appendAdScript(src, attrs = {}) {
   document.body.appendChild(script);
 }
 
+async function loadBannerInto(slot) {
+  slot.style.cssText = "width:100%;min-height:270px;max-width:100%;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;";
+  const script = document.createElement("script");
+  window.atOptions = { key: "82565278dee02e769d1a15ccdd7a7b49", format: "iframe", height: 250, width: 300, params: {} };
+  script.src = "https://www.highrevenueformat.com/82565278dee02e769d1a15ccdd7a7b49/invoke.js";
+  script.async = false;
+  slot.appendChild(script);
+}
+
 function renderAds(rawLevel) {
   const level = Math.min(4, Math.max(1, Number(rawLevel) || 1));
   const names = {1:"Low", 2:"Medium", 3:"High", 4:"Ultra"};
-  const descriptions = {
-    1: "Low · One 300 × 250 banner for a lighter visitor experience.",
-    2: "Medium · Banner plus in-page push advertising.",
-    3: "High · Medium ads plus OnClick/popunder advertising.",
-    4: "Ultra · All supported formats: banner, in-page push, OnClick, push notifications and vignette."
-  };
   $("ad-level-badge").textContent = `LEVEL ${level} · ${names[level].toUpperCase()}`;
-  $("ad-level-description").textContent = descriptions[level];
   const slots = $("kp-ad-slots");
   slots.replaceChildren();
 
-  const addCard = (title, subtitle, id) => {
+  // User's requested layout: 3 banner placements on Level 1; 4 on Levels 2–4.
+  const bannerCount = level === 1 ? 3 : 4;
+  for (let i = 0; i < bannerCount; i++) {
     const card = document.createElement("article");
     card.className = "ad-card";
-    const heading = document.createElement("h3"); heading.textContent = title;
-    const note = document.createElement("p"); note.textContent = subtitle;
-    card.append(heading, note);
-    if (id) { const slot = document.createElement("div"); slot.id = id; slot.className = "banner-frame"; card.appendChild(slot); }
+    const label = document.createElement("span");
+    label.className = "ad-label";
+    label.textContent = "Sponsored";
+    const frame = document.createElement("div");
+    frame.className = "banner-frame";
+    frame.id = `kp-banner-slot-${i + 1}`;
+    card.append(label, frame);
     slots.appendChild(card);
-    return card;
-  };
-
-  // Banner is present at every level.
-  const banner = addCard("Sponsored banner", "Advertisement · 300 × 250", "kp-banner-slot");
-  const frame = $("kp-banner-slot");
-  frame.style.cssText = "width:100%;min-height:270px;max-width:100%;display:flex;justify-content:center;align-items:center;text-align:center;";
-  window.atOptions = { key: "82565278dee02e769d1a15ccdd7a7b49", format: "iframe", height: 250, width: 300, params: {} };
-  appendAdScript("https://www.highrevenueformat.com/82565278dee02e769d1a15ccdd7a7b49/invoke.js");
+    // Each requested slot is kept separate; the ad provider controls whether it fills.
+    loadBannerInto(frame);
+  }
 
   if (level >= 2) {
-    addCard("In-page push", "Sponsored in-page push placement.");
+    const node = document.createElement("div");
+    node.className = "ad-card";
+    node.innerHTML = '<span class="ad-label">Sponsored</span><div style="margin-top:12px" id="kp-inpage-slot"></div>';
+    slots.appendChild(node);
     (function(s){s.dataset.zone='11999578';s.src='https://nap5k.com/tag.min.js'})(document.body.appendChild(document.createElement('script')));
   }
   if (level >= 3) {
-    addCard("OnClick / popunder", "Publisher-controlled click-triggered format.");
+    const node = document.createElement("div");
+    node.className = "ad-card";
+    node.innerHTML = '<span class="ad-label">Sponsored</span><div style="margin-top:12px">OnClick / popunder</div>';
+    slots.appendChild(node);
     (function(s){s.dataset.zone='11999574';s.src='https://al5sm.com/tag.min.js'})(document.body.appendChild(document.createElement('script')));
   }
   if (level >= 4) {
-    addCard("Push notifications", "Visitors may choose whether to subscribe.");
+    const node = document.createElement("div");
+    node.className = "ad-card";
+    node.innerHTML = '<span class="ad-label">Sponsored</span><div style="margin-top:12px">Push notifications</div>';
+    slots.appendChild(node);
     appendAdScript("https://5gvci.com/act/files/tag.min.js?z=11999575", {"data-cfasync":"false"});
-    addCard("Vignette", "Full-screen-style ad format where supported.");
+    const vignette = document.createElement("div");
+    vignette.className = "ad-card";
+    vignette.innerHTML = '<span class="ad-label">Sponsored</span><div style="margin-top:12px">Vignette</div>';
+    slots.appendChild(vignette);
     (function(s){s.dataset.zone='11999580';s.src='https://n6wxm.com/vignette.min.js'})(document.body.appendChild(document.createElement('script')));
   }
 }
