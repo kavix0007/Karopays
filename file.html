@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>File — KaroPays</title>
+<title>Unlock File — KaroPays</title>
 <link rel="stylesheet" href="assets/css/pro.css">
 
 <style>
@@ -48,9 +48,7 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 .ad-card p{margin:0;color:var(--kp-muted);font-size:12px;line-height:1.6}
 .banner-frame{display:flex;justify-content:center;align-items:center;min-height:270px;margin-top:14px;padding:10px;border:1px dashed #d9d2f5;border-radius:13px;background:#faf9ff;overflow:hidden}
 .banner-frame iframe{max-width:100%}
-.offer-card{display:block}
-.offer-link{display:inline-flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:47px;margin-top:22px;padding:12px 16px;border-radius:12px;background:linear-gradient(135deg,#7957ff,#5e3be7);color:#fff;text-decoration:none;font-weight:800;font-size:14px;box-shadow:0 7px 18px #6d4aff2b}
-.offer-link:hover{background:var(--kp-purple-dark)}
+.unlock-section{margin-top:24px;padding:clamp(22px,4vw,34px);border:1px solid var(--kp-border);border-radius:24px;background:#fff;text-align:center;box-shadow:0 12px 34px #28174d08}.unlock-section h2{margin:8px 0;font-size:clamp(22px,3vw,30px)}.unlock-section p{color:var(--kp-muted);margin:8px auto 18px;max-width:560px}.timer-text{font-weight:800;color:var(--kp-purple)!important;font-size:18px}.unlock-section .actions{justify-content:center}.unlock-section .actions button{min-width:220px}.unlock-section [hidden]{display:none!important}.scroll-unlock{margin-top:18px}.ad-label{display:inline-flex;padding:5px 9px;border-radius:7px;background:#f0edff;color:#6b4ae7;font-size:10px;font-weight:850;letter-spacing:1px}
 @media(max-width:720px){.site-header{padding:12px 16px;align-items:flex-start}.logo{font-size:18px}.desktop-nav{justify-content:flex-end;gap:8px 13px;max-width:58%}.desktop-nav a{font-size:11px}.legal-page{width:min(100% - 22px,680px);margin:22px auto 42px}.file-hero{border-radius:20px;padding:24px 19px}.file-hero h1{letter-spacing:-1px}.ad-section{padding:18px 13px;border-radius:19px}.ad-section-head{display:block}.ad-section-head .ad-label{margin-bottom:10px}.ad-grid{grid-template-columns:1fr}.banner-frame{min-height:260px;padding:6px}.actions{display:grid;grid-template-columns:1fr}.actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
 </style>
@@ -97,23 +95,8 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
       <div class="file-meta" id="meta"></div>
 
       <div class="actions">
-
-        <button
-          class="primary"
-          id="download"
-          type="button"
-        >
-          Unlock File &amp; Download
-        </button>
-
-        <button
-          class="secondary"
-          id="share"
-          type="button"
-        >
-          Share file
-        </button>
-
+        <button class="primary" id="scroll-unlock" type="button">Scroll down to unlock file ↓</button>
+        <button class="secondary" id="share" type="button">Share file</button>
       </div>
 
       <p
@@ -123,16 +106,25 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 
     </div>
 
-    <!-- Only the Sponsored label is shown; placements follow the saved ad_level. -->
-    <section class="ad-section" aria-label="Sponsored">
-      <div class="ad-section-head">
-        <span class="ad-label">Sponsored</span>
-        <span id="ad-level-badge" class="ad-label">LEVEL 1 · LOW</span>
-      </div>
+    <!-- Ad formats are controlled by the file's saved ad_level. -->
+    <section class="ad-section" aria-label="Sponsored ads">
+      <div class="ad-section-head"><span class="ad-label">Sponsored</span></div>
       <div id="kp-ad-slots" class="ad-grid"></div>
-      <div class="offer-card" style="margin-top:16px;padding:16px;border:1px solid var(--kp-border);border-radius:16px;background:#fff">
-        <a class="offer-link" id="visit-offer" href="https://uplcm.com/4/11999748" target="_blank" rel="sponsored noopener noreferrer">Visit Offer ↗</a>
+    </section>
+
+    <section id="unlock-section" class="unlock-section" aria-labelledby="unlock-title">
+      <div class="eyebrow">FILE ACCESS</div>
+      <h2 id="unlock-title">Unlock your file</h2>
+      <p>Start the short timer to prepare your download. When the timer finishes, the download button will appear.</p>
+      <div class="actions" style="justify-content:center">
+        <button class="primary" id="start-unlock" type="button">Unlock File</button>
+        <button class="secondary" id="download-fast" type="button">Download Fast ↗</button>
       </div>
+      <p id="unlock-timer" class="timer-text" aria-live="polite" hidden></p>
+      <div class="actions" id="real-download-row" style="justify-content:center;margin-top:12px" hidden>
+        <button class="primary" id="download" type="button">Download File</button>
+      </div>
+      <p id="unlock-message" class="form-message" aria-live="polite"></p>
     </section>
   </section>
 
@@ -225,61 +217,41 @@ function appendAdScript(src, attrs = {}) {
 
 async function loadBannerInto(slot) {
   slot.style.cssText = "width:100%;min-height:270px;max-width:100%;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;";
-  const script = document.createElement("script");
-  window.atOptions = { key: "82565278dee02e769d1a15ccdd7a7b49", format: "iframe", height: 250, width: 300, params: {} };
-  script.src = "https://www.highrevenueformat.com/82565278dee02e769d1a15ccdd7a7b49/invoke.js";
-  script.async = false;
-  slot.appendChild(script);
+  const options = { key: "82565278dee02e769d1a15ccdd7a7b49", format: "iframe", height: 250, width: 300, params: {} };
+  // Each banner gets its own invocation and options object. Actual fill is controlled by the ad provider.
+  const config = document.createElement("script");
+  config.text = "window.atOptions = " + JSON.stringify(options) + ";";
+  slot.appendChild(config);
+  const invoke = document.createElement("script");
+  invoke.src = "https://www.highrevenueformat.com/82565278dee02e769d1a15ccdd7a7b49/invoke.js";
+  invoke.async = false;
+  slot.appendChild(invoke);
 }
 
 function renderAds(rawLevel) {
   const level = Math.min(4, Math.max(1, Number(rawLevel) || 1));
-  const names = {1:"Low", 2:"Medium", 3:"High", 4:"Ultra"};
-  $("ad-level-badge").textContent = `LEVEL ${level} · ${names[level].toUpperCase()}`;
   const slots = $("kp-ad-slots");
   slots.replaceChildren();
-
-  // User's requested layout: 3 banner placements on Level 1; 4 on Levels 2–4.
-  const bannerCount = level === 1 ? 3 : 4;
-  for (let i = 0; i < bannerCount; i++) {
+  // Three banner placements are shown at every saved ad level.
+  for (let i = 0; i < 3; i++) {
     const card = document.createElement("article");
     card.className = "ad-card";
-    const label = document.createElement("span");
-    label.className = "ad-label";
-    label.textContent = "Sponsored";
     const frame = document.createElement("div");
     frame.className = "banner-frame";
     frame.id = `kp-banner-slot-${i + 1}`;
-    card.append(label, frame);
+    card.appendChild(frame);
     slots.appendChild(card);
-    // Each requested slot is kept separate; the ad provider controls whether it fills.
     loadBannerInto(frame);
   }
-
+  // Additional network formats are enabled by level; do not render extra format headings/cards.
   if (level >= 2) {
-    const node = document.createElement("div");
-    node.className = "ad-card";
-    node.innerHTML = '<span class="ad-label">Sponsored</span><div style="margin-top:12px" id="kp-inpage-slot"></div>';
-    slots.appendChild(node);
     (function(s){s.dataset.zone='11999578';s.src='https://nap5k.com/tag.min.js'})(document.body.appendChild(document.createElement('script')));
   }
   if (level >= 3) {
-    const node = document.createElement("div");
-    node.className = "ad-card";
-    node.innerHTML = '<span class="ad-label">Sponsored</span><div style="margin-top:12px">OnClick / popunder</div>';
-    slots.appendChild(node);
     (function(s){s.dataset.zone='11999574';s.src='https://al5sm.com/tag.min.js'})(document.body.appendChild(document.createElement('script')));
   }
   if (level >= 4) {
-    const node = document.createElement("div");
-    node.className = "ad-card";
-    node.innerHTML = '<span class="ad-label">Sponsored</span><div style="margin-top:12px">Push notifications</div>';
-    slots.appendChild(node);
     appendAdScript("https://5gvci.com/act/files/tag.min.js?z=11999575", {"data-cfasync":"false"});
-    const vignette = document.createElement("div");
-    vignette.className = "ad-card";
-    vignette.innerHTML = '<span class="ad-label">Sponsored</span><div style="margin-top:12px">Vignette</div>';
-    slots.appendChild(vignette);
     (function(s){s.dataset.zone='11999580';s.src='https://n6wxm.com/vignette.min.js'})(document.body.appendChild(document.createElement('script')));
   }
 }
@@ -491,6 +463,40 @@ function showError() {
  * - creator
  */
 
+
+// The top CTA scrolls to the unlock controls at the bottom of the page.
+$("scroll-unlock").addEventListener("click", () => {
+  $("unlock-section").scrollIntoView({ behavior: "smooth", block: "center" });
+});
+
+// SmartLink is an optional fast route; it is separate from the secure file download.
+$("download-fast").addEventListener("click", () => {
+  window.open("https://uplcm.com/4/11999748", "_blank", "noopener,noreferrer");
+});
+
+let unlockStarted = false;
+$("start-unlock").addEventListener("click", () => {
+  if (unlockStarted) return;
+  unlockStarted = true;
+  const startButton = $("start-unlock");
+  const timer = $("unlock-timer");
+  startButton.disabled = true;
+  timer.hidden = false;
+  let remaining = 14;
+  timer.textContent = `Your download unlocks in ${remaining} seconds…`;
+  const tick = () => {
+    remaining -= 1;
+    if (remaining <= 0) {
+      timer.textContent = "Your file is ready to download.";
+      $("real-download-row").hidden = false;
+      startButton.hidden = true;
+      return;
+    }
+    timer.textContent = `Your download unlocks in ${remaining} seconds…`;
+    window.setTimeout(tick, 1000);
+  };
+  window.setTimeout(tick, 1000);
+});
 
 $("download").onclick =
   async function () {
