@@ -526,57 +526,7 @@ $("download").onclick =
 
       /* =================================================
          STEP 1
-         CREATE SIGNED URL
-      ================================================= */
-
-      /*
-       * We create the signed URL before recording the
-       * earning.
-       *
-       * This prevents recording an earning if the file
-       * cannot actually be accessed.
-       */
-
-      const {
-        data: signed,
-        error: signedError
-      } =
-        await supabaseClient
-          .storage
-          .from("files")
-          .createSignedUrl(
-            file.storage_path,
-            120
-          );
-
-
-      if (
-        signedError ||
-        !signed ||
-        !signed.signedUrl
-      ) {
-
-        console.error(
-          "Signed URL error:",
-          signedError
-        );
-
-
-        throw new Error(
-          signedError?.message ||
-          "Could not create a download link."
-        );
-      }
-
-
-      console.log(
-        "Signed URL created successfully."
-      );
-
-
-      /* =================================================
-         STEP 2
-         RECORD DOWNLOAD
+         RECORD DOWNLOAD + RECEIVE SERVER-SIGNED URL
       ================================================= */
 
       console.log(
@@ -711,6 +661,10 @@ $("download").onclick =
         );
       }
 
+      if (typeof result.signed_url !== "string" || !result.signed_url) {
+        throw new Error("The server did not return a secure download link.");
+      }
+
 
       /* =================================================
          SUCCESS MESSAGE
@@ -766,7 +720,7 @@ $("download").onclick =
        */
 
       window.location.href =
-        signed.signedUrl;
+        result.signed_url;
 
 
     } catch (error) {
