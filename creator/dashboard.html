@@ -99,63 +99,6 @@ body.kp-dark{--kp-bg:#111522;--kp-card:#191f30;--kp-text:#f3f5fb;--kp-muted:#a1a
   body.kp-dark .kp-announcement-copy h2{color:#f3f6ff}
   body.kp-dark .kp-announcement-copy p{color:#b8c5df}
   @media(max-width:700px){.kp-announcements{gap:9px;margin-bottom:17px}.kp-announcement-card{padding:13px;gap:10px;flex-wrap:wrap}.kp-announcement-icon{flex-basis:34px;height:34px;font-size:18px}.kp-announcement-copy{flex-basis:calc(100% - 48px)}.kp-announcement-copy h2{font-size:13px}.kp-announcement-copy p{font-size:11px}.kp-announcement-tag{margin-left:44px;font-size:9px;padding:4px 6px}}
-
-/* Mobile-first usability patch: off-canvas navigation and full-width content */
-@media(max-width:700px){
-  .kp-topbar{height:62px;padding:0 10px;gap:8px}
-  .kp-brand{min-width:0;max-width:112px;flex:0 0 auto}
-  .kp-brand-logo{width:105px;height:36px}
-  .kp-search{flex:1;min-width:0;height:36px;padding:0 9px}
-  .kp-search input{min-width:0;font-size:12px}
-  .kp-top-actions{margin-left:0;flex:0 0 auto}
-  .kp-sidebar{top:62px;bottom:0;left:0;width:min(285px,84vw);padding:16px 13px;transform:translateX(-110%);transition:transform .22s ease;z-index:120;box-shadow:none}
-  .kp-sidebar .kp-nav-group-label,.kp-sidebar .kp-nav-divider,.kp-sidebar .kp-nav,.kp-sidebar .kp-premium-box{display:flex}
-  .kp-sidebar .kp-nav{justify-content:flex-start;font-size:13px;gap:12px;padding:12px 13px}
-  .kp-sidebar .kp-nav span{width:22px;font-size:20px}
-  .kp-sidebar .kp-premium-box{display:block;margin-top:18px}
-  body.kp-sidebar-open .kp-sidebar{transform:translateX(0);box-shadow:12px 0 34px #18203a30}
-  body.kp-sidebar-open:before{content:"";position:fixed;inset:62px 0 0;background:rgba(13,20,38,.42);z-index:110}
-  .kp-main{margin-left:0!important;width:100%;max-width:none;padding:16px 12px 32px}
-  .kp-welcome{align-items:stretch;flex-direction:column;gap:12px}
-  .kp-welcome h1{font-size:22px}
-  .kp-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-  .kp-stat-card{min-width:0;min-height:106px;padding:12px;gap:9px}
-  .kp-stat-icon{width:39px;height:39px;flex:0 0 39px;font-size:20px;border-radius:11px}
-  .kp-stat-copy span{white-space:normal;font-size:11px}
-  .kp-stat-copy strong{font-size:clamp(17px,5vw,23px);overflow-wrap:anywhere}
-  .kp-stat-copy small{font-size:9px}
-  .kp-mini-bars,.kp-stat-watermark,.kp-clock-watermark{display:none}
-  .kp-dashboard-grid,.kp-bottom-grid{grid-template-columns:minmax(0,1fr);gap:11px}
-  .kp-right-stack{grid-template-columns:minmax(0,1fr);gap:11px}
-  .kp-panel{padding:14px 12px;min-width:0}
-  .kp-panel-heading{gap:8px}
-  .kp-heading-title h2,.kp-panel h2{font-size:14px}
-  .kp-chart-note{font-size:10px;white-space:normal;text-align:right}
-  .kp-chart-wrap{height:210px;min-width:0;overflow:hidden}
-  .kp-country-row{grid-template-columns:minmax(0,1fr) 48px 72px;gap:6px}
-  .kp-country-row .kp-progress{display:none}
-  .kp-country-name{font-size:11px}
-  .kp-country-count strong,.kp-country-amount strong{font-size:11px}
-  .kp-table-scroll{max-width:100%;overscroll-behavior-x:contain}
-  .kp-table{min-width:520px}
-  .kp-manage-panel .dashboard-file{display:block}
-  .kp-manage-panel .dashboard-file-actions{margin-top:12px!important}
-  .kp-payout-heading{align-items:stretch;flex-direction:column}
-  .payout-balance-box{width:100%}
-  .payout-grid{grid-template-columns:minmax(0,1fr);gap:10px}
-  .kp-announcement-card{align-items:flex-start}
-}
-@media(max-width:380px){
-  .kp-brand{max-width:84px}
-  .kp-brand-logo{width:82px;height:32px}
-  .kp-topbar{gap:6px;padding:0 7px}
-  .kp-menu-toggle{font-size:21px;padding:2px}
-  .kp-search span{display:none}
-  .kp-stat-card{padding:10px;gap:7px}
-  .kp-stat-icon{width:34px;height:34px;flex-basis:34px;font-size:17px}
-  .kp-stat-copy strong{font-size:16px}
-}
-
 </style>
 </head>
 
@@ -297,12 +240,12 @@ body.kp-dark{--kp-bg:#111522;--kp-card:#191f30;--kp-text:#f3f5fb;--kp-muted:#a1a
 
 
     <div class="danger-label">
-      PERMANENT ACTION
+      SOFT DELETE
     </div>
 
 
     <h2 id="deleteTitle">
-      Delete this file?
+      Move this file to Deleted Files?
     </h2>
 
 
@@ -317,14 +260,12 @@ body.kp-dark{--kp-bg:#111522;--kp-card:#191f30;--kp-text:#f3f5fb;--kp-muted:#a1a
 
       <br><br>
 
-      This will permanently remove the file.
+      The file will be hidden from public listings and downloads, but admins will keep a record for verification.
 
       <br><br>
 
       <strong>
-        Your total downloads and earnings
-        from this file will also be removed
-        from your dashboard totals.
+        Your historical downloads and earnings will be preserved.
       </strong>
 
       <br><br>
@@ -356,7 +297,7 @@ body.kp-dark{--kp-bg:#111522;--kp-card:#191f30;--kp-text:#f3f5fb;--kp-muted:#a1a
         id="confirmDelete"
         type="button"
       >
-        Delete permanently
+        Delete file
       </button>
 
     </div>
@@ -538,9 +479,10 @@ async function load() {
     money(totalEarnings);
 
 
-  render(files || []);
+  const visibleFiles = (files || []).filter(file => String(file.status || "").toLowerCase() !== "deleted");
+  render(visibleFiles);
 
-  await renderAnalytics(files || []);
+  await renderAnalytics(visibleFiles);
 
 }
 
@@ -791,7 +733,7 @@ function renderKpChart(rows, range) {
   canvas.style.width = width + "px"; canvas.style.height = height + "px";
   const ctx = canvas.getContext("2d"); ctx.scale(ratio, ratio);
   ctx.clearRect(0,0,width,height);
-  const n = range === "all" ? 30 : Math.min(Number(range) || 7, 90);
+  const n = range === "all" ? 7 : Math.min(Number(range), 30);
   const days = [];
   for(let i=n-1;i>=0;i--){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-i);days.push(kpDateKey(d));}
   const values = days.map(day => {
@@ -807,7 +749,7 @@ function renderKpChart(rows, range) {
   values.forEach((v,i)=>{const x=pad.l+slot*(i+.5);const bh=(v.downloads/maxDl)*plotH*.72;ctx.fillStyle="rgba(130,135,255,.36)";ctx.fillRect(x-slot*.23,pad.t+plotH-bh,Math.max(4,slot*.46),bh);const y=pad.t+plotH-(v.earn/maxEarn)*plotH;points.push({x,y});ctx.fillStyle="#78839a";ctx.textAlign="center";ctx.textBaseline="top";if(days.length<=10||i%Math.ceil(days.length/7)===0)ctx.fillText(kpDateLabel(v.day),x,height-pad.b+10);});
   ctx.strokeStyle="#4264ff";ctx.lineWidth=2;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();
   points.forEach(p=>{ctx.beginPath();ctx.fillStyle="#4264ff";ctx.arc(p.x,p.y,3.4,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#fff";ctx.lineWidth=1.5;ctx.stroke();});
-  $("kpChartRange").textContent=range==="all"?"Recent 30 Days · all-time totals below":`Last ${range} Days`;
+  $("kpChartRange").textContent=range==="all"?"Recent 7 Days":`Last ${range} Days`;
   $("kpChartEmpty").hidden=rows.length>0;
 }
 function renderKpCountries(rows) {
@@ -847,15 +789,6 @@ $("kpGlobalSearch").addEventListener("input",function(){const q=this.value.trim(
 $("kpThemeToggle").addEventListener("click",()=>{document.body.classList.toggle("kp-dark");$("kpThemeToggle").textContent=document.body.classList.contains("kp-dark")?"☀":"☾";});
 
 $("kpMenuToggle").addEventListener("click",()=>{document.body.classList.toggle("kp-sidebar-open");});
-document.querySelectorAll(".kp-sidebar .kp-nav").forEach(link=>link.addEventListener("click",()=>document.body.classList.remove("kp-sidebar-open")));
-document.addEventListener("click",event=>{
-  if(document.body.classList.contains("kp-sidebar-open") &&
-     !event.target.closest(".kp-sidebar") &&
-     !event.target.closest("#kpMenuToggle")){
-    document.body.classList.remove("kp-sidebar-open");
-  }
-});
-document.addEventListener("keydown",event=>{if(event.key==="Escape")document.body.classList.remove("kp-sidebar-open");});
 
 
 /* =========================================
@@ -976,8 +909,7 @@ function openDelete(id, name) {
 
   $("deleteFileText").innerHTML =
 
-    `You are about to permanently delete
-     <strong>${esc(name)}</strong>.`;
+    `You are about to hide <strong>${esc(name)}</strong> from public listings. Its earnings history will be kept for admin verification.`;
 
 
   $("deleteMessage").textContent =
@@ -1089,91 +1021,31 @@ $("confirmDelete")
 
 
       $("deleteMessage").textContent =
-        "Removing the file and its database record...";
+        "Hiding file and preserving earnings history...";
 
 
       try {
 
-        /*
-         * Delete the database record through the secure RPC.
-         *
-         * The RPC is responsible for:
-         * - verifying that the signed-in user owns the file
-         * - removing the file record
-         * - removing the file's download earnings
-         * - removing the file's downloads/earnings from creator totals
-         * - returning the storage path for cleanup
-         *
-         * Do NOT use .from("files").delete() here.
-         */
-
+        // Soft-delete through the secured RPC. Do not remove the storage
+        // object or file row: admins need both for verification.
         const {
           data: deleteResult,
           error: deleteError
         } = await supabaseClient.rpc(
           "delete_creator_file",
-          {
-            p_file_id: fileToDelete
-          }
+          { p_file_id: fileToDelete }
         );
 
-
-        if (deleteError) {
-
-          throw new Error(
-            deleteError.message ||
-            "Could not delete the file."
-          );
-
-        }
-
-
+        if (deleteError) throw new Error(deleteError.message || "Could not delete the file.");
         if (!deleteResult || !deleteResult.success) {
-
-          throw new Error(
-            deleteResult?.error ||
-            "The file could not be deleted."
-          );
-
+          throw new Error(deleteResult?.error || "The file could not be deleted.");
         }
-
-
-        /*
-         * Delete the Storage object after the database
-         * transaction succeeds. Storage cleanup failure
-         * does not undo the successful database deletion.
-         */
-
-        if (deleteResult.storage_path) {
-
-          const {
-            error: storageError
-          } = await supabaseClient.storage
-
-            .from("files")
-
-            .remove([
-              deleteResult.storage_path
-            ]);
-
-
-          if (storageError) {
-
-            console.warn(
-              "Storage cleanup error:",
-              storageError
-            );
-
-          }
-
-        }
-
 
         closeDelete();
 
 
         msg(
-          "✓ File deleted. Its downloads and earnings were removed from your dashboard totals and balance."
+          "✓ File moved to deleted status. Historical downloads and earnings have been preserved for admin verification."
         );
 
 
@@ -1199,7 +1071,7 @@ $("confirmDelete")
           false;
 
         button.textContent =
-          "Delete permanently";
+          "Delete file";
 
       }
 
