@@ -1,16 +1,51 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Contact Us — KaroPays</title><meta name="description" content="Contact KaroPays support for help with uploads, downloads, earnings, and payouts."><meta name="theme-color" content="#5271ff">
-<link rel="stylesheet" href="assets/css/pro.css"></head><body>
-<header class="site-header"><a class="logo" href="index.html" aria-label="KaroPays home"><span class="logo-mark">K</span><span>KaroPays</span></a><nav class="desktop-nav" aria-label="Main navigation"><a href="payout-rates.html">Payout Rates</a><a href="payment-proof.html">Payment Proof</a><a href="prize-winners.html">Prize Winners</a><a href="premium.html">Premium</a><a href="login.html">Sign in</a><a class="nav-cta" href="register.html">Register</a></nav></header>
-<main class="contact-page"><div class="contact-head"><span class="section-label">KAROPAYS SUPPORT</span><h1>How can we help?</h1><p class="lead">Questions about uploads, downloads, creator earnings, or payouts? Contact our support team.</p></div>
-<div class="contact-layout"><aside class="contact-info" aria-label="Contact information"><section class="contact-card"><div class="contact-icon" aria-hidden="true">✉</div><h2>Email support</h2><p>For support requests, email us directly.</p><a class="contact-mail" href="mailto:karopays.online@gmail.com">karopays.online@gmail.com</a></section><section class="contact-card"><div class="contact-icon" aria-hidden="true">ⓘ</div><h2>Before you contact us</h2><p>Include useful details about your issue. Never send your password, private keys, or payment credentials.</p></section></aside>
-<section class="contact-form-card"><h2>Send a support request</h2><div class="contact-status info show" role="status">The online form is not connected yet. You can contact us at <a href="mailto:karopays.online@gmail.com">karopays.online@gmail.com</a>.</div>
-<form id="contactForm" novalidate><div class="contact-field"><label for="contactName">Full name</label><input id="contactName" name="name" type="text" autocomplete="name" maxlength="100" required><p class="field-error" id="contactNameError"></p></div>
-<div class="contact-field"><label for="contactEmail">Email address</label><input id="contactEmail" name="email" type="email" autocomplete="email" maxlength="254" required><p class="field-error" id="contactEmailError"></p></div>
-<div class="contact-field"><label for="contactSubject">Subject</label><input id="contactSubject" name="subject" type="text" maxlength="150" required><p class="field-error" id="contactSubjectError"></p></div>
-<div class="contact-field"><label for="contactMessage">Message</label><textarea id="contactMessage" name="message" rows="6" maxlength="3000" required></textarea><div class="contact-field-foot"><p class="field-error" id="contactMessageError"></p><span class="char-count" id="contactCharCount">0/3000</span></div></div>
-<button class="primary full" type="submit">Check message</button><p class="contact-note">Frontend preview only. This form does not send or save messages yet.</p></form><div id="contactFormResult" class="contact-status" role="status" aria-live="polite"></div></section></div></main>
-<footer><div class="footer-main"><div><a class="logo" href="index.html"><span class="logo-mark">K</span><span>KaroPays</span></a><p>File hosting and creator monetization.</p></div><div><h4>Platform</h4><a href="browse.html">Browse files</a><a href="upload.html">Upload</a><a href="payout-rates.html">Payout rates</a><a href="premium.html">Premium</a></div><div><h4>Company</h4><a href="payment-proof.html">Payment proof</a><a href="prize-winners.html">Prize winners</a><a href="program-rules.html">Program rules</a></div><div><h4>Legal</h4><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a></div><div><h4>Support</h4><a href="contact.html">Contact us</a><a href="mailto:karopays.online@gmail.com">karopays.online@gmail.com</a></div></div><div class="footer-bottom">© 2026 KaroPays. All rights reserved.</div></footer>
-<script src="assets/js/contact-form.js"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#5271ff">
+  <title>Contact Us — KaroPays</title>
+  <link rel="stylesheet" href="assets/css/pro.css">
+  <style>
+    .contact-wrap{max-width:900px;margin:56px auto;padding:0 22px 64px}
+    .contact-wrap .eyebrow{color:#5271ff;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.78rem}
+    .contact-wrap h1{font-size:clamp(2rem,5vw,3rem);margin:10px 0;color:#151b2d}
+    .contact-wrap .intro{color:#66718a;max-width:620px;line-height:1.7}
+    .contact-card{margin-top:28px;padding:clamp(20px,4vw,34px);background:#fff;border:1px solid #e5eaff;border-radius:20px;box-shadow:0 14px 45px rgba(55,78,150,.08)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .contact-card label{display:block;font-weight:650;color:#27314b;font-size:.92rem;margin-bottom:17px}
+    .contact-card input,.contact-card select,.contact-card textarea{box-sizing:border-box;width:100%;margin-top:8px;padding:13px 14px;border:1px solid #dfe5f2;border-radius:10px;background:#fbfcff;color:#151b2d;font:inherit}
+    .contact-card textarea{resize:vertical;min-height:150px}
+    .contact-card input:focus,.contact-card select:focus,.contact-card textarea:focus{outline:2px solid #5271ff55;border-color:#5271ff}
+    .contact-submit{border:0;border-radius:11px;padding:13px 20px;background:#5271ff;color:white;font-weight:800;cursor:pointer}
+    .contact-note{margin:16px 0 0;color:#68748b;font-size:.9rem;line-height:1.6}
+    .contact-status{margin-top:14px;color:#405ee8;font-weight:650}
+    @media(max-width:600px){.contact-grid{grid-template-columns:1fr}.contact-wrap{margin-top:34px}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="index.html"><span class="logo-mark">K</span><span>KaroPays</span></a>
+  <nav class="desktop-nav">
+    <a href="payout-rates.html">Payout Rates</a><a href="payment-proof.html">Payment Proof</a><a href="prize-winners.html">Prize Winners</a><a href="premium.html">Premium</a><a class="active" href="contact.html">Contact Us</a><a href="login.html">Sign in</a><a class="nav-cta" href="register.html">Register</a>
+  </nav>
+</header>
+<main class="contact-wrap">
+  <div class="eyebrow">We're here to help</div>
+  <h1>Contact Us</h1>
+  <p class="intro">Have a question about your account, downloads, or creator earnings? Send a message using the form below.</p>
+  <form class="contact-card" id="contactForm">
+    <div class="contact-grid">
+      <label>Your name<input name="name" autocomplete="name" maxlength="100" required></label>
+      <label>Your email<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+    </div>
+    <label>Topic<select name="topic" required><option value="" selected disabled>Select a topic</option><option>Account and sign-in</option><option>Downloads and files</option><option>Earnings and payouts</option><option>Report a problem</option><option>Other</option></select></label>
+    <label>Message<textarea name="message" maxlength="4000" required placeholder="Tell us how we can help..."></textarea></label>
+    <button class="contact-submit" type="submit">Prepare message</button>
+    <p class="contact-note">This form is currently a front-end draft and does not send or store messages yet. Please do not include passwords, payment details, or other sensitive information.</p>
+    <p class="contact-status" id="contactStatus" role="status" aria-live="polite"></p>
+  </form>
+</main>
+<script src="assets/js/contact-form.js"></script>
+</body>
+</html>
