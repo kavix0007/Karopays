@@ -69,14 +69,34 @@
 }
 </style>
 
+
+<style id="karopays-mobile-header-auth">
+@media(max-width:850px){
+  .site-header{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand actions" "nav nav";gap:8px 12px;padding:12px 14px;height:auto;min-height:0;align-items:center}
+  .site-header>.logo{grid-area:brand;min-width:0}
+  .site-header>.desktop-nav{grid-area:nav;width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;align-items:stretch;overflow:visible;white-space:normal}
+  .site-header>.desktop-nav a{min-width:0;display:flex;justify-content:center;align-items:center;text-align:center;white-space:normal;overflow-wrap:anywhere;line-height:1.2;font-size:12px;padding:9px 4px;margin:0}
+  .site-header>.desktop-nav .nav-cta{margin:0}
+  .site-header>.desktop-nav .mobile-menu-toggle{grid-column:3;grid-row:1;display:flex;flex-direction:column;justify-content:center;gap:4px;align-items:center;width:40px;height:36px;margin:auto;border:1px solid var(--line-strong);border-radius:9px;background:#fff;padding:7px;cursor:pointer}
+  .mobile-menu-toggle span{display:block;width:18px;height:2px;border-radius:2px;background:var(--ink)}
+}
+@media(min-width:851px){.mobile-menu-toggle{display:none!important}}
+@media(max-width:380px){.site-header>.desktop-nav{grid-template-columns:repeat(2,minmax(0,1fr))}.site-header>.desktop-nav .mobile-menu-toggle{grid-column:2;grid-row:1}}
+</style>
+<script id="karopays-mobile-header-auth-js">
+(()=>{const b=document.querySelector('.mobile-menu-toggle');if(!b)return;const nav=b.closest('.desktop-nav');b.addEventListener('click',()=>{const open=b.getAttribute('aria-expanded')==='true';b.setAttribute('aria-expanded',String(!open));nav.classList.toggle('mobile-nav-open',!open);});})();
+</script>
+
+
+<style id="karopays-mobile-nav-toggle-state">@media(max-width:850px){.site-header>.desktop-nav:not(.mobile-nav-open) a:not(.nav-cta){display:none}.site-header>.desktop-nav:not(.mobile-nav-open) a.nav-cta{display:flex;grid-column:2;grid-row:1}.site-header>.desktop-nav:not(.mobile-nav-open) .mobile-menu-toggle{grid-column:3;grid-row:1}}</style>
 </head>
 <body>
 <header class="site-header">
   <a class="logo" href="index.html"><span class="logo-mark">K</span><span>KaroPays</span></a>
   <nav class="desktop-nav">
     <a href="payout-rates.html">Payout Rates</a><a href="payment-proof.html">Payment Proof</a><a href="prize-winners.html">Prize Winners</a><a href="premium.html">Premium</a><a href="contact.html">Contact Us</a>
-    <a href="login.html">Sign in</a><a class="nav-cta" href="register.html">Register</a>
-  </nav>
+    <a href="login.html">Login</a><a class="nav-cta" href="register.html">Register</a>
+  <button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button></nav>
 </header>
 
 <main>
