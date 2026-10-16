@@ -91,7 +91,7 @@ function showRegisterMessage(message, type = "info") {
 registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  if (!window.supabaseClient?.auth) {
+  if (typeof supabaseClient === "undefined" || !supabaseClient?.auth) {
     showRegisterMessage("Registration is temporarily unavailable. Please refresh the page and try again.", "error");
     return;
   }
