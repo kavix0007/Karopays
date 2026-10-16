@@ -852,9 +852,18 @@ function kpRedrawAnalytics(){if(kpFilesCache.length||kpEarningsCache.length)rend
 $("kpRange").addEventListener("change",()=>renderAnalytics(kpFilesCache));
 window.addEventListener("resize",()=>{clearTimeout(window.__kpChartResize);window.__kpChartResize=setTimeout(()=>renderKpChart(kpEarningsCache,$("kpRange").value),100);});
 $("kpGlobalSearch").addEventListener("input",function(){const q=this.value.trim().toLowerCase();document.querySelectorAll("#filesContainer .dashboard-file").forEach(card=>{card.hidden=!!q&&!card.textContent.toLowerCase().includes(q);});});
-$("kpThemeToggle").addEventListener("click",()=>{document.body.classList.toggle("kp-dark");$("kpThemeToggle").textContent=document.body.classList.contains("kp-dark")?"☀":"☾";});
 
-$("kpMenuToggle").addEventListener("click",()=>{document.body.classList.toggle("kp-sidebar-open");});
+
+const kpMenuButton = document.getElementById("kpMenuToggle");
+if (kpMenuButton) {
+  kpMenuButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    document.body.classList.toggle("kp-sidebar-open");
+    const isOpen = document.body.classList.contains("kp-sidebar-open");
+    kpMenuButton.setAttribute("aria-expanded", String(isOpen));
+    kpMenuButton.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+  });
+}
 
 
 /* =========================================
