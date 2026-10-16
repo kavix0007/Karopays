@@ -139,6 +139,43 @@ body.kp-dark{--kp-bg:#111522;--kp-card:#191f30;--kp-text:#f3f5fb;--kp-muted:#a1a
 }
 </style>
 
+
+<style id="karopays-dashboard-topbar-clean">
+/* Keep the dashboard in the light theme and use the brand blue consistently. */
+:root{color-scheme:light!important;--kp-bg:#f5f7fc;--kp-card:#fff;--kp-text:#121521;--kp-muted:#69748a;--kp-line:#e8ecf4;--kp-blue:#5271ff;--kp-blue2:#5271ff;--kp-purple:#5271ff}
+html,body{background:#f5f7fc!important;color:#121521!important}
+.kp-stat-card{display:flex;align-items:center;gap:14px}
+.kp-stat-icon{display:grid!important;place-items:center;flex:0 0 62px;width:62px;height:62px;font-size:25px!important;line-height:1;color:#5271ff}
+.kp-stat-icon.kp-blue,.kp-stat-icon.kp-purple{background:#eaf0ff!important;color:#5271ff!important}
+.kp-stat-icon.kp-green{background:#e0f8ee!important;color:#16a777!important}
+.kp-stat-icon.kp-orange{background:#fff0e7!important;color:#e8894c!important}
+.kp-stat-watermark,.kp-clock-watermark{display:none!important}
+.kp-topbar{display:flex;align-items:center;gap:14px}
+.kp-brand.logo{flex:0 0 auto;min-width:0}
+.kp-top-actions{display:flex;align-items:center;gap:12px;margin-left:auto;flex:0 0 auto}
+.kp-profile{min-width:0}
+@media(max-width:760px){
+ .kp-topbar{height:auto;min-height:68px;padding:10px 14px;display:flex;flex-wrap:wrap;gap:10px}
+ .kp-menu-toggle{order:0;flex:0 0 auto}
+ .kp-brand.logo{order:1;flex:1;min-width:0}
+ .kp-top-actions{order:2;margin-left:auto;max-width:100%}
+ .kp-profile{display:none}
+ .kp-signout{white-space:nowrap;font-size:12px}
+ .kp-main{margin-left:0!important;width:100%;padding:18px 14px 36px}
+ .kp-stat-grid{grid-template-columns:minmax(0,1fr)!important;gap:10px}
+ .kp-stat-card{min-height:98px;padding:14px;gap:14px}
+ .kp-stat-icon{width:48px;height:48px;flex-basis:48px;font-size:22px!important}
+ .kp-stat-copy{flex:1;min-width:0}
+ .kp-stat-copy span{white-space:normal}
+ .kp-stat-copy strong{font-size:23px;white-space:normal}
+ .kp-mini-bars{display:none!important}
+}
+@media(min-width:761px) and (max-width:1050px){
+ .kp-topbar{gap:12px}
+ .kp-brand.logo{min-width:0}
+}
+</style>
+
 </head>
 
 
@@ -149,9 +186,7 @@ body.kp-dark{--kp-bg:#111522;--kp-card:#191f30;--kp-text:#f3f5fb;--kp-muted:#a1a
 <header class="kp-topbar">
   <button class="kp-menu-toggle" id="kpMenuToggle" type="button" aria-label="Toggle navigation">Menu</button>
   <a class="kp-brand logo" href="../index.html" aria-label="KaroPays home"><span class="logo-mark">K</span><span>KaroPays</span></a>
-  <label class="kp-search"><span>⌕</span><input id="kpGlobalSearch" type="search" placeholder="Search files, creators, categories..." aria-label="Search your files"></label>
   <div class="kp-top-actions">
-    <button class="kp-icon-button" id="kpThemeToggle" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">☾</button>
     <div class="kp-profile"><span class="kp-avatar" id="kpAvatar">K</span><span class="kp-profile-copy"><strong id="kpProfileName">Creator</strong><small>Creator</small></span><span>⌄</span></div>
     <a href="#" id="signOut" class="kp-signout">Sign out</a>
   </div>
