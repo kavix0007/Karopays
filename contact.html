@@ -12,6 +12,17 @@
     .contact-wrap h1{font-size:clamp(2rem,5vw,3rem);margin:10px 0;color:#151b2d}
     .contact-wrap .intro{color:#66718a;max-width:620px;line-height:1.7}
     .contact-card{margin-top:28px;padding:clamp(20px,4vw,34px);background:#fff;border:1px solid #e5eaff;border-radius:20px;box-shadow:0 14px 45px rgba(55,78,150,.08)}
+    .support-option{display:flex;gap:20px;align-items:flex-start;padding:8px 0}
+    .support-icon{flex:0 0 52px;height:52px;border-radius:15px;display:grid;place-items:center;background:#eef1ff;color:#405ee8;font-size:1.7rem;font-weight:800}
+    .telegram-icon{background:#e8f6ff;color:#168acb}
+    .support-copy{flex:1;min-width:0}
+    .support-copy h2{margin:0 0 8px;color:#151b2d;font-size:1.25rem}
+    .support-copy p{margin:0 0 10px;color:#66718a;line-height:1.65}
+    .support-copy .support-address{font-weight:750;color:#27314b;overflow-wrap:anywhere}
+    .support-link{display:inline-flex;align-items:center;text-decoration:none;margin-top:8px}
+    .telegram-link{background:#168acb}
+    .support-divider{height:1px;background:#e8ecf5;margin:26px 0}
+    @media(max-width:480px){.support-option{gap:14px}.support-icon{flex-basis:44px;height:44px}}
     .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
     .contact-card label{display:block;font-weight:650;color:#27314b;font-size:.92rem;margin-bottom:17px}
     .contact-card input,.contact-card select,.contact-card textarea{box-sizing:border-box;width:100%;margin-top:8px;padding:13px 14px;border:1px solid #dfe5f2;border-radius:10px;background:#fbfcff;color:#151b2d;font:inherit}
@@ -33,18 +44,33 @@
 <main class="contact-wrap">
   <div class="eyebrow">We're here to help</div>
   <h1>Contact Us</h1>
-  <p class="intro">Have a question about your account, downloads, or creator earnings? Send a message using the form below.</p>
-  <form class="contact-card" id="contactForm">
-    <div class="contact-grid">
-      <label>Your name<input name="name" autocomplete="name" maxlength="100" required></label>
-      <label>Your email<input name="email" type="email" autocomplete="email" maxlength="254" required></label>
+  <p class="intro">Need help with your account, downloads, or creator earnings? Choose the support option that works best for you.</p>
+
+  <section class="contact-card" aria-label="KaroPays support options">
+    <div class="support-option">
+      <div class="support-icon" aria-hidden="true">✉</div>
+      <div class="support-copy">
+        <h2>Email Support</h2>
+        <p>Send us your question by email. Your email app will open with our support address filled in.</p>
+        <p class="support-address">karopays.online@gmail.com</p>
+        <a class="contact-submit support-link" href="mailto:karopays.online@gmail.com?subject=KaroPays%20Support">Email KaroPays Support</a>
+      </div>
     </div>
-    <label>Topic<select name="topic" required><option value="" selected disabled>Select a topic</option><option>Account and sign-in</option><option>Downloads and files</option><option>Earnings and payouts</option><option>Report a problem</option><option>Other</option></select></label>
-    <label>Message<textarea name="message" maxlength="4000" required placeholder="Tell us how we can help..."></textarea></label>
-    <button class="contact-submit" type="submit">Prepare message</button>
-    <p class="contact-note">This form is currently a front-end draft and does not send or store messages yet. Please do not include passwords, payment details, or other sensitive information.</p>
-    <p class="contact-status" id="contactStatus" role="status" aria-live="polite"></p>
-  </form>
+
+    <div class="support-divider" role="separator"></div>
+
+    <div class="support-option">
+      <div class="support-icon telegram-icon" aria-hidden="true">➤</div>
+      <div class="support-copy">
+        <h2>Telegram Support & Updates</h2>
+        <p>Visit the KaroPays Telegram channel for updates and to reach the community.</p>
+        <p class="support-address">@karopays_updates</p>
+        <a class="contact-submit support-link telegram-link" href="https://t.me/karopays_updates" target="_blank" rel="noopener noreferrer">Open Telegram</a>
+      </div>
+    </div>
+
+    <p class="contact-note">These options open your email app or Telegram. This page does not send or store messages itself. Never share your password, payment details, or other sensitive information.</p>
+  </section>
 </main>
 <script src="assets/js/contact-form.js"></script>
 </body>
