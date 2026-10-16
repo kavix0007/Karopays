@@ -58,9 +58,9 @@
       I agree to the Program Rules and Terms.
     </label>
 
-    <p id="registerMessage"></p>
+    <p id="registerMessage" class="form-message" role="status" aria-live="polite"></p>
 
-    <button class="primary full" type="submit">
+    <button class="primary full" id="registerButton" type="submit">
       Create account
     </button>
 
@@ -81,41 +81,74 @@
 <script>
 const registerForm = document.getElementById("registerForm");
 const registerMessage = document.getElementById("registerMessage");
+const registerButton = document.getElementById("registerButton");
+
+function showRegisterMessage(message, type = "info") {
+  registerMessage.textContent = message;
+  registerMessage.dataset.state = type;
+}
 
 registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const displayName =
-    document.getElementById("displayName").value.trim();
-
-  const email =
-    document.getElementById("email").value.trim();
-
-  const password =
-    document.getElementById("password").value;
-
-  registerMessage.textContent = "Creating your account...";
-
-  const { data, error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password,
-    options: {
-      data: {
-        display_name: displayName
-      }
-    }
-  });
-
-  if (error) {
-    registerMessage.textContent = error.message;
+  if (!window.supabaseClient?.auth) {
+    showRegisterMessage("Registration is temporarily unavailable. Please refresh the page and try again.", "error");
     return;
   }
 
-  if (data.user) {
-    registerMessage.textContent =
-      "Account created successfully. Check your email if confirmation is required.";
+  const displayName = document.getElementById("displayName").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
 
-    registerForm.reset();
+  if (!displayName) {
+    showRegisterMessage("Please enter your name.", "error");
+    return;
+  }
+
+  registerButton.disabled = true;
+  registerButton.textContent = "Creating account...";
+  showRegisterMessage("Creating your account and sending the confirmation email…");
+
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/login.html`,
+        data: { display_name: displayName }
+      }
+    });
+
+    if (error) {
+      showRegisterMessage(error.message || "We couldn't create your account. Please try again.", "error");
+      return;
+    }
+
+    if (data.user && !data.session) {
+      showRegisterMessage(
+        `Your account request was received. We sent a confirmation link to ${email}. Open that email and click “Confirm email address” before signing in. Check Spam/Junk too. If it doesn't arrive, wait a few minutes before trying again.`,
+        "success"
+      );
+      document.getElementById("password").value = "";
+      document.getElementById("terms").checked = false;
+      return;
+    }
+
+    if (data.user && data.session) {
+      showRegisterMessage("Your account was created and you are signed in. Redirecting to your dashboard…", "success");
+      window.location.assign("creator/dashboard.html");
+      return;
+    }
+
+    showRegisterMessage("We couldn't confirm the registration result. Please try signing in or try again later.", "error");
+  } catch (error) {
+    showRegisterMessage(
+      error?.message || "A network error occurred. Check your connection and try again.",
+      "error"
+    );
+  } finally {
+    registerButton.disabled = false;
+    registerButton.textContent = "Create account";
   }
 });
 </script>
