@@ -1,19 +1,19 @@
-# KaroPays — Consistent Dashboard Theme
+# KaroPays UI update package
 
-This package applies the blue, white, and light-grey visual theme used by the creator dashboard to the site's shared `assets/css/pro.css`. Existing HTML/JavaScript content was retained wherever possible; the shared stylesheet adds overrides at the end rather than deleting the original CSS.
+This package is based on the files supplied in this conversation and preserves the existing HTML/JS pages and Supabase configuration.
 
-## Included
-- Homepage, login, registration, upload, browse, file download and edit pages
-- Creator dashboard
-- Payout rates, payment proof, prize winners, premium, how-it-works, program rules, terms, privacy and content-removal pages
-- Admin pages, Supabase browser configuration, existing app script, sitemap and robots.txt
-- `assets/css/pro.css` with the shared dashboard-matched theme
-
-## Deploy
-Upload the contents of this folder to the same website root, preserving the `assets/`, `creator/`, and `f/` folders. Back up your current deployment first.
+## Changes applied
+- Homepage Contact Us navigation is present and points to `contact.html`.
+- Removed visible links to `content-removal.html` from supplied navigation/footer locations.
+- Removed the Help & Support item from the creator dashboard where it was present.
+- Standardized remaining dashboard inline purple accents to KaroPays blue `#5271ff`.
+- Removed the visible support email from supplied public-facing pages.
+- Updated `sitemap.xml` to use `karopays.online` consistently and omit the content-removal page.
+- Preserved `content-removal.html` in the package as an inactive/orphaned page rather than deleting the file, to avoid irreversible removal without separate approval.
+- Preserved the supplied KaroPays logo asset; it is brand artwork, not a dashboard/homepage screenshot.
 
 ## Important
-- This is a visual consistency pass, not a backend audit or live production test.
-- The browser Supabase key in `assets/js/supabase-config.js` is a publishable key; never put a service-role/secret key in browser code.
-- Existing Supabase schema, RLS, payout calculations and delete behavior were not changed.
-- Test login, upload, browse, download/earnings, edit/delete and payout workflows on a staging copy before replacing your live site.
+- This package has not been deployed to the live site.
+- Contact form remains front-end-only; it does not send or store messages.
+- Supabase schema, RLS policies, Edge Functions, payout logic, and file data were not changed.
+- Test login, upload, browse, download, edit/delete, payout, and mobile dashboard flows on a staging copy before deployment.

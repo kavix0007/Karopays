@@ -51,14 +51,13 @@ h1,h2,h3,h4{color:var(--ink);font-family:var(--font-head);font-weight:700}
 
 /* ---------- Header ---------- */
 .site-header{height:72px;background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5.5%;position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
-.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;white-space:nowrap;font-family:var(--font-head);font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--ink)}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-size:18px;font-weight:700;letter-spacing:-.3px;color:var(--ink)}
 .logo-mark{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;color:#fff;font-weight:800;background:var(--brand)}
 .desktop-nav{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--muted)}
 .desktop-nav a{padding:8px 12px;border-radius:var(--r-sm);transition:background .15s,color .15s}
 .desktop-nav a:hover{color:var(--brand-hover);background:var(--brand-50)}
 .desktop-nav a.active{color:var(--brand-hover);background:var(--brand-100)}
-.desktop-nav .nav-cta{margin-left:6px;padding:9px 18px;background:var(--brand);color:#fff}
-.desktop-nav .nav-cta:hover{background:var(--brand-hover);color:#fff}
+.desktop-nav .nav-cta{margin-left:6px;padding:9px 18px}
 
 /* ---------- Buttons ---------- */
 .primary,.secondary,.light-btn,.btn,.nav-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:12px 20px;font:700 14px/1.2 var(--font);cursor:pointer;transition:background .15s,border-color .15s,box-shadow .15s,transform .15s}
@@ -128,8 +127,7 @@ h1,h2,h3,h4{color:var(--ink);font-family:var(--font-head);font-weight:700}
 
 /* ---------- Footer ---------- */
 footer{background:#fff;border-top:1px solid var(--line);padding:55px 8% 20px;color:var(--muted)}
-.footer-main{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr 1.5fr;gap:36px}
-.footer-main a[href^="mailto:"]{overflow-wrap:anywhere}
+.footer-main{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
 .footer-main p,.footer-main a{color:var(--muted);font-size:13px}
 .footer-main h4{font-size:13px;margin:0 0 12px}
 .footer-main a{display:block;margin:8px 0}
@@ -245,19 +243,17 @@ tr:last-child td{border-bottom:0}
   .rate-cards{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:850px){
-  /* Nav stays reachable on mobile: logo on top, every link visible below it (wraps, never scrolls sideways) */
-  .site-header{height:auto;flex-wrap:wrap;gap:8px 12px;padding:10px 5% 12px}
-  .desktop-nav{width:100%;flex-wrap:wrap;gap:6px}
-  .desktop-nav a{flex:1 1 auto;text-align:center;border:1px solid var(--line);background:#fff;padding:9px 12px}
-  .desktop-nav a.active{background:var(--brand-100);border-color:var(--brand-200)}
-  .desktop-nav .nav-cta{margin-left:0;border-color:var(--brand);color:#fff}
+  /* Nav stays reachable on mobile: wraps under the logo and scrolls sideways (no JS needed) */
+  .site-header{height:auto;flex-wrap:wrap;gap:6px 12px;padding:10px 5%}
+  .desktop-nav{width:100%;overflow-x:auto;white-space:nowrap;gap:2px;padding-bottom:4px;scrollbar-width:none}
+  .desktop-nav::-webkit-scrollbar{display:none}
   .hero{grid-template-columns:1fr;padding:48px 6% 70px;min-height:0}
   .hero h1{font-size:42px;letter-spacing:-1.6px}
   .hero-visual{height:300px}
   .feature-strip{width:92%;grid-template-columns:1fr 1fr}
   .feature-strip div:nth-child(2){border-right:0}
   .feature-strip div{border-bottom:1px solid var(--line)}
-  .steps,.rule-grid,.rate-cards,.proof-grid,.winner-grid,.premium-card,.rule-columns,.footer-main,.file-stat-grid,.contact-layout{grid-template-columns:1fr}
+  .steps,.rule-grid,.rate-cards,.proof-grid,.winner-grid,.premium-card,.rule-columns,.footer-main,.file-stat-grid{grid-template-columns:1fr}
   .blue-band{display:block;padding:55px 7%}
   .light-btn{margin-top:20px}
   .legal-page h1{font-size:36px}
@@ -276,13 +272,6 @@ tr:last-child td{border-bottom:0}
   .feature-strip{grid-template-columns:1fr}
   .feature-strip div{border-right:0}
 }
-@media(max-width:600px){
-  /* Phones: all six links sit in a tidy grid (3 per row on a 360px screen) */
-  .site-header{padding:10px 4% 12px}
-  .desktop-nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:6px}
-  .desktop-nav a{font-size:12px;padding:9px 4px;line-height:1.25}
-  .logo{font-size:20px}
-}
 @media(max-width:520px){
   .auth-wrap{padding:20px 14px}
   .auth-wrap>.logo{position:static;margin-bottom:18px}
@@ -292,43 +281,3 @@ tr:last-child td{border-bottom:0}
   html{scroll-behavior:auto}
   *,*::before,*::after{transition:none!important;animation:none!important}
 }
-
-/* ---------- Contact page ---------- */
-.contact-page{max-width:1060px;margin:auto;padding:64px 5% 90px}
-.contact-head{max-width:640px;margin-bottom:34px}
-.contact-head h1{font-size:44px;letter-spacing:-1.6px;margin:12px 0}
-.contact-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.7fr);gap:22px;align-items:start}
-.contact-info{display:grid;gap:14px}
-.contact-card,.contact-form-card{background:#fff;border:1px solid var(--line);border-radius:var(--r-md);box-shadow:var(--shadow-sm)}
-.contact-card{padding:22px}
-.contact-card h2{font-size:16px;margin:14px 0 6px}
-.contact-card p{color:var(--muted);font-size:14px;margin:0 0 8px}
-.contact-card p a{color:var(--brand-hover);font-weight:600}
-.contact-icon{width:40px;height:40px;border-radius:10px;background:var(--brand-100);color:var(--brand-hover);display:grid;place-items:center;font-size:20px}
-.contact-mail{color:var(--brand-hover);font-weight:700;font-size:15px;overflow-wrap:anywhere}
-.contact-mail:hover{text-decoration:underline}
-.contact-form-card{padding:30px;border-radius:var(--r-lg);box-shadow:var(--shadow)}
-.contact-form-card h2{font-size:22px;margin:0 0 20px}
-.contact-field{margin-bottom:18px}
-.contact-field label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
-.contact-field input,.contact-field textarea{width:100%;padding:12px;border:1px solid var(--line-strong);border-radius:var(--r-sm);font:inherit;color:var(--ink);background:#fff;transition:border-color .15s,box-shadow .15s}
-.contact-field textarea{resize:vertical;min-height:150px}
-.contact-field [aria-invalid="true"]{border-color:var(--danger);box-shadow:0 0 0 3px rgba(197,46,61,.12)}
-.field-error{color:var(--danger);font-size:12px;font-weight:600;min-height:18px;margin:5px 0 0}
-.contact-field-foot{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.char-count{color:var(--muted);font-size:12px;margin-top:5px;white-space:nowrap}
-.char-count.over{color:var(--danger);font-weight:700}
-.contact-honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-.contact-status{display:none;margin:4px 0 16px;padding:14px 16px;border-radius:var(--r-md);font-size:14px;line-height:1.55;border:1px solid transparent}
-.contact-status.show{display:block}
-.contact-status a{font-weight:700;text-decoration:underline;overflow-wrap:anywhere}
-.contact-status.info{background:var(--brand-50);border-color:var(--brand-200);color:var(--ink)}
-.contact-status.info a{color:var(--brand-hover)}
-.contact-status.error{background:var(--danger-bg);border-color:var(--danger-line);color:var(--ink)}
-.contact-status.error a{color:var(--danger)}
-.contact-status.success{background:var(--ok-bg);border-color:#bfe8d9;color:var(--ink)}
-.contact-status.success a{color:var(--ok)}
-.contact-form-card .primary.full{width:100%}
-.contact-note{color:var(--muted);font-size:12px;text-align:center;margin:12px 0 0}
-@media(max-width:850px){.contact-page{padding:44px 5% 70px}.contact-head h1{font-size:34px}}
-@media(max-width:520px){.contact-form-card{padding:22px 18px}}
