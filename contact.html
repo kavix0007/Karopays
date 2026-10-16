@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact Us — KaroPays</title>
+<meta name="description" content="Contact KaroPays support at karopays.online@gmail.com.">
+<meta name="theme-color" content="#5271ff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/css/pro.css">
+</head>
+<body>
+<header class="site-header">
+  <a class="logo" href="index.html"><span class="logo-mark">K</span><span>KaroPays</span></a>
+  <nav class="desktop-nav">
+    <a href="payout-rates.html">Payout Rates</a><a href="payment-proof.html">Payment Proof</a><a href="prize-winners.html">Prize Winners</a><a href="premium.html">Premium</a>
+    <a href="login.html">Sign in</a><a class="nav-cta" href="register.html">Register</a>
+  </nav>
+</header>
+
+<main class="contact-page">
+  <div class="contact-head">
+    <div class="section-label">Support</div>
+    <h1>Contact Us</h1>
+    <p class="lead">Questions about your account, files, payouts or content removal? Send us a message and include as much detail as you can.</p>
+  </div>
+
+  <div class="contact-layout">
+    <aside class="contact-info" aria-label="Support details">
+      <div class="contact-card">
+        <span class="contact-icon" aria-hidden="true">✉</span>
+        <h2>Email support</h2>
+        <p>You can always reach us directly at:</p>
+        <a class="contact-mail" href="mailto:karopays.online@gmail.com">karopays.online@gmail.com</a>
+      </div>
+      <div class="contact-card">
+        <span class="contact-icon" aria-hidden="true">✓</span>
+        <h2>Help us help you</h2>
+        <p>Include the email on your KaroPays account and, if it is about a file, the file link. Never send your password.</p>
+      </div>
+      <div class="contact-card">
+        <span class="contact-icon" aria-hidden="true">⚑</span>
+        <h2>Copyright complaint?</h2>
+        <p>Use the <a href="content-removal.html">content removal</a> page so your report reaches the right process.</p>
+      </div>
+    </aside>
+
+    <section class="contact-form-card" aria-labelledby="contactFormTitle">
+      <h2 id="contactFormTitle">Send a message</h2>
+
+      <form id="contactForm" novalidate>
+        <div class="contact-field">
+          <label for="contactName">Full name</label>
+          <input id="contactName" name="name" type="text" autocomplete="name" required maxlength="80" aria-describedby="contactNameError">
+          <p class="field-error" id="contactNameError"></p>
+        </div>
+
+        <div class="contact-field">
+          <label for="contactEmail">Email address</label>
+          <input id="contactEmail" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="contactEmailError">
+          <p class="field-error" id="contactEmailError"></p>
+        </div>
+
+        <div class="contact-field">
+          <label for="contactSubject">Subject</label>
+          <input id="contactSubject" name="subject" type="text" required maxlength="120" aria-describedby="contactSubjectError">
+          <p class="field-error" id="contactSubjectError"></p>
+        </div>
+
+        <div class="contact-field">
+          <label for="contactMessage">Message</label>
+          <textarea id="contactMessage" name="message" rows="7" required aria-describedby="contactMessageError contactCount"></textarea>
+          <div class="contact-field-foot">
+            <p class="field-error" id="contactMessageError"></p>
+            <span class="char-count" id="contactCount" aria-hidden="true">0 / 2000</span>
+          </div>
+        </div>
+
+        <!-- Spam trap for the future backend: real users never see or fill this. -->
+        <div class="contact-honeypot" aria-hidden="true">
+          <label for="contactWebsite">Leave this field empty</label>
+          <input id="contactWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div id="contactStatus" class="contact-status" role="status" aria-live="polite"></div>
+
+        <button class="primary full" type="submit" id="contactSubmit">Send message</button>
+        <p class="contact-note">Online sending is not connected yet. After you submit, we will show you how to reach us by email.</p>
+      </form>
+    </section>
+  </div>
+</main>
+
+<footer><div class="footer-main"><div><a class="logo" href="index.html"><span class="logo-mark">K</span><span>KaroPays</span></a><p>File hosting and creator monetization.</p></div><div><h4>Platform</h4><a href="browse.html">Browse files</a><a href="upload.html">Upload</a><a href="payout-rates.html">Payout rates</a><a href="premium.html">Premium</a></div><div><h4>Company</h4><a href="payment-proof.html">Payment proof</a><a href="prize-winners.html">Prize winners</a><a href="program-rules.html">Program rules</a><a href="content-removal.html">Content removal</a></div><div><h4>Legal</h4><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a></div><div><h4>Support</h4><a href="contact.html">Contact us</a><a href="mailto:karopays.online@gmail.com">karopays.online@gmail.com</a></div></div><div class="footer-bottom">© 2026 KaroPays. All rights reserved.</div></footer>
+
+<script src="assets/js/contact-form.js"></script>
+</body>
+</html>
