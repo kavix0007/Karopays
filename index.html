@@ -86,16 +86,27 @@
 }
 </style>
 <script id="karopays-working-mobile-menu-js">
-(()=> {
+document.addEventListener('DOMContentLoaded', () => {
   const button = document.querySelector('.mobile-menu-toggle');
   const nav = button && button.closest('.desktop-nav');
   if (!button || !nav) return;
-  button.addEventListener('click', () => {
-    const open = button.getAttribute('aria-expanded') === 'true';
-    button.setAttribute('aria-expanded', String(!open));
-    button.setAttribute('aria-label', open ? 'Open navigation' : 'Close navigation');
-    nav.classList.toggle('mobile-nav-open', !open);
+
+  button.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const open = nav.classList.toggle('mobile-nav-open');
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
   });
+
+  nav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('mobile-nav-open');
+      button.setAttribute('aria-expanded', 'false');
+      button.setAttribute('aria-label', 'Open navigation');
+    });
+  });
+
   window.addEventListener('resize', () => {
     if (window.innerWidth > 850) {
       nav.classList.remove('mobile-nav-open');
@@ -103,7 +114,7 @@
       button.setAttribute('aria-label', 'Open navigation');
     }
   });
-})();
+});
 </script>
 
 </head>
