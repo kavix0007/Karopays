@@ -15,104 +15,51 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="assets/css/pro.css">
 
-<style id="karopays-mobile-nav-fit">
-/* Keep every homepage navigation link visible inside the mobile viewport. */
-@media (max-width: 850px) {
-  .site-header {
-    height: auto;
-    min-height: 0;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 8px 12px;
-    padding: 12px 16px 10px;
-  }
-  .site-header > .logo {
-    flex: 0 0 100%;
-    width: 100%;
-  }
-  .site-header > .desktop-nav {
-    width: 100%;
-    min-width: 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 4px;
-    overflow: visible;
-    white-space: normal;
-    padding: 0 0 2px;
-    align-items: stretch;
-  }
-  .site-header > .desktop-nav a {
-    min-width: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: normal;
-    line-height: 1.2;
-    font-size: 12px;
-    padding: 9px 4px;
-    margin: 0;
-  }
-  .site-header > .desktop-nav .nav-cta {
-    margin: 0;
-  }
-}
-@media (max-width: 380px) {
-  .site-header > .desktop-nav {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .site-header > .desktop-nav a {
-    font-size: 12px;
-  }
-}
-</style>
-
-<style id="karopays-working-mobile-menu">
-.mobile-menu-toggle{display:none;border:1px solid var(--line-strong);border-radius:9px;background:#fff;width:42px;height:38px;padding:8px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px}
-.mobile-menu-toggle span{display:block;width:19px;height:2px;background:var(--ink);border-radius:2px}
+<style id="karopays-final-responsive-header">
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:nowrap}
+.site-header>.logo{flex:0 0 auto;width:auto;min-width:0}
+.desktop-nav{display:flex;align-items:center;justify-content:flex-end;gap:24px;min-width:0}
+.site-header-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.site-header-actions .header-login{font-weight:650;white-space:nowrap}
+.site-header-actions .header-register{white-space:nowrap}
+.mobile-menu-toggle{display:none;border:1px solid #dfe4ef;border-radius:10px;background:#fff;width:42px;height:40px;padding:8px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px;flex:0 0 42px}
+.mobile-menu-toggle span{display:block;width:19px;height:2px;background:#172033;border-radius:2px}
 @media(max-width:850px){
-  .site-header{height:auto;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand nav";gap:10px 8px;padding:12px 14px;align-items:center}
-  .site-header>.logo{grid-area:brand;min-width:0}
-  .site-header>.desktop-nav{grid-area:nav;width:auto;min-width:0;display:flex;align-items:center;justify-content:flex-end;gap:6px;overflow:visible;white-space:normal}
-  .site-header>.desktop-nav a{display:none}
-  .site-header>.desktop-nav a[href="login.html"],.site-header>.desktop-nav a[href="register.html"]{display:flex;align-items:center;justify-content:center;padding:9px 11px;font-size:12px;white-space:nowrap;margin:0}
-  .site-header>.desktop-nav .nav-cta{margin:0}
-  .site-header>.desktop-nav .mobile-menu-toggle{display:flex;flex:0 0 38px;width:38px;height:36px}
-  .site-header>.desktop-nav.mobile-nav-open{grid-column:1 / -1;width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;padding-top:8px;border-top:1px solid var(--line);margin-top:2px}
-  .site-header>.desktop-nav.mobile-nav-open a{display:flex;min-width:0;justify-content:center;text-align:center;white-space:normal;overflow-wrap:anywhere;line-height:1.2;font-size:12px;padding:10px 5px;margin:0}
-  .site-header>.desktop-nav.mobile-nav-open .mobile-menu-toggle{grid-column:2;grid-row:1;justify-self:end}
+ .site-header{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand actions" "nav nav";align-items:center;gap:10px 8px;padding:12px 14px;height:auto;min-height:0}
+ .site-header>.logo{grid-area:brand;min-width:0;width:auto;flex:0 1 auto}
+ .site-header-actions{grid-area:actions;display:flex;align-items:center;gap:6px}
+ .site-header-actions .header-login,.site-header-actions .header-register{display:inline-flex;align-items:center;justify-content:center;font-size:12px;padding:9px 10px;margin:0}
+ .site-header-actions .mobile-menu-toggle{display:flex}
+ .site-header>.desktop-nav{grid-area:nav;display:none;width:100%;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding-top:10px;border-top:1px solid #e7eaf1}
+ .site-header>.desktop-nav.mobile-nav-open{display:grid}
+ .site-header>.desktop-nav a{display:flex;min-width:0;align-items:center;justify-content:center;text-align:center;white-space:normal;overflow-wrap:anywhere;line-height:1.25;font-size:13px;padding:11px 6px;margin:0;border-radius:8px}
+}
+@media(max-width:390px){
+ .site-header{padding:10px}
+ .site-header>.logo .logo-mark{width:38px;height:38px}
+ .site-header>.logo>span:last-child{font-size:17px}
+ .site-header-actions{gap:4px}
+ .site-header-actions .header-login,.site-header-actions .header-register{padding:8px 7px;font-size:11px}
+ .site-header-actions .mobile-menu-toggle{width:36px;height:36px;flex-basis:36px}
 }
 </style>
-<script id="karopays-working-mobile-menu-js">
-document.addEventListener('DOMContentLoaded', () => {
+<script id="karopays-final-responsive-header-js">
+document.addEventListener('DOMContentLoaded', function () {
   const button = document.querySelector('.mobile-menu-toggle');
-  const nav = button && button.closest('.desktop-nav');
+  const nav = document.querySelector('.site-header .desktop-nav');
   if (!button || !nav) return;
-
-  button.addEventListener('click', (event) => {
+  button.addEventListener('click', function (event) {
     event.preventDefault();
-    event.stopPropagation();
     const open = nav.classList.toggle('mobile-nav-open');
     button.setAttribute('aria-expanded', String(open));
     button.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
   });
-
-  nav.querySelectorAll('a').forEach((link) => {
-    link.addEventListener('click', () => {
+  nav.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () {
       nav.classList.remove('mobile-nav-open');
       button.setAttribute('aria-expanded', 'false');
       button.setAttribute('aria-label', 'Open navigation');
     });
-  });
-
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 850) {
-      nav.classList.remove('mobile-nav-open');
-      button.setAttribute('aria-expanded', 'false');
-      button.setAttribute('aria-label', 'Open navigation');
-    }
   });
 });
 </script>
@@ -120,11 +67,19 @@ document.addEventListener('DOMContentLoaded', () => {
 </head>
 <body>
 <header class="site-header">
-  <a class="logo" href="index.html"><span class="logo-mark">K</span><span>KaroPays</span></a>
-  <nav class="desktop-nav">
-    <a href="payout-rates.html">Payout Rates</a><a href="payment-proof.html">Payment Proof</a><a href="prize-winners.html">Prize Winners</a><a href="premium.html">Premium</a><a href="contact.html">Contact Us</a>
-    <a href="login.html">Login</a><a class="nav-cta" href="register.html">Register</a>
-  <button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button></nav>
+  <a class="logo" href="index.html" aria-label="KaroPays home"><span class="logo-mark">K</span><span>KaroPays</span></a>
+  <div class="site-header-actions">
+    <a class="header-login" href="login.html">Login</a>
+    <a class="nav-cta header-register" href="register.html">Register</a>
+    <button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="desktop-nav" aria-label="Main navigation">
+    <a href="payout-rates.html">Payout Rates</a>
+    <a href="payment-proof.html">Payment Proof</a>
+    <a href="prize-winners.html">Prize Winners</a>
+    <a href="premium.html">Premium</a>
+    <a href="contact.html">Contact Us</a>
+  </nav>
 </header>
 
 <main>

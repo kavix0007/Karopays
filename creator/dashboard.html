@@ -176,6 +176,60 @@ html,body{background:#f5f7fc!important;color:#121521!important}
 }
 </style>
 
+
+<style id="kp-final-mobile-sidebar">
+.kp-menu-toggle{display:inline-flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;width:42px;height:40px;min-width:42px;padding:8px;border:1px solid #dfe4ef;border-radius:10px;background:#fff;cursor:pointer;font-size:0}
+.kp-menu-toggle span{display:block;width:19px;height:2px;background:#182033;border-radius:2px}
+.kp-brand.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:#171a27;min-width:0}
+.kp-brand.logo .logo-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:11px;background:#5271ff;color:#fff;font-size:24px;font-weight:800;flex:0 0 40px}
+.kp-brand.logo>span:last-child{font-size:18px;font-weight:850;white-space:nowrap}
+@media(max-width:760px){
+ body{overflow-x:hidden}
+ .kp-topbar{position:relative;z-index:1001;display:flex;align-items:center;gap:10px;flex-wrap:nowrap;height:auto;min-height:68px;padding:10px 12px}
+ .kp-menu-toggle{order:0;flex:0 0 40px}
+ .kp-brand.logo{order:1;flex:1 1 auto;min-width:0}
+ .kp-brand.logo .logo-mark{width:38px;height:38px;flex-basis:38px}
+ .kp-brand.logo>span:last-child{font-size:17px}
+ .kp-top-actions{order:2;display:flex;align-items:center;gap:8px;margin-left:auto;flex:0 0 auto}
+ .kp-profile{display:none!important}
+ .kp-signout{white-space:nowrap;font-size:12px}
+ .kp-sidebar{position:fixed!important;left:0;top:0;bottom:0;width:min(280px,84vw)!important;max-width:84vw;z-index:1000;overflow-y:auto;transform:translateX(-105%);transition:transform .22s ease;box-shadow:none}
+ body.kp-sidebar-open .kp-sidebar{transform:translateX(0);box-shadow:12px 0 32px rgba(18,28,55,.2)}
+ body.kp-sidebar-open:after{content:"";position:fixed;inset:0;background:rgba(18,28,55,.25);z-index:999}
+ .kp-main{margin-left:0!important;width:100%;max-width:100%;padding:18px 14px 36px;position:relative}
+}
+@media(min-width:761px){
+ .kp-menu-toggle{display:none}
+}
+</style>
+<script id="kp-sidebar-menu-final">
+document.addEventListener('DOMContentLoaded', function () {
+  const button = document.getElementById('kpMenuToggle');
+  const sidebar = document.getElementById('kpSidebar');
+  if (!button || !sidebar || button.dataset.menuReady === 'true') return;
+  button.dataset.menuReady = 'true';
+  function setOpen(open) {
+    document.body.classList.toggle('kp-sidebar-open', open);
+    button.setAttribute('aria-expanded', String(open));
+    button.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+  }
+  button.addEventListener('click', function (event) {
+    event.preventDefault();
+    setOpen(!document.body.classList.contains('kp-sidebar-open'));
+  });
+  document.addEventListener('click', function (event) {
+    if (document.body.classList.contains('kp-sidebar-open') &&
+        !sidebar.contains(event.target) && !button.contains(event.target)) setOpen(false);
+  });
+  sidebar.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () { setOpen(false); });
+  });
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 760) setOpen(false);
+  });
+});
+</script>
+
 </head>
 
 
@@ -184,7 +238,7 @@ html,body{background:#f5f7fc!important;color:#121521!important}
 
 
 <header class="kp-topbar">
-  <button class="kp-menu-toggle" id="kpMenuToggle" type="button" aria-label="Toggle navigation">Menu</button>
+  <button class="kp-menu-toggle" id="kpMenuToggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
   <a class="kp-brand logo" href="../index.html" aria-label="KaroPays home"><span class="logo-mark">K</span><span>KaroPays</span></a>
   <div class="kp-top-actions">
     <div class="kp-profile"><span class="kp-avatar" id="kpAvatar">K</span><span class="kp-profile-copy"><strong id="kpProfileName">Creator</strong><small>Creator</small></span><span>⌄</span></div>
@@ -854,16 +908,7 @@ window.addEventListener("resize",()=>{clearTimeout(window.__kpChartResize);windo
 $("kpGlobalSearch").addEventListener("input",function(){const q=this.value.trim().toLowerCase();document.querySelectorAll("#filesContainer .dashboard-file").forEach(card=>{card.hidden=!!q&&!card.textContent.toLowerCase().includes(q);});});
 
 
-const kpMenuButton = document.getElementById("kpMenuToggle");
-if (kpMenuButton) {
-  kpMenuButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    document.body.classList.toggle("kp-sidebar-open");
-    const isOpen = document.body.classList.contains("kp-sidebar-open");
-    kpMenuButton.setAttribute("aria-expanded", String(isOpen));
-    kpMenuButton.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
-  });
-}
+
 
 
 /* =========================================
