@@ -250,9 +250,8 @@
     </h2>
 
     <p>
-      Deleting this file is permanent. The stored file,
-      file page, download count and earnings associated
-      with this file will be removed.
+      This moves the file to Deleted status and hides it from public downloads.
+      The file record, stored object, download history, and creator earnings are preserved for admin review.
     </p>
 
     <button
@@ -288,38 +287,21 @@
     </div>
 
     <div class="danger-label">
-      PERMANENT ACTION
+      SOFT DELETE
     </div>
 
     <h2 id="deleteTitle">
-      Delete this file?
+      Move this file to Deleted Files?
     </h2>
 
-    <p>
-      <strong>This action cannot be undone.</strong>
-    </p>
-
     <p id="deleteFileName">
-      You are about to permanently delete this file.
+      This file will be hidden from public downloads.
     </p>
 
     <div class="delete-warning">
-
-      <strong>
-        Think before you delete.
-      </strong>
-
+      <strong>Historical data will be preserved.</strong>
       <br><br>
-
-      This will remove your file permanently.
-
-      <br><br>
-
-      <strong>
-        Your total downloads and earnings for this file
-        will also be removed.
-      </strong>
-
+      KaroPays will retain the file record, stored file, download history, and earnings for admin verification. This action should be treated as irreversible unless a restore workflow is added.
     </div>
 
     <p
@@ -342,7 +324,7 @@
         class="delete-confirm-btn"
         id="confirmDelete"
       >
-        Yes, permanently delete
+        Move to Deleted Files
       </button>
 
     </div>
@@ -843,148 +825,41 @@ function closeDeleteModal() {
 confirmDelete.addEventListener(
   "click",
   async function() {
-
-    if (!currentFile || !currentUser) {
-      return;
-    }
-
+    if (!currentFile || !currentUser) return;
 
     confirmDelete.disabled = true;
     cancelDelete.disabled = true;
-
-    confirmDelete.textContent =
-      "Deleting...";
-
-    deleteMessage.textContent =
-      "Removing the file and its database record...";
-
+    confirmDelete.textContent = "Moving...";
+    deleteMessage.textContent = "Marking file as deleted while preserving its record and storage.";
 
     try {
-
-      /*
-       * Delete the database record first.
-       *
-       * RLS still requires creator_id = current user.
-       */
-
-      const {
-        data: deletedRows,
-        error: databaseError
-      } = await supabaseClient
-
-        .from("files")
-
-        .delete()
-
-        .eq("id", currentFile.id)
-
-        .eq("creator_id", currentUser.id)
-
-        .select("id");
-
-
-      if (databaseError) {
-
-        console.error(
-          "Database delete error:",
-          databaseError
-        );
-
-        throw new Error(
-          databaseError.message ||
-          "The file could not be deleted."
-        );
-
-      }
-
-
-      if (!deletedRows || !deletedRows.length) {
-
-        throw new Error(
-          "The file was not deleted. Check your Supabase RLS DELETE policy."
-        );
-
-      }
-
-
-      /*
-       * Database record is now gone.
-       *
-       * Remove physical Storage object.
-       */
-
-      if (currentFile.storage_path) {
-
-        const {
-          error: storageError
-        } = await supabaseClient.storage
-
-          .from("files")
-
-          .remove([
-            currentFile.storage_path
-          ]);
-
-
-        if (storageError) {
-
-          console.error(
-            "Storage cleanup error:",
-            storageError
-          );
-
-          /*
-           * Do not report complete failure because
-           * the database record has already been deleted.
-           */
-
-          deleteMessage.textContent =
-            "File record deleted. Storage cleanup may require administrator cleanup.";
-
-        }
-
-      }
-
-
-      if (!deleteMessage.textContent) {
-
-        deleteMessage.textContent =
-          "File deleted successfully.";
-
-      }
-
-
-      confirmDelete.textContent =
-        "Deleted";
-
-
-      setTimeout(function() {
-
-        window.location.href =
-          "creator/dashboard.html";
-
-      }, 1200);
-
-
-    } catch (error) {
-
-      console.error(
-        "Delete error:",
-        error
+      // Use the secured soft-delete RPC. Never call files.delete() or Storage.remove().
+      const { data: deleteResult, error: deleteError } = await supabaseClient.rpc(
+        "delete_creator_file",
+        { p_file_id: currentFile.id }
       );
 
-      deleteMessage.textContent =
-        error.message ||
-        "Unable to delete the file.";
+      if (deleteError) throw new Error(deleteError.message || "The file could not be moved to Deleted Files.");
 
+      // Supabase functions may return JSON as an object; support a one-row array too.
+      const result = Array.isArray(deleteResult) ? deleteResult[0] : deleteResult;
+      if (!result || result.success !== true) {
+        throw new Error(result?.error || "The soft-delete operation did not confirm success.");
+      }
+
+      deleteMessage.textContent = "File moved to Deleted Files. Stored file, download history, and earnings were preserved.";
+      confirmDelete.textContent = "Moved";
+
+      setTimeout(function() {
+        window.location.href = "creator/dashboard.html";
+      }, 900);
+    } catch (error) {
+      console.error("Soft-delete error:", error);
+      deleteMessage.textContent = error.message || "Unable to move file to Deleted Files.";
       confirmDelete.disabled = false;
       cancelDelete.disabled = false;
-
-      confirmDelete.textContent =
-        "Yes, permanently delete";
-
+      confirmDelete.textContent = "Move to Deleted Files";
     }
-
   }
 );
 
