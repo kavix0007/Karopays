@@ -220,6 +220,10 @@ html,body{background:#f5f7fc!important;color:#121521!important}
 </style>
 
 <link rel="icon" type="image/png" sizes="48x48" href="../assets/img/favicon-48.png"><link rel="apple-touch-icon" href="../assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff">
+<style id="kp-remove-earnings-chart">
+  /* Chart panel removed at the user's request; keep analytics cards full width. */
+  .kp-dashboard-grid{grid-template-columns:minmax(0,1fr)!important}
+</style>
 </head>
 
 
@@ -246,7 +250,7 @@ html,body{background:#f5f7fc!important;color:#121521!important}
   <a class="kp-nav" href="../upload.html">Upload File</a>
   <a class="kp-nav" href="#analytics">Analytics</a>
   <a class="kp-nav" href="#payouts">Payouts</a>
-  <a class="kp-nav" href="../referrals.html">Referrals</a>
+  <a class="kp-nav" href="#referrals"><span aria-hidden="true">♧</span> Referrals</a>
   <div class="kp-nav-divider"></div>
   <div class="kp-nav-group-label">HELP</div>
   <a class="kp-nav" href="../contact.html">Support</a>
@@ -259,9 +263,10 @@ html,body{background:#f5f7fc!important;color:#121521!important}
     <article class="kp-announcement-card">
       <div class="kp-announcement-icon" aria-hidden="true">🏆</div>
       <div class="kp-announcement-copy">
-        <h2>November Top Earner Competition</h2>
-        <p>The November Top Earner Competition is coming! Share your files and grow your downloads throughout November. KaroPays’ top earners will receive rewards in December. Competition rules and reward details will be announced soon.</p>
-        <span class="kp-announcement-meta">NOVEMBER COMPETITION · DECEMBER REWARDS</span>
+        <h2>KAROPAYS BETA</h2>
+        <p>🚀 KaroPays Beta is Live!You can now upload files, presets, and editing packs to start monetizing your downloads. 💜
+Start uploading and earning today!</p>
+        <span class="kp-announcement-meta">full launching soon</span>
       </div>
       <span class="kp-announcement-tag">Coming soon</span>
     </article>
@@ -283,11 +288,6 @@ html,body{background:#f5f7fc!important;color:#121521!important}
   </section>
 
   <section class="kp-dashboard-grid" id="analytics">
-    <article class="kp-panel kp-chart-panel">
-      <div class="kp-panel-heading"><span class="kp-chart-note" id="kpChartRange">Last 7 Days</span></div>
-      <div class="kp-chart-wrap"><canvas id="kpEarningsChart" aria-label="Earnings and downloads chart"></canvas><div id="kpChartEmpty" class="kp-chart-empty" hidden>No earning activity for this period yet.</div></div>
-      <div class="kp-legend"><span><i class="legend-blue"></i>Earnings (USD)</span><span><i class="legend-lilac"></i>Downloads</span></div>
-    </article>
     <div class="kp-right-stack">
       <article class="kp-panel">
         <div class="kp-panel-heading"><div class="kp-heading-title"><span class="kp-heading-icon">◎</span><h2>Earnings by Country</h2></div><span class="kp-live-label">LIVE DATA</span></div>
@@ -315,6 +315,24 @@ html,body{background:#f5f7fc!important;color:#121521!important}
     <div class="kp-panel-heading"><div><div class="kp-eyebrow">YOUR WORKSPACE</div><h2>Your Files</h2><p class="kp-muted">Manage your uploads, share links, and track performance.</p></div><a class="kp-primary" href="../upload.html">＋ Upload File</a></div>
     <p id="dashboardMessage" class="form-message"></p>
     <div id="filesContainer"><p class="kp-muted">Loading your files...</p></div>
+  </section>
+
+  <section class="kp-panel payout-card" id="referrals" style="margin-bottom:15px">
+    <div class="kp-panel-heading kp-payout-heading"><div><div class="kp-eyebrow">CREATOR REFERRALS</div><h2>Refer &amp; Earn</h2><p class="kp-muted">Earn 10% of eligible earnings from creators you refer, for life. Minimum referral payout: <strong>$2.00 USD</strong>.</p></div></div>
+    <div class="kp-stat-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));margin:12px 0">
+      <article class="kp-stat-card"><div class="kp-stat-copy"><span>Your referral code</span><strong id="kpReferralCode" style="font-size:20px">Loading…</strong><button class="kp-primary" id="kpCopyReferral" type="button" style="margin-top:8px">Copy link</button></div></article>
+      <article class="kp-stat-card"><div class="kp-stat-copy"><span>Creators referred</span><strong id="kpReferralCount">—</strong><small>Successful sign-ups</small></div></article>
+      <article class="kp-stat-card"><div class="kp-stat-copy"><span>Available referral balance</span><strong id="kpReferralAvailable">$0.00</strong><small id="kpReferralPending">Pending: $0.00</small></div></article>
+    </div>
+    <div class="payout-grid">
+      <form id="kpReferralPayoutForm" class="kp-form-panel"><h3>Withdraw referral earnings</h3>
+        <label>Amount (USD)<input id="kpReferralAmount" type="number" min="2" step="0.01" placeholder="2.00" required></label>
+        <label>Payment method<select id="kpReferralMethod" required><option value="upi">UPI</option><option value="paypal">PayPal</option></select></label>
+        <label id="kpReferralDetailsLabel">UPI ID<input id="kpReferralDetails" type="text" maxlength="320" placeholder="yourname@upi" required></label>
+        <p id="kpReferralMessage" class="form-message" role="status" aria-live="polite"></p><button class="kp-primary" id="kpReferralSubmit" type="submit">Request referral payout</button>
+      </form>
+      <div class="kp-form-panel"><h3>Referral commission ledger</h3><div id="kpReferralLedger"><p class="kp-muted">Loading referral ledger…</p></div><h3 style="margin-top:20px">Referral payout history</h3><div id="kpReferralPayoutHistory"><p class="kp-muted">Loading payout history…</p></div></div>
+    </div>
   </section>
 
   <section class="kp-panel payout-card" id="payouts">
@@ -480,13 +498,14 @@ async function init() {
 
     user = currentUser;
 
-    // Attach an invited creator once signed in (works after email confirmation too).
-    const invitedBy = (user.user_metadata && user.user_metadata.karopays_referral_code) || new URLSearchParams(location.search).get("ref");
-    if (invitedBy) {
-      const { error: referralAttachError } = await supabaseClient.rpc("attach_referral", { p_code: String(invitedBy).trim().toUpperCase() });
-      if (referralAttachError) console.warn("Referral attribution:", referralAttachError.message);
-    }
-
+    // Apply a referral code saved at registration, only once; the server validates attribution.
+    try {
+      const referralCode = (user.user_metadata && user.user_metadata.karopays_referral_code) || new URLSearchParams(location.search).get("ref") || "";
+      if (referralCode) {
+        const { error: referralAttachError } = await supabaseClient.rpc("attach_referral", { p_code: referralCode });
+        if (referralAttachError && !/already assigned|already attached/i.test(referralAttachError.message || "")) console.warn("Referral attribution:", referralAttachError.message);
+      }
+    } catch (referralAttachError) { console.warn("Referral attribution could not be applied:", referralAttachError); }
 
     $("creatorEmail").textContent =
       user.email || "Creator";
@@ -499,6 +518,7 @@ async function init() {
 
     await load();
     await loadPayouts();
+    await loadReferralProgram();
 
   } catch (error) {
 
@@ -1330,6 +1350,64 @@ $("payoutForm").addEventListener("submit", async function(event) {
     button.disabled = false;
     button.textContent = "Request payout";
   }
+});
+
+/* =========================================
+   REFERRAL PROGRAM (separate balance; existing creator payouts unchanged)
+========================================= */
+async function loadReferralProgram() {
+  if (!user) return;
+  const message = $("kpReferralMessage");
+  try {
+    const { data: summary, error } = await supabaseClient.rpc("get_my_referral_summary");
+    if (error) throw error;
+    const s = typeof summary === "string" ? JSON.parse(summary) : (summary || {});
+    const code = s.code || "";
+    $("kpReferralCode").textContent = code || "Unavailable";
+    $("kpReferralCount").textContent = Number(s.referrals || 0).toLocaleString();
+    $("kpReferralAvailable").textContent = money(s.available_balance || 0);
+    $("kpReferralPending").textContent = "Pending: " + money(s.pending_commission || 0);
+    $("kpCopyReferral").onclick = async () => {
+      const url = new URL("../register.html", window.location.href); url.searchParams.set("ref", code);
+      try { await navigator.clipboard.writeText(url.href); message.textContent = "Referral link copied."; }
+      catch (_) { message.textContent = url.href; }
+    };
+    const { data: commissions, error: ledgerError } = await supabaseClient.from("referral_commissions").select("id,gross_earning,commission_amount,status,created_at").eq("referrer_id", user.id).order("created_at", {ascending:false}).limit(25);
+    if (ledgerError) throw ledgerError;
+    $("kpReferralLedger").innerHTML = commissions && commissions.length ? commissions.map(c => `<div class="payout-row"><div><strong>${money(c.commission_amount)}</strong><div class="kp-muted">From eligible earning ${money(c.gross_earning)} · ${new Date(c.created_at).toLocaleDateString()}</div></div><span class="payout-status">${esc(c.status)}</span></div>`).join("") : '<p class="kp-muted">No referral commissions yet. Share your referral link to get started.</p>';
+    const { data: payouts, error: payoutError } = await supabaseClient.from("referral_payout_requests").select("id,amount,method,status,payout_code,created_at").eq("referrer_id", user.id).order("created_at", {ascending:false}).limit(20);
+    if (payoutError) throw payoutError;
+    $("kpReferralPayoutHistory").innerHTML = payouts && payouts.length ? payouts.map(p => `<div class="payout-row"><div><strong>${money(p.amount)}</strong><div class="kp-muted">${esc(p.method)} · ${esc(p.payout_code || "Referral payout")} · ${new Date(p.created_at).toLocaleDateString()}</div></div><span class="payout-status">${esc(p.status)}</span></div>`).join("") : '<p class="kp-muted">No referral payout requests yet.</p>';
+  } catch (error) {
+    console.error("Referral program load error:", error);
+    $("kpReferralCode").textContent = "Unavailable";
+    $("kpReferralMessage").textContent = "Referral setup could not load: " + (error?.message || "Unknown error") + ". Confirm the referral SQL is installed.";
+    $("kpReferralLedger").innerHTML = '<p class="kp-muted">Referral ledger unavailable.</p>';
+  }
+}
+
+$("kpReferralMethod").addEventListener("change", function() {
+  const paypal = this.value === "paypal";
+  $("kpReferralDetailsLabel").firstChild.textContent = paypal ? "PayPal email" : "UPI ID";
+  $("kpReferralDetails").type = paypal ? "email" : "text";
+  $("kpReferralDetails").placeholder = paypal ? "you@example.com" : "yourname@upi";
+});
+$("kpReferralPayoutForm").addEventListener("submit", async function(event) {
+  event.preventDefault();
+  const amount = Number($("kpReferralAmount").value);
+  const method = $("kpReferralMethod").value;
+  const details = $("kpReferralDetails").value.trim();
+  const button = $("kpReferralSubmit");
+  if (!Number.isFinite(amount) || amount < 2) { $("kpReferralMessage").textContent = "Minimum referral payout is $2.00."; return; }
+  button.disabled = true; button.textContent = "Submitting…"; $("kpReferralMessage").textContent = "";
+  try {
+    const { data, error } = await supabaseClient.rpc("request_referral_payout", { p_amount: amount, p_method: method, p_payment_details: details });
+    if (error) throw error;
+    $("kpReferralAmount").value = ""; $("kpReferralDetails").value = "";
+    $("kpReferralMessage").textContent = `Referral payout request submitted: ${money(data?.amount || amount)}.`;
+    await loadReferralProgram();
+  } catch (error) { $("kpReferralMessage").textContent = error?.message || "Could not submit referral payout."; }
+  finally { button.disabled = false; button.textContent = "Request referral payout"; }
 });
 
 /* =========================================
