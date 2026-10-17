@@ -7,16 +7,16 @@
 <link rel="stylesheet" href="assets/css/pro.css">
 
 <style>
-:root{color-scheme:light;--kp-ink:#17152b;--kp-muted:#706d82;--kp-purple:#6d4aff;--kp-purple-dark:#5435d6;--kp-border:#e9e6f3;--kp-bg:#f7f6fc;--kp-card:#fff}
+:root{color-scheme:light;--kp-ink:var(--ink);--kp-muted:var(--muted);--kp-purple:var(--brand);--kp-purple-dark:var(--brand-dark);--kp-border:var(--line);--kp-bg:var(--bg);--kp-card:#fff}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.55}
-.site-header{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px clamp(18px,5vw,64px);background:rgba(255,255,255,.94);border-bottom:1px solid var(--kp-border);backdrop-filter:blur(12px)}
-.logo{display:inline-flex;align-items:center;gap:10px;color:var(--kp-ink);text-decoration:none;font-weight:850;font-size:20px;letter-spacing:-.5px}
-.logo-mark{display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#8d71ff,#6039ec);color:white;box-shadow:0 6px 16px #6d4aff30}
-.desktop-nav{display:flex;align-items:center;gap:clamp(12px,2.5vw,28px);flex-wrap:wrap}
-.desktop-nav a{color:#5c5870;text-decoration:none;font-size:13px;font-weight:650}
-.desktop-nav a:hover{color:var(--kp-purple)}
+
+
+
+
+
+
 .legal-page{width:min(1080px,calc(100% - 32px));margin:42px auto 72px}
 #state{max-width:720px;margin:64px auto;padding:40px 26px;text-align:center;background:white;border:1px solid var(--kp-border);border-radius:24px;box-shadow:0 14px 40px #2a1b5010}
 .section-label,.eyebrow{display:inline-flex;align-items:center;gap:7px;color:var(--kp-purple);font-size:11px;font-weight:850;letter-spacing:1.5px;text-transform:uppercase}
@@ -24,49 +24,54 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 .lead{color:var(--kp-muted);line-height:1.7}
 #content{display:block}
 .file-hero{position:relative;overflow:hidden;padding:clamp(25px,5vw,52px);background:var(--kp-card);border:1px solid var(--kp-border);border-radius:28px;box-shadow:0 18px 50px #28174d0b}
-.file-hero:before{content:"";position:absolute;right:-95px;top:-135px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#8d71ff19,transparent 68%);pointer-events:none}
+.file-hero:before{content:"";position:absolute;right:-95px;top:-135px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#5271ff1c,transparent 68%);pointer-events:none}
 .file-hero>*{position:relative}
 .file-hero h1{max-width:760px;margin:12px 0 10px;font-size:clamp(28px,5vw,46px);line-height:1.12;letter-spacing:-1.7px;overflow-wrap:anywhere}
 .file-hero .lead{max-width:720px;margin:0 0 22px}
 .file-meta{display:flex;flex-wrap:wrap;gap:9px;margin:22px 0 26px}
-.file-meta span{display:inline-flex;align-items:center;padding:7px 11px;border:1px solid var(--kp-border);border-radius:999px;background:#fbfaff;color:#5d5874;font-size:12px;font-weight:650}
+.file-meta span{display:inline-flex;align-items:center;padding:7px 11px;border:1px solid var(--kp-border);border-radius:999px;background:#f6f8fd;color:#4a5266;font-size:12px;font-weight:650}
 .actions{display:flex;gap:12px;flex-wrap:wrap}
 .actions button{min-height:48px;padding:0 21px;border:0;border-radius:13px;font:inherit;font-weight:800;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
 .actions button:hover{transform:translateY(-1px)}
 .actions button:disabled{opacity:.65;cursor:wait;transform:none}
-.actions .primary{background:linear-gradient(135deg,#7957ff,#5e3be7);color:white;box-shadow:0 8px 18px #6d4aff30}
-.actions .primary:hover{box-shadow:0 10px 24px #6d4aff40}
-.actions .secondary{background:#f2efff;color:#5d40dc;border:1px solid #e3dcff}
+.actions .primary{background:linear-gradient(135deg,#5271ff,#3049c2);color:white;box-shadow:0 8px 18px #5271ff30}
+.actions .primary:hover{box-shadow:0 10px 24px #5271ff40}
+.actions .secondary{background:#e9eeff;color:#3f5ce6;border:1px solid #d3dcff}
 .form-message{min-height:24px;margin:15px 0 0;color:#625d75;font-size:13px;overflow-wrap:anywhere}
-.ad-section{margin-top:24px;padding:clamp(20px,4vw,34px);border:1px solid var(--kp-border);border-radius:24px;background:linear-gradient(135deg,#fff,#fbfaff);box-shadow:0 12px 34px #28174d08}
+.ad-section{margin-top:24px;padding:clamp(20px,4vw,34px);border:1px solid var(--kp-border);border-radius:24px;background:linear-gradient(135deg,#fff,#f6f8fd);box-shadow:0 12px 34px #28174d08}
 .ad-section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
 .ad-section-head h2,.ad-section-head p{display:none}
-.ad-label{display:inline-flex;padding:5px 9px;border-radius:7px;background:#f0edff;color:#6b4ae7;font-size:10px;font-weight:850;letter-spacing:1px}
+.ad-label{display:inline-flex;padding:5px 9px;border-radius:7px;background:#e9eeff;color:#3f5ce6;font-size:10px;font-weight:850;letter-spacing:1px}
 .ad-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:stretch}
+.ad-grid .ad-card:last-child:nth-child(odd){grid-column:1/-1;justify-self:center;width:min(100%,calc(50% - 7px))}
 .ad-card{min-width:0;padding:19px;border:1px solid var(--kp-border);border-radius:17px;background:#fff}
 .ad-card h3{margin:0 0 5px;font-size:16px;letter-spacing:-.2px}
 .ad-card p{margin:0;color:var(--kp-muted);font-size:12px;line-height:1.6}
-.banner-frame{display:flex;justify-content:center;align-items:center;min-height:270px;margin-top:14px;padding:10px;border:1px dashed #d9d2f5;border-radius:13px;background:#faf9ff;overflow:hidden}
+.banner-frame{display:flex;justify-content:center;align-items:center;min-height:270px;margin-top:14px;padding:10px;border:1px dashed #d3dcff;border-radius:13px;background:#f6f8fd;overflow:hidden}
 .banner-frame iframe{max-width:100%}
-.unlock-section{margin-top:24px;padding:clamp(22px,4vw,34px);border:1px solid var(--kp-border);border-radius:24px;background:#fff;text-align:center;box-shadow:0 12px 34px #28174d08}.unlock-section h2{margin:8px 0;font-size:clamp(22px,3vw,30px)}.unlock-section p{color:var(--kp-muted);margin:8px auto 18px;max-width:560px}.timer-text{font-weight:800;color:var(--kp-purple)!important;font-size:18px}.unlock-section .actions{justify-content:center}.unlock-section .actions button{min-width:220px}.unlock-section [hidden]{display:none!important}.scroll-unlock{margin-top:18px}.ad-label{display:inline-flex;padding:5px 9px;border-radius:7px;background:#f0edff;color:#6b4ae7;font-size:10px;font-weight:850;letter-spacing:1px}
-@media(max-width:720px){.site-header{padding:12px 16px;align-items:flex-start}.logo{font-size:18px}.desktop-nav{justify-content:flex-end;gap:8px 13px;max-width:58%}.desktop-nav a{font-size:11px}.legal-page{width:min(100% - 22px,680px);margin:22px auto 42px}.file-hero{border-radius:20px;padding:24px 19px}.file-hero h1{letter-spacing:-1px}.ad-section{padding:18px 13px;border-radius:19px}.ad-section-head{display:block}.ad-section-head .ad-label{margin-bottom:10px}.ad-grid{grid-template-columns:1fr}.banner-frame{min-height:260px;padding:6px}.actions{display:grid;grid-template-columns:1fr}.actions button{width:100%}}
+.unlock-section{margin-top:24px;padding:clamp(22px,4vw,34px);border:1px solid var(--kp-border);border-radius:24px;background:#fff;text-align:center;box-shadow:0 12px 34px #28174d08}.unlock-section h2{margin:8px 0;font-size:clamp(22px,3vw,30px)}.unlock-section p{color:var(--kp-muted);margin:8px auto 18px;max-width:560px}.timer-text{font-weight:800;color:var(--kp-purple)!important;font-size:18px}.unlock-section .actions{justify-content:center}.unlock-section .actions button{min-width:220px}.unlock-section [hidden]{display:none!important}.scroll-unlock{margin-top:18px}.ad-label{display:inline-flex;padding:5px 9px;border-radius:7px;background:#e9eeff;color:#3f5ce6;font-size:10px;font-weight:850;letter-spacing:1px}
+@media(max-width:720px){.legal-page{width:min(100% - 22px,680px);margin:22px auto 42px}.file-hero{border-radius:20px;padding:24px 19px}.file-hero h1{letter-spacing:-1px}.ad-section{padding:18px 13px;border-radius:19px}.ad-section-head{display:block}.ad-section-head .ad-label{margin-bottom:10px}.ad-grid{grid-template-columns:1fr}.ad-grid .ad-card:last-child:nth-child(odd){grid-column:auto;width:100%}.banner-frame{min-height:260px;padding:6px}.actions{display:grid;grid-template-columns:1fr}.actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
 </style>
 
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png"><link rel="apple-touch-icon" href="assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff">
 </head>
 
 <body>
 
 <header class="site-header">
-  <a class="logo" href="index.html">
-    <span class="logo-mark">K</span>KaroPays
-  </a>
-
-  <nav class="desktop-nav">
+  <a class="logo" href="index.html" aria-label="KaroPays home"><img class="logo-img" src="assets/img/karopays-logo.png" alt="KaroPays" width="112" height="52"></a>
+  <div class="site-header-actions">
+    <a class="header-login" href="login.html">Login</a>
+    <a class="nav-cta header-register" href="register.html">Register</a>
+    <button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="desktop-nav" aria-label="Main navigation">
     <a href="payout-rates.html">Payout Rates</a>
     <a href="payment-proof.html">Payment Proof</a>
+    <a href="prize-winners.html">Prize Winners</a>
     <a href="premium.html">Premium</a>
-    <a href="login.html">Sign in</a>
+    <a href="contact.html">Contact Us</a>
   </nav>
 </header>
 
@@ -138,6 +143,8 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script src="assets/js/supabase-config.js"></script>
+<script src="assets/js/slot-loader.js"></script>
+<script src="assets/js/site.js" defer></script>
 
 
 <script>
@@ -207,67 +214,27 @@ loadFile();
    4 Ultra: High + push notification + vignette
    The SmartLink offer is shown separately at every level.
 ========================================================= */
-function appendAdScript(src, attrs = {}) {
-  const script = document.createElement("script");
-  script.src = src;
-  script.async = true;
-  Object.entries(attrs).forEach(([key, value]) => script.setAttribute(key, value));
-  document.body.appendChild(script);
-}
-
-function loadBannerInto(slot) {
-  slot.style.cssText = "width:100%;min-height:270px;max-width:100%;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;";
-  const key = "82565278dee02e769d1a15ccdd7a7b49";
-  /*
-   * Why an iframe: the ad's invoke.js writes the banner with document.write(),
-   * which the browser ignores when the script is injected after page load.
-   * Running each banner inside its own srcdoc iframe gives it a fresh document
-   * (so document.write works) and its own atOptions (so 3 banners don't clash).
-   */
-  const doc =
-    '<!doctype html><html><head><meta charset="utf-8">' +
-    '<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}' +
-    'body{display:flex;justify-content:center;align-items:center;min-height:250px}</style></head><body>' +
-    '<script>var atOptions={"key":"' + key + '","format":"iframe","height":250,"width":300,"params":{}};<\/script>' +
-    '<script src="https://www.highrevenueformat.com/' + key + '/invoke.js"><\/script>' +
-    '</body></html>';
-  const frame = document.createElement("iframe");
-  frame.width = 300;
-  frame.height = 250;
-  frame.setAttribute("scrolling", "no");
-  frame.setAttribute("frameborder", "0");
-  frame.setAttribute("title", "Advertisement");
-  frame.style.cssText = "border:0;width:300px;height:250px;max-width:100%;overflow:hidden;";
-  frame.srcdoc = doc;
-  slot.appendChild(frame);
-}
+const AD_LEVEL_LABELS = { 1: "Low", 2: "Medium", 3: "High", 4: "Ultra" };
 
 function renderAds(rawLevel) {
   const level = Math.min(4, Math.max(1, Number(rawLevel) || 1));
-  const slots = $("kp-ad-slots");
-  slots.replaceChildren();
-  // Three banner placements are shown at every saved ad level.
-  for (let i = 0; i < 3; i++) {
-    const card = document.createElement("article");
-    card.className = "ad-card";
-    const frame = document.createElement("div");
-    frame.className = "banner-frame";
-    frame.id = `kp-banner-slot-${i + 1}`;
-    card.appendChild(frame);
-    slots.appendChild(card);
-    loadBannerInto(frame);
-  }
-  // Additional network formats are enabled by level; do not render extra format headings/cards.
-  if (level >= 2) {
-    (function(s){s.dataset.zone='11999578';s.src='https://nap5k.com/tag.min.js'})(document.body.appendChild(document.createElement('script')));
-  }
-  if (level >= 3) {
-    (function(s){s.dataset.zone='11999574';s.src='https://al5sm.com/tag.min.js'})(document.body.appendChild(document.createElement('script')));
-  }
+  // 3 independent banner placements at every level (each in its own iframe).
+  KaroAds.mountBanners($("kp-ad-slots"), 3);
+  // Extra network formats by level (failures are ignored silently).
+  if (level >= 2) KaroAds.addTag("https://nap5k.com/tag.min.js", { "data-zone": "11999578" });
+  if (level >= 3) KaroAds.addTag("https://al5sm.com/tag.min.js", { "data-zone": "11999574" });
   if (level >= 4) {
-    appendAdScript("https://5gvci.com/act/files/tag.min.js?z=11999575", {"data-cfasync":"false"});
-    (function(s){s.dataset.zone='11999580';s.src='https://n6wxm.com/vignette.min.js'})(document.body.appendChild(document.createElement('script')));
+    KaroAds.addTag("https://5gvci.com/act/files/tag.min.js?z=11999575", { "data-cfasync": "false" });
+    KaroAds.addTag("https://n6wxm.com/vignette.min.js", { "data-zone": "11999580" });
   }
+}
+
+function renderMeta() {
+  $("meta").innerHTML =
+    "<span>" + esc(file.category || "Other") + "</span>" +
+    "<span>" + bytes(file.file_size) + "</span>" +
+    "<span>" + (Number(file.downloads) || 0).toLocaleString() + " downloads</span>" +
+    "<span>Ad Level " + (AD_LEVEL_LABELS[Number(file.ad_level)] || "Low") + "</span>";
 }
 
 /* =========================================================
@@ -356,24 +323,7 @@ async function loadFile() {
     /*
      * File metadata
      */
-    $("meta").innerHTML = `
-      <span>
-        ${esc(f.category || "Other")}
-      </span>
-
-      <span>
-        ${bytes(f.file_size)}
-      </span>
-
-      <span>
-        ${(Number(f.downloads) || 0).toLocaleString()}
-        downloads
-      </span>
-
-      <span>
-        Ad Level ${({1:"Low",2:"Medium",3:"High",4:"Ultra"}[Number(f.ad_level)] || "Low")}
-      </span>
-    `;
+    renderMeta();
 
 
     /*
@@ -700,24 +650,7 @@ $("download").onclick =
           result.downloads;
 
 
-        $("meta").innerHTML = `
-          <span>
-            ${esc(file.category || "Other")}
-          </span>
-
-          <span>
-            ${bytes(file.file_size)}
-          </span>
-
-          <span>
-            ${Number(file.downloads).toLocaleString()}
-            downloads
-          </span>
-
-          <span>
-            Ad Level ${Number(file.ad_level) || 1}
-          </span>
-        `;
+        renderMeta();
 
       }
 
@@ -761,7 +694,7 @@ $("download").onclick =
 
 
       button.textContent =
-        "Download file";
+        "Download File";
     }
 
   };

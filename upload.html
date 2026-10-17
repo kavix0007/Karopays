@@ -8,16 +8,27 @@
   <title>Upload — KaroPays</title>
 
   <link rel="stylesheet" href="assets/css/pro.css">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png"><link rel="apple-touch-icon" href="assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff">
 </head>
 
 <body>
+<header class="site-header">
+  <a class="logo" href="index.html" aria-label="KaroPays home"><img class="logo-img" src="assets/img/karopays-logo.png" alt="KaroPays" width="112" height="52"></a>
+  <div class="site-header-actions">
+    <a class="header-login" href="login.html">Login</a>
+    <a class="nav-cta header-register" href="register.html">Register</a>
+    <button class="mobile-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="desktop-nav" aria-label="Main navigation">
+    <a href="payout-rates.html">Payout Rates</a>
+    <a href="payment-proof.html">Payment Proof</a>
+    <a href="prize-winners.html">Prize Winners</a>
+    <a href="premium.html">Premium</a>
+    <a href="contact.html">Contact Us</a>
+  </nav>
+</header>
 
 <main class="legal-page">
-
-  <a class="logo" href="index.html">
-    <span class="logo-mark">K</span>
-    KaroPays
-  </a>
 
   <h1>Upload a file</h1>
 
@@ -43,6 +54,7 @@
       <input
         id="fileName"
         type="text"
+        maxlength="150"
         placeholder="Example: Valorant Presets Pack"
         required
       >
@@ -138,7 +150,18 @@ const uploadProgress =
   document.getElementById("uploadProgress");
 
 
-uploadForm.addEventListener("submit", async (event) => {
+/* Uploading requires a signed-in creator; otherwise send them to sign in. */
+(async () => {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) location.replace("login.html");
+  } catch (e) { console.error(e); }
+})();
+
+/* Client-side guard only (UX). Program rules forbid malware; enforce again server-side. */
+const BLOCKED_EXT = ["exe","msi","bat","cmd","scr","pif","vbs","vbe","wsf","hta","cpl"];
+
+async function handleUpload(event) {
 
   event.preventDefault();
 
@@ -212,6 +235,12 @@ uploadForm.addEventListener("submit", async (event) => {
    * We can change this later
    * depending on your Supabase plan.
    */
+
+  const ext = (selectedFile.name.split(".").pop() || "").toLowerCase();
+  if (BLOCKED_EXT.includes(ext)) {
+    uploadMessage.textContent = "." + ext + " files are not allowed. See the Program Rules.";
+    return;
+  }
 
   const MAX_FILE_SIZE =
     100 * 1024 * 1024;
@@ -398,9 +427,22 @@ setTimeout(() => {
 
 }, 1200);
 
+}
+
+uploadForm.addEventListener("submit", async (event) => {
+  try {
+    await handleUpload(event);
+  } catch (err) {
+    console.error(err);
+    uploadMessage.textContent = "Something went wrong: " + (err && err.message ? err.message : err);
+    uploadButton.disabled = false;
+    uploadButton.textContent = "Create file page";
+    uploadProgress.style.display = "none";
+  }
 });
 
 </script>
 
+<script src="assets/js/site.js" defer></script>
 </body>
 </html>

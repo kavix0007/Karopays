@@ -1,1 +1,33 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sign In — KaroPays</title><link rel="stylesheet" href="assets/css/pro.css"></head><body><main class="auth-wrap"><a class="logo" href="index.html"><span class="logo-mark">K</span>KaroPays</a><form class="auth-card" id="loginForm"><div class="section-label">WELCOME BACK</div><h1>Sign in to KaroPays.</h1><label>Email<input id="email" type="email" required autocomplete="email"></label><label>Password<input id="password" type="password" required autocomplete="current-password"></label><p id="loginMessage" class="form-message"></p><button class="primary full" id="loginButton" type="submit">Sign in</button><p>New creator? <a href="register.html">Create an account</a></p></form></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-config.js"></script><script>const f=document.getElementById('loginForm'),m=document.getElementById('loginMessage'),b=document.getElementById('loginButton');(async()=>{const{data}=await supabaseClient.auth.getSession();if(data.session)location.replace('creator/dashboard.html')})();f.addEventListener('submit',async e=>{e.preventDefault();b.disabled=true;b.textContent='Signing in...';m.textContent='';const{data,error}=await supabaseClient.auth.signInWithPassword({email:email.value.trim(),password:password.value});if(error){m.textContent=error.message;b.disabled=false;b.textContent='Sign in';return}if(data.user)location.replace('creator/dashboard.html')});</script></body></html>
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign In — KaroPays</title><link rel="stylesheet" href="assets/css/pro.css"><link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png"><link rel="apple-touch-icon" href="assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff"></head>
+<body><main class="auth-wrap">
+<a class="logo" href="index.html" aria-label="KaroPays home"><img class="logo-img" src="assets/img/karopays-logo.png" alt="KaroPays" width="112" height="52"></a>
+<form class="auth-card" id="loginForm" novalidate>
+  <div class="section-label">WELCOME BACK</div>
+  <h1>Sign in to KaroPays.</h1>
+  <label for="email">Email<input id="email" type="email" required autocomplete="email"></label>
+  <label for="password">Password<input id="password" type="password" required autocomplete="current-password"></label>
+  <p id="loginMessage" class="form-message" role="status" aria-live="polite"></p>
+  <button class="primary full" id="loginButton" type="submit">Sign in</button>
+  <p>New creator? <a href="register.html">Create an account</a></p>
+</form></main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script>
+const form=document.getElementById("loginForm"),msg=document.getElementById("loginMessage"),btn=document.getElementById("loginButton");
+const say=(t,s="error")=>{msg.textContent=t;msg.dataset.state=s};
+(async()=>{try{const{data}=await supabaseClient.auth.getSession();if(data.session)location.replace("creator/dashboard.html")}catch(e){console.error(e)}})();
+form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const email=form.email.value.trim(),password=form.password.value;
+  if(!email||!password){say("Enter your email and password.");return}
+  btn.disabled=true;btn.textContent="Signing in...";say("","info");
+  try{
+    const{data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+    if(error){say(error.message||"Could not sign in.");return}
+    if(data.user)location.replace("creator/dashboard.html");
+  }catch(err){say(err?.message||"Network error. Check your connection and try again.")}
+  finally{btn.disabled=false;btn.textContent="Sign in"}
+});
+</script></body></html>

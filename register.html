@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Create Account — KaroPays</title>
   <link rel="stylesheet" href="assets/css/pro.css">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png"><link rel="apple-touch-icon" href="assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff">
 </head>
 
 <body>
@@ -12,8 +13,7 @@
 <main class="auth-wrap">
 
   <a class="logo" href="index.html">
-    <span class="logo-mark">K</span>
-    KaroPays
+    <img class="logo-img" src="assets/img/karopays-logo.png" alt="KaroPays" width="112" height="52">
   </a>
 
   <form class="auth-card" id="registerForm">
@@ -48,14 +48,14 @@
         id="password"
         type="password"
         required
-        minlength="6"
+        minlength="8"
         autocomplete="new-password"
       >
     </label>
 
     <label class="check">
       <input id="terms" type="checkbox" required>
-      I agree to the Program Rules and Terms.
+      I agree to the <a href="program-rules.html" target="_blank" rel="noopener">Program Rules</a> and <a href="terms.html" target="_blank" rel="noopener">Terms</a>.
     </label>
 
     <p id="registerMessage" class="form-message" role="status" aria-live="polite"></p>

@@ -15,59 +15,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="assets/css/pro.css">
 
-<style id="karopays-final-responsive-header">
-.site-header{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:nowrap}
-.site-header>.logo{flex:0 0 auto;width:auto;min-width:0}
-.desktop-nav{display:flex;align-items:center;justify-content:flex-end;gap:24px;min-width:0}
-.site-header-actions{display:flex;align-items:center;gap:10px;flex:0 0 auto}
-.site-header-actions .header-login{font-weight:650;white-space:nowrap}
-.site-header-actions .header-register{white-space:nowrap}
-.mobile-menu-toggle{display:none;border:1px solid #dfe4ef;border-radius:10px;background:#fff;width:42px;height:40px;padding:8px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:4px;flex:0 0 42px}
-.mobile-menu-toggle span{display:block;width:19px;height:2px;background:#172033;border-radius:2px}
-@media(max-width:850px){
- .site-header{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"brand actions" "nav nav";align-items:center;gap:10px 8px;padding:12px 14px;height:auto;min-height:0}
- .site-header>.logo{grid-area:brand;min-width:0;width:auto;flex:0 1 auto}
- .site-header-actions{grid-area:actions;display:flex;align-items:center;gap:6px}
- .site-header-actions .header-login,.site-header-actions .header-register{display:inline-flex;align-items:center;justify-content:center;font-size:12px;padding:9px 10px;margin:0}
- .site-header-actions .mobile-menu-toggle{display:flex}
- .site-header>.desktop-nav{grid-area:nav;display:none;width:100%;min-width:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding-top:10px;border-top:1px solid #e7eaf1}
- .site-header>.desktop-nav.mobile-nav-open{display:grid}
- .site-header>.desktop-nav a{display:flex;min-width:0;align-items:center;justify-content:center;text-align:center;white-space:normal;overflow-wrap:anywhere;line-height:1.25;font-size:13px;padding:11px 6px;margin:0;border-radius:8px}
-}
-@media(max-width:390px){
- .site-header{padding:10px}
- .site-header>.logo .logo-mark{width:38px;height:38px}
- .site-header>.logo>span:last-child{font-size:17px}
- .site-header-actions{gap:4px}
- .site-header-actions .header-login,.site-header-actions .header-register{padding:8px 7px;font-size:11px}
- .site-header-actions .mobile-menu-toggle{width:36px;height:36px;flex-basis:36px}
-}
-</style>
-<script id="karopays-final-responsive-header-js">
-document.addEventListener('DOMContentLoaded', function () {
-  const button = document.querySelector('.mobile-menu-toggle');
-  const nav = document.querySelector('.site-header .desktop-nav');
-  if (!button || !nav) return;
-  button.addEventListener('click', function (event) {
-    event.preventDefault();
-    const open = nav.classList.toggle('mobile-nav-open');
-    button.setAttribute('aria-expanded', String(open));
-    button.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
-  });
-  nav.querySelectorAll('a').forEach(function (link) {
-    link.addEventListener('click', function () {
-      nav.classList.remove('mobile-nav-open');
-      button.setAttribute('aria-expanded', 'false');
-      button.setAttribute('aria-label', 'Open navigation');
-    });
-  });
-});
-</script>
-
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png"><link rel="apple-touch-icon" href="assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff">
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header">
-  <a class="logo" href="index.html" aria-label="KaroPays home"><span class="logo-mark">K</span><span>KaroPays</span></a>
+  <a class="logo" href="index.html" aria-label="KaroPays home"><img class="logo-img" src="assets/img/karopays-logo.png" alt="KaroPays" width="112" height="52"></a>
   <div class="site-header-actions">
     <a class="header-login" href="login.html">Login</a>
     <a class="nav-cta header-register" href="register.html">Register</a>
@@ -82,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
   </nav>
 </header>
 
-<main>
+<main id="main">
 <section class="hero">
   <div class="hero-copy">
     <div class="pill">☁ File hosting that pays you back</div>
@@ -137,5 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
 </section>
 </main>
 
-<footer><div class="footer-main"><div><a class="logo" href="index.html"><span class="logo-mark">K</span><span>KaroPays</span></a><p>File hosting and creator monetization.</p></div><div><h4>Platform</h4><a href="browse.html">Browse files</a><a href="upload.html">Upload</a><a href="payout-rates.html">Payout rates</a><a href="premium.html">Premium</a></div><div><h4>Company</h4><a href="payment-proof.html">Payment proof</a><a href="prize-winners.html">Prize winners</a><a href="program-rules.html">Program rules</a></div><div><h4>Legal</h4><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a></div><div><h4>Support</h4><a href="contact.html">Contact us</a></div></div><div class="footer-bottom">© 2026 KaroPays. All rights reserved.</div></footer>
+<footer><div class="footer-main"><div><a class="logo" href="index.html"><img class="logo-img" src="assets/img/karopays-logo.png" alt="KaroPays" width="112" height="52"></a><p>File hosting and creator monetization.</p></div><div><h4>Platform</h4><a href="browse.html">Browse files</a><a href="upload.html">Upload</a><a href="payout-rates.html">Payout rates</a><a href="premium.html">Premium</a></div><div><h4>Company</h4><a href="payment-proof.html">Payment proof</a><a href="prize-winners.html">Prize winners</a><a href="program-rules.html">Program rules</a></div><div><h4>Legal</h4><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a></div><div><h4>Support</h4><a href="contact.html">Contact us</a></div></div><div class="footer-bottom">© 2026 KaroPays. All rights reserved.</div></footer>
+<script src="assets/js/site.js" defer></script>
 </body></html>
