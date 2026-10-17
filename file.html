@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Unlock File — KaroPays (Ad Test Copy)</title>
+<title>Unlock File — KaroPays</title>
 <link rel="stylesheet" href="assets/css/pro.css">
 
 <style>
@@ -215,24 +215,31 @@ function appendAdScript(src, attrs = {}) {
   document.body.appendChild(script);
 }
 
-function loadTestScriptInto(slot, placementNumber) {
-  slot.style.cssText = "width:100%;min-height:270px;max-width:100%;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;position:relative;";
-  slot.setAttribute("data-ad-test-placement", String(placementNumber));
-
-  // TEST ONLY: this provider tag does not specify banner dimensions. It may
-  // create a different ad format and may not render visibly inside this slot.
-  const bootstrap = document.createElement("script");
-  bootstrap.text = `(function(zrshm){
-var d = document,
-    s = d.createElement('script'),
-    l = d.currentScript || d.scripts[d.scripts.length - 1];
-s.settings = zrshm || {};
-s.src = "//conventionalresponse.com/blXoV_sOd.GYlY0zYuWxcv/oePmq9ku/ZHU/lMk/PqT/cQ1sMHTJkVw/NVzvMDtwNXzwU/xXO/TjA_3kNDwe";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})`;
-  slot.appendChild(bootstrap);
+function loadBannerInto(slot) {
+  slot.style.cssText = "width:100%;min-height:270px;max-width:100%;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;";
+  const key = "82565278dee02e769d1a15ccdd7a7b49";
+  /*
+   * Why an iframe: the ad's invoke.js writes the banner with document.write(),
+   * which the browser ignores when the script is injected after page load.
+   * Running each banner inside its own srcdoc iframe gives it a fresh document
+   * (so document.write works) and its own atOptions (so 3 banners don't clash).
+   */
+  const doc =
+    '<!doctype html><html><head><meta charset="utf-8">' +
+    '<style>html,body{margin:0;padding:0;background:transparent;overflow:hidden}' +
+    'body{display:flex;justify-content:center;align-items:center;min-height:250px}</style></head><body>' +
+    '<script>var atOptions={"key":"' + key + '","format":"iframe","height":250,"width":300,"params":{}};<\/script>' +
+    '<script src="https://www.highrevenueformat.com/' + key + '/invoke.js"><\/script>' +
+    '</body></html>';
+  const frame = document.createElement("iframe");
+  frame.width = 300;
+  frame.height = 250;
+  frame.setAttribute("scrolling", "no");
+  frame.setAttribute("frameborder", "0");
+  frame.setAttribute("title", "Advertisement");
+  frame.style.cssText = "border:0;width:300px;height:250px;max-width:100%;overflow:hidden;";
+  frame.srcdoc = doc;
+  slot.appendChild(frame);
 }
 
 function renderAds(rawLevel) {
@@ -248,7 +255,7 @@ function renderAds(rawLevel) {
     frame.id = `kp-banner-slot-${i + 1}`;
     card.appendChild(frame);
     slots.appendChild(card);
-    loadTestScriptInto(frame, i + 1);
+    loadBannerInto(frame);
   }
   // Additional network formats are enabled by level; do not render extra format headings/cards.
   if (level >= 2) {
@@ -328,9 +335,6 @@ async function loadFile() {
 
     file = f;
 
-    // Apply the saved ad level for this file; the browser does not set payout rates.
-    renderAds(f.ad_level);
-
     /*
      * File information
      */
@@ -380,6 +384,9 @@ async function loadFile() {
 
     $("content").style.display =
       "block";
+
+    // Render ads AFTER the content is visible so the ad iframes get real dimensions.
+    renderAds(f.ad_level);
 
 
   } catch (error) {
