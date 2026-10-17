@@ -12,10 +12,11 @@ Originals are untouched in `_backup_original/` (rollback = copy them back). No d
 | # | Severity | Issue | Status |
 |---|---|---|---|
 | 1 | High | **Banners never rendered** on `file.html`: provider's `invoke.js` uses `document.write()`, which browsers ignore for scripts injected after load; 3 banners also shared one `window.atOptions`; ads were started while the page was `display:none`. | **Fixed** (`slot-loader.js`, one iframe per banner, runs after content is visible) |
+| 1b | High | **Dashboard "Sign out" did nothing — and so did the payout form and payout-method change.** `creator/dashboard.html` called `$("kpGlobalSearch").addEventListener(...)` but that search box no longer exists, so the script threw there and every handler after it was never attached. | **Fixed** (null-safe listener). Verified: click → `signOut()` → login page, desktop + mobile |
 | 2 | High | Ad failures were silent (blocked / no fill = empty dashed boxes). | **Fixed** – states `filled / empty / blocked`, friendly note |
 | 3 | Med | `file.html`: "Ad Level" label changed from "Medium" to "2" after a download (duplicate template). | **Fixed** (`renderMeta()`) |
 | 4 | Med | `upload.html`: no sign-in gate; any thrown error left the button stuck on "Uploading…"; no executable-file check despite Program Rules banning malware. | **Fixed** (redirect to login, try/catch, block `.exe .msi .bat .cmd .scr .pif .vbs .vbe .wsf .hta .cpl`). **Client-side only — see §4.** |
-| 5 | Med | Public pages other than `index.html` had a 6-link header with no mobile menu; `prize-winners` title was "start soon". | **Fixed** (shared header + `site.js`) |
+| 5 | Med | Header/menu: now the full menu (Payout Rates, Payment Proof, Prize Winners, Premium, Contact, Login, Register) shows **only on `index.html` and `file.html`** with a working mobile menu. `prize-winners`, `program-rules`, `upload` get a simple logo + "Back to home" bar. `prize-winners` title was "start soon". | **Fixed** |
 | 6 | Low | Horizontal scroll on phones (hero glow). | **Fixed** |
 | 7 | Low | Register: 6-char minimum, consent text without links. | **Fixed** (8 chars client-side, links to rules/terms) |
 | 8 | Low | `login.html`: minified, relied on global element ids, no network-error handling. | **Fixed** (same behaviour, readable, handled errors) |

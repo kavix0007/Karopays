@@ -899,7 +899,7 @@ async function renderKpPending() {
 function kpRedrawAnalytics(){if(kpFilesCache.length||kpEarningsCache.length)renderAnalytics(kpFilesCache);}
 $("kpRange").addEventListener("change",()=>renderAnalytics(kpFilesCache));
 window.addEventListener("resize",()=>{clearTimeout(window.__kpChartResize);window.__kpChartResize=setTimeout(()=>renderKpChart(kpEarningsCache,$("kpRange").value),100);});
-$("kpGlobalSearch").addEventListener("input",function(){const q=this.value.trim().toLowerCase();document.querySelectorAll("#filesContainer .dashboard-file").forEach(card=>{card.hidden=!!q&&!card.textContent.toLowerCase().includes(q);});});
+$("kpGlobalSearch")?.addEventListener("input",function(){const q=this.value.trim().toLowerCase();document.querySelectorAll("#filesContainer .dashboard-file").forEach(card=>{card.hidden=!!q&&!card.textContent.toLowerCase().includes(q);});});
 
 
 
