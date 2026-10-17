@@ -130,13 +130,19 @@ registerForm.addEventListener("submit", async (event) => {
       return;
     }
 
-    if (data.user) {
-      // Preserve the original KaroPays registration success behavior.
+    if (data.user && !data.session) {
       showRegisterMessage(
-        "Account created successfully. Check your email if confirmation is required.",
+        `Your account request was received. We sent a confirmation link to ${email}. Open that email and click “Confirm email address” before signing in. Check Spam/Junk too. If it doesn't arrive, wait a few minutes before trying again.`,
         "success"
       );
-      registerForm.reset();
+      document.getElementById("password").value = "";
+      document.getElementById("terms").checked = false;
+      return;
+    }
+
+    if (data.user && data.session) {
+      showRegisterMessage("Your account was created and you are signed in. Redirecting to your dashboard…", "success");
+      window.location.assign("creator/dashboard.html");
       return;
     }
 
