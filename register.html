@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Create Account — KaroPays</title>
   <link rel="stylesheet" href="assets/css/pro.css">
-<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png"><link rel="apple-touch-icon" href="assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff">
 </head>
 
 <body>
@@ -13,7 +12,8 @@
 <main class="auth-wrap">
 
   <a class="logo" href="index.html">
-    <img class="logo-img" src="assets/img/karopays-logo.png" alt="KaroPays" width="112" height="52">
+    <span class="logo-mark">K</span>
+    KaroPays
   </a>
 
   <form class="auth-card" id="registerForm">
@@ -43,24 +43,29 @@
     </label>
 
     <label>
+      Referral code (optional)
+      <input id="referralCode" type="text" autocomplete="off" placeholder="Enter creator referral code">
+    </label>
+
+    <label>
       Password
       <input
         id="password"
         type="password"
         required
-        minlength="8"
+        minlength="6"
         autocomplete="new-password"
       >
     </label>
 
     <label class="check">
       <input id="terms" type="checkbox" required>
-      I agree to the <a href="program-rules.html" target="_blank" rel="noopener">Program Rules</a> and <a href="terms.html" target="_blank" rel="noopener">Terms</a>.
+      I agree to the Program Rules and Terms.
     </label>
 
-    <p id="registerMessage" class="form-message" role="status" aria-live="polite"></p>
+    <p id="registerMessage"></p>
 
-    <button class="primary full" id="registerButton" type="submit">
+    <button class="primary full" type="submit">
       Create account
     </button>
 
@@ -81,74 +86,43 @@
 <script>
 const registerForm = document.getElementById("registerForm");
 const registerMessage = document.getElementById("registerMessage");
-const registerButton = document.getElementById("registerButton");
-
-function showRegisterMessage(message, type = "info") {
-  registerMessage.textContent = message;
-  registerMessage.dataset.state = type;
-}
 
 registerForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  if (typeof supabaseClient === "undefined" || !supabaseClient?.auth) {
-    showRegisterMessage("Registration is temporarily unavailable. Please refresh the page and try again.", "error");
-    return;
-  }
+  const displayName =
+    document.getElementById("displayName").value.trim();
 
-  const displayName = document.getElementById("displayName").value.trim();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+  const email =
+    document.getElementById("email").value.trim();
 
-  if (!displayName) {
-    showRegisterMessage("Please enter your name.", "error");
-    return;
-  }
+  const password =
+    document.getElementById("password").value;
+  const referralCode = (new URLSearchParams(location.search).get("ref") || document.getElementById("referralCode").value || "").trim().toUpperCase();
 
-  registerButton.disabled = true;
-  registerButton.textContent = "Creating account...";
-  showRegisterMessage("Creating your account and sending the confirmation email…");
+  registerMessage.textContent = "Creating your account...";
 
-  try {
-    const { data, error } = await supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/login.html`,
-        data: { display_name: displayName }
+  const { data, error } = await supabaseClient.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      data: {
+        display_name: displayName,
+        karopays_referral_code: referralCode || null
       }
-    });
-
-    if (error) {
-      showRegisterMessage(error.message || "We couldn't create your account. Please try again.", "error");
-      return;
     }
+  });
 
-    if (data.user && !data.session) {
-      showRegisterMessage(
-        `Your account request was received. We sent a confirmation link to ${email}. Open that email and click “Confirm email address” before signing in. Check Spam/Junk too. If it doesn't arrive, wait a few minutes before trying again.`,
-        "success"
-      );
-      document.getElementById("password").value = "";
-      document.getElementById("terms").checked = false;
-      return;
-    }
+  if (error) {
+    registerMessage.textContent = error.message;
+    return;
+  }
 
-    if (data.user && data.session) {
-      showRegisterMessage("Your account was created and you are signed in. Redirecting to your dashboard…", "success");
-      window.location.assign("creator/dashboard.html");
-      return;
-    }
+  if (data.user) {
+    registerMessage.textContent =
+      "Account created successfully. Check your email if confirmation is required.";
 
-    showRegisterMessage("We couldn't confirm the registration result. Please try signing in or try again later.", "error");
-  } catch (error) {
-    showRegisterMessage(
-      error?.message || "A network error occurred. Check your connection and try again.",
-      "error"
-    );
-  } finally {
-    registerButton.disabled = false;
-    registerButton.textContent = "Create account";
+    registerForm.reset();
   }
 });
 </script>
