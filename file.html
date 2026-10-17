@@ -251,40 +251,23 @@ async function loadFile() {
 
   try {
 
+    // Use the public RPC so visitors on other devices can load
+    // active shared files without requiring direct table SELECT access.
+    // The RPC returns a TABLE result, which Supabase supplies as an array.
     const {
-      data: f,
+      data,
       error: e
-    } =
-      await supabaseClient
-        .from("files")
-        .select(
-          `
-          id,
-          file_name,
-          file_size,
-          description,
-          category,
-          ad_level,
-          downloads,
-          status,
-          storage_path
-          `
-        )
-        .eq(
-          "id",
-          id
-        )
-        .eq(
-          "status",
-          "active"
-        )
-        .single();
+    } = await supabaseClient.rpc("get_public_file", {
+      p_file_id: id
+    });
+
+    const f = Array.isArray(data) ? (data[0] || null) : data;
 
 
     if (e) {
 
       console.error(
-        "File lookup error:",
+        "Public file lookup error:",
         e
       );
 
@@ -293,7 +276,7 @@ async function loadFile() {
     }
 
 
-    if (!f) {
+    if (!f || String(f.status || "").toLowerCase() !== "active") {
 
       showError();
       return;
