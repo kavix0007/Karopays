@@ -220,6 +220,10 @@ html,body{background:#f5f7fc!important;color:#121521!important}
 </style>
 
 <link rel="icon" type="image/png" sizes="48x48" href="../assets/img/favicon-48.png"><link rel="apple-touch-icon" href="../assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff">
+<style id="kp-remove-earnings-chart">
+  /* Chart panel removed at the user's request; keep analytics cards full width. */
+  .kp-dashboard-grid{grid-template-columns:minmax(0,1fr)!important}
+</style>
 </head>
 
 
@@ -282,11 +286,6 @@ html,body{background:#f5f7fc!important;color:#121521!important}
   </section>
 
   <section class="kp-dashboard-grid" id="analytics">
-    <article class="kp-panel kp-chart-panel">
-      <div class="kp-panel-heading"><span class="kp-chart-note" id="kpChartRange">Last 7 Days</span></div>
-      <div class="kp-chart-wrap"><canvas id="kpEarningsChart" aria-label="Earnings and downloads chart"></canvas><div id="kpChartEmpty" class="kp-chart-empty" hidden>No earning activity for this period yet.</div></div>
-      <div class="kp-legend"><span><i class="legend-blue"></i>Earnings (USD)</span><span><i class="legend-lilac"></i>Downloads</span></div>
-    </article>
     <div class="kp-right-stack">
       <article class="kp-panel">
         <div class="kp-panel-heading"><div class="kp-heading-title"><span class="kp-heading-icon">◎</span><h2>Earnings by Country</h2></div><span class="kp-live-label">LIVE DATA</span></div>
