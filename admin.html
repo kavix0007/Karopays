@@ -200,7 +200,25 @@ function renderEarnings(){
 }
 window.viewPayout=id=>{const r=payouts.find(x=>x.id===id);if(!r)return;openModal("Payout "+payoutCode(r),`<div class="detail-grid"><div class="detail"><small>Payout ID</small><b>${esc(payoutCode(r))}</b></div><div class="detail"><small>Status</small><b>${esc(r.status)}</b></div><div class="detail"><small>Creator ID</small><b>${esc(r.creator_id)}</b></div><div class="detail"><small>Amount</small><b>$${Number(r.amount||0).toFixed(2)}</b></div><div class="detail"><small>Method</small><b>${esc(r.method)}</b></div><div class="detail"><small>Payment details</small><b>${esc(r.payment_details||"—")}</b></div></div>`)};
 window.viewFile=id=>{const r=files.find(x=>x.id===id);if(!r)return;openModal("File details",`<div class="detail-grid"><div class="detail"><small>File name</small><b>${esc(r.file_name)}</b></div><div class="detail"><small>File ID</small><b>${esc(r.id)}</b></div><div class="detail"><small>Creator ID</small><b>${esc(r.creator_id)}</b></div><div class="detail"><small>Category</small><b>${esc(r.category||"—")}</b></div><div class="detail"><small>Downloads</small><b>${Number(r.downloads||0)}</b></div><div class="detail"><small>Ad level</small><b>${esc(r.ad_level)}</b></div><div class="detail"><small>Status</small><b>${esc(r.status)}</b></div><div class="detail"><small>Deleted at</small><b>${esc(r.deleted_at ? new Date(r.deleted_at).toLocaleString() : "—")}</b></div><div class="detail"><small>Historical earnings</small><b>$${Number(r.earnings||0).toFixed(4)}</b></div><div class="detail"><small>Created at</small><b>${esc(r.created_at ? new Date(r.created_at).toLocaleString() : "—")}</b></div><div class="detail"><small>Storage path</small><b>${esc(r.storage_path||"—")}</b></div><div class="detail" style="grid-column:1/-1"><small>Description</small><b>${esc(r.description||"—")}</b></div></div>`)};
-window.updatePayout=async(id,status)=>{if(!confirm("Change payout status to "+status+"?"))return;const{error}=await supabaseClient.from("payout_requests").update({status}).eq("id",id);if(error){showGlobal("Could not update payout. Admin UPDATE permission is required.");return}await refreshAll()};
+window.updatePayout=async(id,status)=>{
+ if(!["approved","rejected","paid"].includes(status)){showGlobal("Invalid payout status.");return}
+ if(!confirm("Change payout status to "+status+"?"))return;
+ if(status==="paid"){
+  // Paid payouts must go through the server-side RPC so the creator balance
+  // is deducted atomically with the payout status change.
+  const {data,error}=await supabaseClient.rpc("complete_payout",{p_request_id:id});
+  if(error||!data||data.success!==true){
+   console.error("Payout completion failed:",error||data);
+   showGlobal("Could not mark payout as paid. Ensure the payout is approved and the admin account is authorized. The balance was not confirmed as deducted.");
+   return;
+  }
+ }else{
+  const {error}=await supabaseClient.from("payout_requests").update({status}).eq("id",id);
+  if(error){console.error(error);showGlobal("Could not update payout. Admin UPDATE permission is required.");return}
+ }
+ await refreshAll();
+ showGlobal("Payout status updated successfully.");
+};
 function openModal(title,body){$("modalTitle").textContent=title;$("modalBody").innerHTML=body;$("modal").classList.add("open")}
 $("closeModal").onclick=()=>$("modal").classList.remove("open");$("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("open")});
 $("payoutSearch").addEventListener("input",renderPayouts);$("payoutFilter").addEventListener("change",renderPayouts);$("fileSearch").addEventListener("input",renderFiles);$("fileFilter").addEventListener("change",renderFiles);$("earningsSearch").addEventListener("input",renderEarnings);$("refreshAll").addEventListener("click",refreshAll);
