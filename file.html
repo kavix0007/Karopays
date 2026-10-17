@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Unlock File — KaroPays</title>
+<title>Unlock File — KaroPays (Ad Test Copy)</title>
 <link rel="stylesheet" href="assets/css/pro.css">
 
 <style>
@@ -215,17 +215,24 @@ function appendAdScript(src, attrs = {}) {
   document.body.appendChild(script);
 }
 
-async function loadBannerInto(slot) {
-  slot.style.cssText = "width:100%;min-height:270px;max-width:100%;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;";
-  const options = { key: "82565278dee02e769d1a15ccdd7a7b49", format: "iframe", height: 250, width: 300, params: {} };
-  // Each banner gets its own invocation and options object. Actual fill is controlled by the ad provider.
-  const config = document.createElement("script");
-  config.text = "window.atOptions = " + JSON.stringify(options) + ";";
-  slot.appendChild(config);
-  const invoke = document.createElement("script");
-  invoke.src ="https://www.highrevenueformat.com/82565278dee02e769d1a15ccdd7a7b49/invoke.js";
-  invoke.async = false;
-  slot.appendChild(invoke);
+function loadTestScriptInto(slot, placementNumber) {
+  slot.style.cssText = "width:100%;min-height:270px;max-width:100%;display:flex;justify-content:center;align-items:center;text-align:center;overflow:hidden;position:relative;";
+  slot.setAttribute("data-ad-test-placement", String(placementNumber));
+
+  // TEST ONLY: this provider tag does not specify banner dimensions. It may
+  // create a different ad format and may not render visibly inside this slot.
+  const bootstrap = document.createElement("script");
+  bootstrap.text = `(function(zrshm){
+var d = document,
+    s = d.createElement('script'),
+    l = d.currentScript || d.scripts[d.scripts.length - 1];
+s.settings = zrshm || {};
+s.src = "//conventionalresponse.com/blXoV_sOd.GYlY0zYuWxcv/oePmq9ku/ZHU/lMk/PqT/cQ1sMHTJkVw/NVzvMDtwNXzwU/xXO/TjA_3kNDwe";
+s.async = true;
+s.referrerPolicy = 'no-referrer-when-downgrade';
+l.parentNode.insertBefore(s, l);
+})({})`;
+  slot.appendChild(bootstrap);
 }
 
 function renderAds(rawLevel) {
@@ -241,7 +248,7 @@ function renderAds(rawLevel) {
     frame.id = `kp-banner-slot-${i + 1}`;
     card.appendChild(frame);
     slots.appendChild(card);
-    loadBannerInto(frame);
+    loadTestScriptInto(frame, i + 1);
   }
   // Additional network formats are enabled by level; do not render extra format headings/cards.
   if (level >= 2) {
