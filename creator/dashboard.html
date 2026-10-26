@@ -227,6 +227,24 @@ html,body{background:#f5f7fc!important;color:#121521!important}
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png">
 <link rel="apple-touch-icon" sizes="192x192" href="/assets/img/favicon-192.png">
 <meta name="theme-color" content="#5271ff">
+
+<style id="kp-sidebar-uniform-nav-fix">
+/* Uniform creator sidebar: text-only labels aligned on the same left edge. */
+.kp-sidebar .kp-nav {
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:0!important;
+  padding-left:14px!important;
+  padding-right:12px!important;
+  white-space:nowrap!important;
+  flex-wrap:nowrap!important;
+  text-align:left!important;
+}
+.kp-sidebar .kp-nav > span { display:none!important; }
+</style>
+
 </head>
 
 
@@ -250,11 +268,11 @@ html,body{background:#f5f7fc!important;color:#121521!important}
   <div class="kp-nav-group-label">WORKSPACE</div>
   <a class="kp-nav active" href="#overview">Dashboard</a>
   <a class="kp-nav" href="#filesContainer">My Files</a>
-  <a class="kp-nav" href="../traffic-sources.html"><span>↗</span>Traffic Sources</a>
-<a class="kp-nav" href="../upload.html">Upload File</a>
+  <a class="kp-nav" href="../upload.html">Upload File</a>
   <a class="kp-nav" href="#analytics">Analytics</a>
+  <a class="kp-nav" href="../traffic-sources.html">Traffic Sources</a>
   <a class="kp-nav" href="#payouts">Payouts</a>
-  <a class="kp-nav" href="#referrals"><span aria-hidden="true"></span>Referrals</a>
+  <a class="kp-nav" href="#referrals">Referrals</a>
   <div class="kp-nav-divider"></div>
   <div class="kp-nav-group-label">HELP</div>
   <a class="kp-nav" href="../contact.html">Support</a>
