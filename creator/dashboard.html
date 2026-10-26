@@ -1551,5 +1551,14 @@ function esc(value) {
 })();
 </script>
 
+
+<style id="karopays-sidebar-one-line-fix">
+/* Keep every creator sidebar item and its icon on one horizontal line. */
+.kp-sidebar .kp-nav{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;flex-wrap:nowrap!important;white-space:nowrap!important;width:100%;min-width:0;box-sizing:border-box;}
+.kp-sidebar .kp-nav span{display:inline-flex!important;flex:0 0 22px!important;align-items:center!important;justify-content:center!important;width:22px!important;min-width:22px!important;}
+.kp-sidebar .kp-nav{line-height:1.35;overflow:hidden;text-overflow:ellipsis;}
+@media(max-width:700px){.kp-sidebar-open .kp-sidebar{width:260px!important;max-width:85vw}.kp-sidebar-open .kp-sidebar .kp-nav{font-size:13px!important;gap:12px!important;}}
+</style>
+
 </body>
 </html>
