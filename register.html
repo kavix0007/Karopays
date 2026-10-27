@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Create Account — KaroPays</title>
   <link rel="stylesheet" href="assets/css/pro.css">
-
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="48x48" href="/favicon.png">
-<link rel="apple-touch-icon" sizes="192x192" href="/assets/img/favicon-192.png">
-<meta name="theme-color" content="#5271ff">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon-48.png"><link rel="apple-touch-icon" href="assets/img/favicon-192.png"><meta name="theme-color" content="#5271ff">
 </head>
 
 <body>
@@ -44,6 +40,11 @@
         required
         autocomplete="email"
       >
+    </label>
+
+    <label>
+      Referral code <span style="color:#69748a;font-weight:400">(optional)</span>
+      <input id="referralCode" type="text" autocomplete="off" maxlength="32" placeholder="Enter a friend's code" value="">
     </label>
 
     <label>
@@ -103,6 +104,7 @@ registerForm.addEventListener("submit", async (event) => {
   const displayName = document.getElementById("displayName").value.trim();
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
+  const referralCode = (document.getElementById("referralCode").value || new URLSearchParams(window.location.search).get("ref") || "").trim().toUpperCase();
 
   if (!displayName) {
     showRegisterMessage("Please enter your name.", "error");
@@ -119,7 +121,7 @@ registerForm.addEventListener("submit", async (event) => {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/login.html`,
-        data: { display_name: displayName }
+        data: { display_name: displayName, karopays_referral_code: referralCode }
       }
     });
 
