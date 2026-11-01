@@ -283,10 +283,10 @@ Start uploading and earning today!
   </section>
 
   <section class="kp-stat-grid" aria-label="Creator overview">
-    <article class="kp-stat-card"><div class="kp-stat-icon kp-blue">⇩</div><div class="kp-stat-copy"><span>Total Downloads</span><strong id="totalDownloads">0</strong><small class="kp-positive" id="kpDownloadsSub">Across your active files</small></div><div class="kp-mini-bars blue"><i></i><i></i><i></i><i></i><i></i></div></article>
-    <article class="kp-stat-card"><div class="kp-stat-icon kp-green">$</div><div class="kp-stat-copy"><span>Total Earnings</span><strong id="totalEarnings">$0.00</strong><small class="kp-positive">From your active files</small></div><div class="kp-mini-bars green"><i></i><i></i><i></i><i></i><i></i></div></article>
-    <article class="kp-stat-card"><div class="kp-stat-icon kp-purple">▣</div><div class="kp-stat-copy"><span>Available Balance</span><strong id="availableBalance">$0.00</strong><small id="kpBalanceInr">Creator balance</small></div><div class="kp-stat-watermark">▣</div></article>
-    <article class="kp-stat-card"><div class="kp-stat-icon kp-orange">◷</div><div class="kp-stat-copy"><span>Pending Payout</span><strong id="kpPendingPayout">$0.00</strong><small id="kpPendingLabel">Checking requests...</small></div><div class="kp-clock-watermark">◷</div></article>
+    <article class="kp-stat-card"><div class="kp-stat-icon kp-blue">⭳</div><div class="kp-stat-copy"><span>Total Downloads</span><strong id="totalDownloads">0</strong><small class="kp-positive" id="kpDownloadsSub">Across your active files</small></div><div class="kp-mini-bars blue"><i></i><i></i><i></i><i></i><i></i></div></article>
+    <article class="kp-stat-card"><div class="kp-stat-icon kp-green">💵</div><div class="kp-stat-copy"><span>Total Earnings</span><strong id="totalEarnings">$0.00</strong><small class="kp-positive">From your active files</small></div><div class="kp-mini-bars green"><i></i><i></i><i></i><i></i><i></i></div></article>
+    <article class="kp-stat-card"><div class="kp-stat-icon kp-purple">💳</div><div class="kp-stat-copy"><span>Available Balance</span><strong id="availableBalance">$0.00</strong><small id="kpBalanceInr">Creator balance</small></div><div class="kp-stat-watermark">▣</div></article>
+    <article class="kp-stat-card"><div class="kp-stat-icon kp-orange">⏱️</div><div class="kp-stat-copy"><span>Pending Payout</span><strong id="kpPendingPayout">$0.00</strong><small id="kpPendingLabel">Checking requests...</small></div><div class="kp-clock-watermark">◷</div></article>
   </section>
 
   <section class="kp-dashboard-grid" id="analytics">
@@ -337,7 +337,7 @@ Start uploading and earning today!
       <p class="kp-muted">Referral commission shows the approved amount recorded for each referred creator. These amounts are already included in your Available Balance, so they are not added a second time here.</p>
       <div class="kp-table-scroll">
         <table class="kp-table">
-          <thead><tr><th>Username</th><th>Referral commission earned</th><th>Referral date</th></tr></thead>
+          <thead><tr><th>Username</th><th>Referral date</th></tr></thead>
           <tbody id="kpReferredCreators"><tr><td colspan="3">Loading referred creators…</td></tr></tbody>
         </table>
       </div>
@@ -867,26 +867,49 @@ function kpSafeDate(value) {
 }
 async function renderAnalytics(files) {
   kpFilesCache = (files || []).filter(f => String(f.status || "active").toLowerCase() === "active");
-  const activeIds = new Set(kpFilesCache.map(f => String(f.id)));
   const range = $("kpRange") ? $("kpRange").value : "7";
-  const cutoff = range === "all" ? null : new Date(Date.now() - (Number(range) - 1) * 86400000);
-  const {data, error} = await supabaseClient.from("download_earnings")
-    .select("id,file_id,creator_id,country_code,ad_level,payout_rate,earning,created_at")
-    .eq("creator_id", user.id)
-    .order("created_at", {ascending:false})
-    .limit(1000);
-  if (error) {
-    console.error("Analytics load error:", error);
+  const cutoff = range === "all" ? null : new Date(Date.now() - (Number(range) * 86400000));
+
+  // Fetch every earning row in pages instead of silently stopping at 1,000.
+  const pageSize = 1000;
+  let allRows = [];
+  let from = 0;
+  while (true) {
+    const { data, error } = await supabaseClient.from("download_earnings")
+      .select("id,file_id,creator_id,country_code,ad_level,payout_rate,earning,created_at")
+      .eq("creator_id", user.id)
+      .order("created_at", {ascending:false})
+      .range(from, from + pageSize - 1);
+    if (error) {
+      console.error("Analytics load error:", error);
+      $("kpDownloadsSub").textContent = "Unable to load selected period";
+      break;
+    }
+    const page = data || [];
+    allRows = allRows.concat(page);
+    if (page.length < pageSize) break;
+    from += pageSize;
   }
-  kpEarningsCache = (data || []).filter(e => activeIds.has(String(e.file_id)));
+
+  const activeIds = new Set(kpFilesCache.map(f => String(f.id)));
+  kpEarningsCache = allRows.filter(e => activeIds.has(String(e.file_id)));
   const ranged = kpEarningsCache.filter(e => !cutoff || new Date(e.created_at) >= cutoff);
+
+  // The date filter applies to period-based totals and every analytics panel.
+  const periodDownloads = ranged.length;
+  const periodEarnings = ranged.reduce((sum, row) => sum + Number(row.earning || 0), 0);
+  $("totalDownloads").textContent = periodDownloads.toLocaleString();
+  $("totalEarnings").textContent = money(periodEarnings);
+  $("kpDownloadsSub").textContent = range === "all" ? "All-time eligible downloads" : `Last ${range} days`;
+
   renderKpChart(ranged, range);
   renderKpCountries(ranged);
   renderKpAdLevels(ranged);
-  renderKpTopFiles(kpFilesCache);
+  renderKpTopFiles(kpFilesCache, ranged);
   renderKpRecent(ranged);
   await renderKpPending();
 }
+
 function renderKpChart(rows, range) {
   const canvas = $("kpEarningsChart");
   if (!canvas) return;
@@ -922,19 +945,38 @@ function renderKpCountries(rows) {
   if(!rows.length){target.innerHTML='<p class="kp-muted">No country earnings in this period yet.</p>';return;}
   const map={};rows.forEach(r=>{const c=r.country_code||"UNKNOWN";if(!map[c])map[c]={count:0,earn:0};map[c].count++;map[c].earn+=Number(r.earning||0);});
   const all=Object.entries(map).sort((a,b)=>b[1].earn-a[1].earn);const total=all.reduce((s,x)=>s+x[1].earn,0)||1;
-  target.innerHTML=all.slice(0,5).map(([code,v])=>`<div class="kp-country-row"><div class="kp-country-name">${kpFlag(code)} &nbsp;${esc(kpCountryName(code))}</div><div class="kp-country-count"><strong>${kpNumber(v.count)}</strong><small>downloads</small></div><div class="kp-country-amount"><strong>${kpFmt(v.earn)}</strong><small>${kpFmt(v.count?v.earn/v.count:0,4)} / dl</small></div><div class="kp-progress"><span style="width:${Math.max(2,Math.min(100,v.earn/total*100))}%"></span></div></div>`).join("");
+  target.innerHTML=all.slice(0,5).map(([code,v])=>`<div class="kp-country-row"><div class="kp-country-name">${kpFlag(code)} &nbsp;${esc(kpCountryName(code))}</div><div class="kp-country-count"><strong>${v.count.toLocaleString()}</strong><small>downloads</small></div><div class="kp-country-amount"><strong>${kpFmt(v.earn)}</strong><small>${kpFmt(v.count?v.earn/v.count:0,4)} / dl</small></div><div class="kp-progress"><span style="width:${Math.max(2,Math.min(100,v.earn/total*100))}%"></span></div></div>`).join("");
 }
 function renderKpAdLevels(rows) {
   const target=$("kpAdLevelRows");const map={};
   rows.forEach(r=>{const level=Number(r.ad_level||1);if(!map[level])map[level]={count:0,earn:0};map[level].count++;map[level].earn+=Number(r.earning||0);});
   const levels=Object.entries(map).sort((a,b)=>Number(a[0])-Number(b[0]));
-  target.innerHTML=levels.length?levels.map(([level,v])=>`<tr><td><span class="kp-ad-dot"></span>Level ${esc(level)}</td><td>${kpNumber(v.count)}</td><td>${kpFmt(v.earn)}</td><td>${kpFmt(v.count?v.earn/v.count:0,4)}</td></tr>`).join(""):'<tr><td colspan="4" class="kp-muted">No ad-level data yet.</td></tr>';
+  target.innerHTML=levels.length?levels.map(([level,v])=>`<tr><td><span class="kp-ad-dot"></span>Level ${esc(level)}</td><td>${v.count.toLocaleString()}</td><td>${kpFmt(v.earn)}</td><td>${kpFmt(v.count?v.earn/v.count:0,4)}</td></tr>`).join(""):'<tr><td colspan="4" class="kp-muted">No ad-level data yet.</td></tr>';
 }
-function renderKpTopFiles(files) {
-  const target=$("kpTopFiles");
-  const sorted=[...files].sort((a,b)=>Number(b.downloads||0)-Number(a.downloads||0)).slice(0,5);
-  target.innerHTML=sorted.length?sorted.map((f,i)=>`<tr><td>${i+1}</td><td><span class="kp-file-thumb">▤</span><span class="kp-file-name" title="${esc(f.file_name||"Unnamed file")}">${esc(f.file_name||"Unnamed file")}</span></td><td>${kpNumber(f.downloads)}</td><td>${kpFmt(f.earnings)}</td><td><span class="kp-level-pill">Level ${Number(f.ad_level||1)}</span></td><td><a class="kp-view-all" href="../edit-file.html?id=${encodeURIComponent(f.id)}" aria-label="Edit file">⋮</a></td></tr>`).join(""):'<tr><td colspan="6" class="kp-muted">Upload your first file to see performance.</td></tr>';
+function renderKpTopFiles(files, rows) {
+  const target = $("kpTopFiles");
+  const totals = new Map();
+  (rows || []).forEach(row => {
+    const key = String(row.file_id);
+    const current = totals.get(key) || {downloads:0, earnings:0};
+    current.downloads += 1;
+    current.earnings += Number(row.earning || 0);
+    totals.set(key, current);
+  });
+
+  const sorted = [...files]
+    .map(file => {
+      const metric = totals.get(String(file.id)) || {downloads:0, earnings:0};
+      return {...file, periodDownloads:metric.downloads, periodEarnings:metric.earnings};
+    })
+    .sort((a,b) => b.periodEarnings - a.periodEarnings || b.periodDownloads - a.periodDownloads)
+    .slice(0,5);
+
+  target.innerHTML = sorted.length ? sorted.map((f,i) =>
+    `<tr><td>${i+1}</td><td><span class="kp-file-thumb">▤</span><span class="kp-file-name" title="${esc(f.file_name||"Unnamed file")}">${esc(f.file_name||"Unnamed file")}</span></td><td>${f.periodDownloads.toLocaleString()}</td><td>${kpFmt(f.periodEarnings)}</td><td><span class="kp-level-pill">Level ${Number(f.ad_level||1)}</span></td><td><a class="kp-view-all" href="../edit-file.html?id=${encodeURIComponent(f.id)}" aria-label="Edit file">⋮</a></td></tr>`
+  ).join("") : '<tr><td colspan="6" class="kp-muted">No file activity in this period.</td></tr>';
 }
+
 function renderKpRecent(rows) {
   const target=$("kpRecentEarnings");
   target.innerHTML=rows.length?rows.slice(0,5).map((r,i)=>{const f=kpFilesCache.find(x=>String(x.id)===String(r.file_id));return `<tr><td>#${esc(r.id)}</td><td title="${esc(f?.file_name||"File")}">${esc((f?.file_name||"File").slice(0,18))}</td><td>${kpFlag(r.country_code)} ${esc(r.country_code||"—")}</td><td>${kpFmt(r.earning)}</td><td>${kpSafeDate(r.created_at)}</td></tr>`;}).join(""):'<tr><td colspan="5" class="kp-muted">No recent earnings in this period.</td></tr>';
@@ -948,7 +990,7 @@ async function renderKpPending() {
   $("kpPendingLabel").textContent=pending.length?`${pending.length} request${pending.length===1?"":"s"} pending`:"No pending requests";
 }
 function kpRedrawAnalytics(){if(kpFilesCache.length||kpEarningsCache.length)renderAnalytics(kpFilesCache);}
-$("kpRange").addEventListener("change",()=>renderAnalytics(kpFilesCache));
+$("kpRange").addEventListener("change", async () => { await renderAnalytics(kpFilesCache); });
 window.addEventListener("resize",()=>{clearTimeout(window.__kpChartResize);window.__kpChartResize=setTimeout(()=>renderKpChart(kpEarningsCache,$("kpRange").value),100);});
 $("kpGlobalSearch")?.addEventListener("input",function(){const q=this.value.trim().toLowerCase();document.querySelectorAll("#filesContainer .dashboard-file").forEach(card=>{card.hidden=!!q&&!card.textContent.toLowerCase().includes(q);});});
 
@@ -1435,7 +1477,7 @@ async function loadReferralProgram() {
     if (trackingError) throw trackingError;
 
     const referredCreators = rows || [];
-    $("kpReferralCount").textContent = kpNumber(referredCreators.length);
+    $("kpReferralCount").textContent = referredCreators.length.toLocaleString();
 
     // Read approved commissions for reporting only. The SQL trigger credits
     // profiles.balance; this dashboard must never credit the wallet again.
@@ -1454,33 +1496,22 @@ async function loadReferralProgram() {
     );
     if (totalEl) totalEl.textContent = money(totalReferralEarnings);
 
-    const commissionByCreator = new Map();
-    approvedRows.forEach(row => {
-      const creatorId = String(row.referred_creator_id);
-      commissionByCreator.set(
-        creatorId,
-        (commissionByCreator.get(creatorId) || 0) + Number(row.commission_amount || 0)
-      );
-    });
-
     if (!referredCreators.length) {
-      tableBody.innerHTML = '<tr><td colspan="3">No referred creators yet. Share your referral link to get started.</td></tr>';
+      tableBody.innerHTML = '<tr><td colspan="2">No referred creators yet. Share your referral link to get started.</td></tr>';
       return;
     }
 
     tableBody.innerHTML = referredCreators.map(creator => {
       const username = creator.username || "Creator";
-      const creatorId = creator.referred_creator_id || creator.creator_id || creator.id;
-      const referralCommission = money(commissionByCreator.get(String(creatorId || "")) || 0);
       const date = creator.referral_date ? new Date(creator.referral_date).toLocaleDateString() : "—";
-      return `<tr><td>${esc(username)}</td><td>${referralCommission}</td><td>${esc(date)}</td></tr>`;
+      return `<tr><td>${esc(username)}</td><td>${esc(date)}</td></tr>`;
     }).join("");
   } catch (error) {
     console.error("Referral tracking load error:", error);
     $("kpReferralCode").textContent = "Unavailable";
     $("kpReferralCount").textContent = "—";
     if (totalEl) totalEl.textContent = "—";
-    tableBody.innerHTML = `<tr><td colspan="3">Referral tracking could not load: ${esc(error?.message || "Unknown error")}</td></tr>`;
+    tableBody.innerHTML = `<tr><td colspan="2">Referral tracking could not load: ${esc(error?.message || "Unknown error")}</td></tr>`;
   }
 }
 
