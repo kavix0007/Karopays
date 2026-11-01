@@ -324,19 +324,20 @@ Start uploading and earning today!
       <div>
         <div class="kp-eyebrow">CREATOR REFERRALS</div>
         <h2>Referral Tracking</h2>
-        <p class="kp-muted">Share your referral link and see the creators who joined through it, along with their total KaroPays earnings. Referral rewards are not paid.</p>
+        <p class="kp-muted">Share your referral link to track creators who joined through it and view your approved referral commissions. Referral commissions are automatically added to your normal Available Balance.</p>
       </div>
     </div>
-    <div class="kp-stat-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));margin:12px 0">
+    <div class="kp-stat-grid" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin:12px 0">
       <article class="kp-stat-card"><div class="kp-stat-copy"><span>Your referral code</span><strong id="kpReferralCode" style="font-size:20px">Loading…</strong><button class="kp-primary" id="kpCopyReferral" type="button" style="margin-top:8px">Copy link</button></div></article>
       <article class="kp-stat-card"><div class="kp-stat-copy"><span>Creators referred</span><strong id="kpReferralCount">—</strong><small>Successful sign-ups</small></div></article>
+      <article class="kp-stat-card"><div class="kp-stat-copy"><span>Total referral earnings</span><strong id="kpReferralTotal">$0.00</strong><small>Approved commissions · included in Available Balance</small></div></article>
     </div>
     <div class="kp-form-panel">
       <h3>Creators you referred</h3>
-      <p class="kp-muted">Creator earnings below are the referred creator's own total file earnings, not a referral commission.</p>
+      <p class="kp-muted">Referral commission shows the approved amount recorded for each referred creator. These amounts are already included in your Available Balance, so they are not added a second time here.</p>
       <div class="kp-table-scroll">
         <table class="kp-table">
-          <thead><tr><th>Username</th><th>Creator total earnings</th><th>Referral date</th></tr></thead>
+          <thead><tr><th>Username</th><th>Referral commission earned</th><th>Referral date</th></tr></thead>
           <tbody id="kpReferredCreators"><tr><td colspan="3">Loading referred creators…</td></tr></tbody>
         </table>
       </div>
@@ -1394,17 +1395,20 @@ $("payoutForm").addEventListener("submit", async function(event) {
 });
 
 /* =========================================
-   REFERRAL TRACKING (no referral rewards or separate balance)
+   REFERRAL TRACKING (commission reporting; wallet credit is handled server-side)
 ========================================= */
 async function loadReferralProgram() {
   if (!user) return;
   const tableBody = $("kpReferredCreators");
+  const totalEl = $("kpReferralTotal");
+
   try {
     const { data: summary, error: summaryError } = await supabaseClient.rpc("get_my_referral_summary");
     if (summaryError) throw summaryError;
     const summaryData = typeof summary === "string" ? JSON.parse(summary) : (summary || {});
     const code = summaryData.code || "";
     $("kpReferralCode").textContent = code || "Unavailable";
+
     $("kpCopyReferral").onclick = async () => {
       if (!code) return;
       const url = new URL("../register.html", window.location.href);
@@ -1417,13 +1421,39 @@ async function loadReferralProgram() {
       }
     };
 
-    // A SECURITY DEFINER RPC returns only the referred creator's username,
-    // total earnings and referral date for the signed-in referrer.
+    // The RPC returns only creators referred by the signed-in user.
     const { data: rows, error: trackingError } = await supabaseClient.rpc("get_my_referred_creators");
     if (trackingError) throw trackingError;
 
     const referredCreators = rows || [];
     $("kpReferralCount").textContent = referredCreators.length.toLocaleString();
+
+    // Read approved commissions for reporting only. The SQL trigger credits
+    // profiles.balance; this dashboard must never credit the wallet again.
+    const { data: commissionRows, error: commissionError } = await supabaseClient
+      .from("referral_commissions")
+      .select("referred_creator_id, commission_amount, status")
+      .eq("referrer_id", user.id);
+    if (commissionError) throw commissionError;
+
+    const approvedRows = (commissionRows || []).filter(
+      row => String(row.status || "").toLowerCase() === "approved"
+    );
+
+    const totalReferralEarnings = approvedRows.reduce(
+      (sum, row) => sum + Number(row.commission_amount || 0), 0
+    );
+    if (totalEl) totalEl.textContent = money(totalReferralEarnings);
+
+    const commissionByCreator = new Map();
+    approvedRows.forEach(row => {
+      const creatorId = String(row.referred_creator_id);
+      commissionByCreator.set(
+        creatorId,
+        (commissionByCreator.get(creatorId) || 0) + Number(row.commission_amount || 0)
+      );
+    });
+
     if (!referredCreators.length) {
       tableBody.innerHTML = '<tr><td colspan="3">No referred creators yet. Share your referral link to get started.</td></tr>';
       return;
@@ -1431,14 +1461,16 @@ async function loadReferralProgram() {
 
     tableBody.innerHTML = referredCreators.map(creator => {
       const username = creator.username || "Creator";
-      const earnings = money(creator.total_earnings || 0);
+      const creatorId = creator.referred_creator_id || creator.creator_id || creator.id;
+      const referralCommission = money(commissionByCreator.get(String(creatorId || "")) || 0);
       const date = creator.referral_date ? new Date(creator.referral_date).toLocaleDateString() : "—";
-      return `<tr><td>${esc(username)}</td><td>${earnings}</td><td>${esc(date)}</td></tr>`;
+      return `<tr><td>${esc(username)}</td><td>${referralCommission}</td><td>${esc(date)}</td></tr>`;
     }).join("");
   } catch (error) {
     console.error("Referral tracking load error:", error);
     $("kpReferralCode").textContent = "Unavailable";
     $("kpReferralCount").textContent = "—";
+    if (totalEl) totalEl.textContent = "—";
     tableBody.innerHTML = `<tr><td colspan="3">Referral tracking could not load: ${esc(error?.message || "Unknown error")}</td></tr>`;
   }
 }
