@@ -320,20 +320,26 @@ Start uploading and earning today!
   </section>
 
   <section class="kp-panel payout-card" id="referrals" style="margin-bottom:15px">
-    <div class="kp-panel-heading kp-payout-heading"><div><div class="kp-eyebrow">CREATOR REFERRALS</div><h2>Refer &amp; Earn</h2><p class="kp-muted">Earn 10% of eligible earnings from creators you refer, for life. Minimum referral payout: <strong>$2.00 USD</strong>.</p></div></div>
-    <div class="kp-stat-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));margin:12px 0">
+    <div class="kp-panel-heading kp-payout-heading">
+      <div>
+        <div class="kp-eyebrow">CREATOR REFERRALS</div>
+        <h2>Referral Tracking</h2>
+        <p class="kp-muted">Share your referral link and see the creators who joined through it, along with their total KaroPays earnings. Referral rewards are not paid.</p>
+      </div>
+    </div>
+    <div class="kp-stat-grid" style="grid-template-columns:repeat(2,minmax(0,1fr));margin:12px 0">
       <article class="kp-stat-card"><div class="kp-stat-copy"><span>Your referral code</span><strong id="kpReferralCode" style="font-size:20px">Loading…</strong><button class="kp-primary" id="kpCopyReferral" type="button" style="margin-top:8px">Copy link</button></div></article>
       <article class="kp-stat-card"><div class="kp-stat-copy"><span>Creators referred</span><strong id="kpReferralCount">—</strong><small>Successful sign-ups</small></div></article>
-      <article class="kp-stat-card"><div class="kp-stat-copy"><span>Available referral balance</span><strong id="kpReferralAvailable">$0.00</strong><small id="kpReferralPending">Pending: $0.00</small></div></article>
     </div>
-    <div class="payout-grid">
-      <form id="kpReferralPayoutForm" class="kp-form-panel"><h3>Withdraw referral earnings</h3>
-        <label>Amount (USD)<input id="kpReferralAmount" type="number" min="2" step="0.01" placeholder="2.00" required></label>
-        <label>Payment method<select id="kpReferralMethod" required><option value="upi">UPI</option><option value="paypal">PayPal</option></select></label>
-        <label id="kpReferralDetailsLabel">UPI ID<input id="kpReferralDetails" type="text" maxlength="320" placeholder="yourname@upi" required></label>
-        <p id="kpReferralMessage" class="form-message" role="status" aria-live="polite"></p><button class="kp-primary" id="kpReferralSubmit" type="submit">Request referral payout</button>
-      </form>
-      <div class="kp-form-panel"><h3>Referral commission ledger</h3><div id="kpReferralLedger"><p class="kp-muted">Loading referral ledger…</p></div><h3 style="margin-top:20px">Referral payout history</h3><div id="kpReferralPayoutHistory"><p class="kp-muted">Loading payout history…</p></div></div>
+    <div class="kp-form-panel">
+      <h3>Creators you referred</h3>
+      <p class="kp-muted">Creator earnings below are the referred creator's own total file earnings, not a referral commission.</p>
+      <div class="kp-table-scroll">
+        <table class="kp-table">
+          <thead><tr><th>Username</th><th>Creator total earnings</th><th>Referral date</th></tr></thead>
+          <tbody id="kpReferredCreators"><tr><td colspan="3">Loading referred creators…</td></tr></tbody>
+        </table>
+      </div>
     </div>
   </section>
 
@@ -1388,62 +1394,54 @@ $("payoutForm").addEventListener("submit", async function(event) {
 });
 
 /* =========================================
-   REFERRAL PROGRAM (separate balance; existing creator payouts unchanged)
+   REFERRAL TRACKING (no referral rewards or separate balance)
 ========================================= */
 async function loadReferralProgram() {
   if (!user) return;
-  const message = $("kpReferralMessage");
+  const tableBody = $("kpReferredCreators");
   try {
-    const { data: summary, error } = await supabaseClient.rpc("get_my_referral_summary");
-    if (error) throw error;
-    const s = typeof summary === "string" ? JSON.parse(summary) : (summary || {});
-    const code = s.code || "";
+    const { data: summary, error: summaryError } = await supabaseClient.rpc("get_my_referral_summary");
+    if (summaryError) throw summaryError;
+    const summaryData = typeof summary === "string" ? JSON.parse(summary) : (summary || {});
+    const code = summaryData.code || "";
     $("kpReferralCode").textContent = code || "Unavailable";
-    $("kpReferralCount").textContent = Number(s.referrals || 0).toLocaleString();
-    $("kpReferralAvailable").textContent = money(s.available_balance || 0);
-    $("kpReferralPending").textContent = "Pending: " + money(s.pending_commission || 0);
     $("kpCopyReferral").onclick = async () => {
-      const url = new URL("../register.html", window.location.href); url.searchParams.set("ref", code);
-      try { await navigator.clipboard.writeText(url.href); message.textContent = "Referral link copied."; }
-      catch (_) { message.textContent = url.href; }
+      if (!code) return;
+      const url = new URL("../register.html", window.location.href);
+      url.searchParams.set("ref", code);
+      try {
+        await navigator.clipboard.writeText(url.href);
+        $("kpCopyReferral").textContent = "Copied!";
+      } catch (_) {
+        window.prompt("Copy your referral link:", url.href);
+      }
     };
-    const { data: commissions, error: ledgerError } = await supabaseClient.from("referral_commissions").select("id,gross_earning,commission_amount,status,created_at").eq("referrer_id", user.id).order("created_at", {ascending:false}).limit(25);
-    if (ledgerError) throw ledgerError;
-    $("kpReferralLedger").innerHTML = commissions && commissions.length ? commissions.map(c => `<div class="payout-row"><div><strong>${money(c.commission_amount)}</strong><div class="kp-muted">From eligible earning ${money(c.gross_earning)} · ${new Date(c.created_at).toLocaleDateString()}</div></div><span class="payout-status">${esc(c.status)}</span></div>`).join("") : '<p class="kp-muted">No referral commissions yet. Share your referral link to get started.</p>';
-    const { data: payouts, error: payoutError } = await supabaseClient.from("referral_payout_requests").select("id,amount,method,status,payout_code,created_at").eq("referrer_id", user.id).order("created_at", {ascending:false}).limit(20);
-    if (payoutError) throw payoutError;
-    $("kpReferralPayoutHistory").innerHTML = payouts && payouts.length ? payouts.map(p => `<div class="payout-row"><div><strong>${money(p.amount)}</strong><div class="kp-muted">${esc(p.method)} · ${esc(p.payout_code || "Referral payout")} · ${new Date(p.created_at).toLocaleDateString()}</div></div><span class="payout-status">${esc(p.status)}</span></div>`).join("") : '<p class="kp-muted">No referral payout requests yet.</p>';
+
+    // A SECURITY DEFINER RPC returns only the referred creator's username,
+    // total earnings and referral date for the signed-in referrer.
+    const { data: rows, error: trackingError } = await supabaseClient.rpc("get_my_referred_creators");
+    if (trackingError) throw trackingError;
+
+    const referredCreators = rows || [];
+    $("kpReferralCount").textContent = referredCreators.length.toLocaleString();
+    if (!referredCreators.length) {
+      tableBody.innerHTML = '<tr><td colspan="3">No referred creators yet. Share your referral link to get started.</td></tr>';
+      return;
+    }
+
+    tableBody.innerHTML = referredCreators.map(creator => {
+      const username = creator.username || "Creator";
+      const earnings = money(creator.total_earnings || 0);
+      const date = creator.referral_date ? new Date(creator.referral_date).toLocaleDateString() : "—";
+      return `<tr><td>${esc(username)}</td><td>${earnings}</td><td>${esc(date)}</td></tr>`;
+    }).join("");
   } catch (error) {
-    console.error("Referral program load error:", error);
+    console.error("Referral tracking load error:", error);
     $("kpReferralCode").textContent = "Unavailable";
-    $("kpReferralMessage").textContent = "Referral setup could not load: " + (error?.message || "Unknown error") + ". Confirm the referral SQL is installed.";
-    $("kpReferralLedger").innerHTML = '<p class="kp-muted">Referral ledger unavailable.</p>';
+    $("kpReferralCount").textContent = "—";
+    tableBody.innerHTML = `<tr><td colspan="3">Referral tracking could not load: ${esc(error?.message || "Unknown error")}</td></tr>`;
   }
 }
-
-$("kpReferralMethod").addEventListener("change", function() {
-  const paypal = this.value === "paypal";
-  $("kpReferralDetailsLabel").firstChild.textContent = paypal ? "PayPal email" : "UPI ID";
-  $("kpReferralDetails").type = paypal ? "email" : "text";
-  $("kpReferralDetails").placeholder = paypal ? "you@example.com" : "yourname@upi";
-});
-$("kpReferralPayoutForm").addEventListener("submit", async function(event) {
-  event.preventDefault();
-  const amount = Number($("kpReferralAmount").value);
-  const method = $("kpReferralMethod").value;
-  const details = $("kpReferralDetails").value.trim();
-  const button = $("kpReferralSubmit");
-  if (!Number.isFinite(amount) || amount < 2) { $("kpReferralMessage").textContent = "Minimum referral payout is $2.00."; return; }
-  button.disabled = true; button.textContent = "Submitting…"; $("kpReferralMessage").textContent = "";
-  try {
-    const { data, error } = await supabaseClient.rpc("request_referral_payout", { p_amount: amount, p_method: method, p_payment_details: details });
-    if (error) throw error;
-    $("kpReferralAmount").value = ""; $("kpReferralDetails").value = "";
-    $("kpReferralMessage").textContent = `Referral payout request submitted: ${money(data?.amount || amount)}.`;
-    await loadReferralProgram();
-  } catch (error) { $("kpReferralMessage").textContent = error?.message || "Could not submit referral payout."; }
-  finally { button.disabled = false; button.textContent = "Request referral payout"; }
-});
 
 /* =========================================
    SIGN OUT
