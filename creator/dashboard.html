@@ -849,7 +849,7 @@ function kpDateLabel(key) {
   return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
 }
 function kpFmt(value, digits=4) {
-  return "$" + Number(value || 0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:digits});
+  return "$" + Number(value || 0).toLocaleString(undefined,{minimumFractionDigits:4,maximumFractionDigits:digits});
 }
 function kpSafeDate(value) {
   if (!value) return "—";
