@@ -624,7 +624,7 @@ async function load() {
 
 
   $("totalDownloads").textContent =
-    totalDownloads.toLocaleString();
+    kpNumber(totalDownloads);
 
 
   $("totalEarnings").textContent =
@@ -716,7 +716,7 @@ function render(files) {
                 Number(
                   file.downloads || 0
                 )
-              ).toLocaleString()}
+              ).toFixed(3)}
               downloads
             </span>
 
@@ -848,8 +848,17 @@ function kpDateLabel(key) {
   const d = new Date(key + "T12:00:00");
   return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
 }
-function kpFmt(value, digits=4) {
-  return "$" + Number(value || 0).toLocaleString(undefined,{minimumFractionDigits:4,maximumFractionDigits:digits});
+function kpNumber(value) {
+  return Number(value || 0).toLocaleString(undefined, {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3
+  });
+}
+function kpFmt(value) {
+  return "$" + Number(value || 0).toLocaleString(undefined, {
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3
+  });
 }
 function kpSafeDate(value) {
   if (!value) return "—";
@@ -900,7 +909,7 @@ function renderKpChart(rows, range) {
   const maxDl=Math.max(1,...values.map(v=>v.downloads));
   const pad={l:39,r:25,t:17,b:35};const plotW=width-pad.l-pad.r;const plotH=height-pad.t-pad.b;
   ctx.font="10px system-ui";ctx.textBaseline="middle";
-  for(let i=0;i<5;i++){const y=pad.t+plotH*i/4;ctx.strokeStyle="#edf0f7";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(width-pad.r,y);ctx.stroke();ctx.fillStyle="#78839a";ctx.textAlign="right";ctx.fillText((maxEarn*(1-i/4)).toFixed(4),pad.l-7,y);}
+  for(let i=0;i<5;i++){const y=pad.t+plotH*i/4;ctx.strokeStyle="#edf0f7";ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(width-pad.r,y);ctx.stroke();ctx.fillStyle="#78839a";ctx.textAlign="right";ctx.fillText((maxEarn*(1-i/4)).toFixed(3),pad.l-7,y);}
   const slot=plotW/Math.max(1,days.length);const points=[];
   values.forEach((v,i)=>{const x=pad.l+slot*(i+.5);const bh=(v.downloads/maxDl)*plotH*.72;ctx.fillStyle="rgba(130,135,255,.36)";ctx.fillRect(x-slot*.23,pad.t+plotH-bh,Math.max(4,slot*.46),bh);const y=pad.t+plotH-(v.earn/maxEarn)*plotH;points.push({x,y});ctx.fillStyle="#78839a";ctx.textAlign="center";ctx.textBaseline="top";if(days.length<=10||i%Math.ceil(days.length/7)===0)ctx.fillText(kpDateLabel(v.day),x,height-pad.b+10);});
   ctx.strokeStyle="#4264ff";ctx.lineWidth=2;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();
@@ -913,18 +922,18 @@ function renderKpCountries(rows) {
   if(!rows.length){target.innerHTML='<p class="kp-muted">No country earnings in this period yet.</p>';return;}
   const map={};rows.forEach(r=>{const c=r.country_code||"UNKNOWN";if(!map[c])map[c]={count:0,earn:0};map[c].count++;map[c].earn+=Number(r.earning||0);});
   const all=Object.entries(map).sort((a,b)=>b[1].earn-a[1].earn);const total=all.reduce((s,x)=>s+x[1].earn,0)||1;
-  target.innerHTML=all.slice(0,5).map(([code,v])=>`<div class="kp-country-row"><div class="kp-country-name">${kpFlag(code)} &nbsp;${esc(kpCountryName(code))}</div><div class="kp-country-count"><strong>${v.count.toLocaleString()}</strong><small>downloads</small></div><div class="kp-country-amount"><strong>${kpFmt(v.earn)}</strong><small>${kpFmt(v.count?v.earn/v.count:0,4)} / dl</small></div><div class="kp-progress"><span style="width:${Math.max(2,Math.min(100,v.earn/total*100))}%"></span></div></div>`).join("");
+  target.innerHTML=all.slice(0,5).map(([code,v])=>`<div class="kp-country-row"><div class="kp-country-name">${kpFlag(code)} &nbsp;${esc(kpCountryName(code))}</div><div class="kp-country-count"><strong>${kpNumber(v.count)}</strong><small>downloads</small></div><div class="kp-country-amount"><strong>${kpFmt(v.earn)}</strong><small>${kpFmt(v.count?v.earn/v.count:0,4)} / dl</small></div><div class="kp-progress"><span style="width:${Math.max(2,Math.min(100,v.earn/total*100))}%"></span></div></div>`).join("");
 }
 function renderKpAdLevels(rows) {
   const target=$("kpAdLevelRows");const map={};
   rows.forEach(r=>{const level=Number(r.ad_level||1);if(!map[level])map[level]={count:0,earn:0};map[level].count++;map[level].earn+=Number(r.earning||0);});
   const levels=Object.entries(map).sort((a,b)=>Number(a[0])-Number(b[0]));
-  target.innerHTML=levels.length?levels.map(([level,v])=>`<tr><td><span class="kp-ad-dot"></span>Level ${esc(level)}</td><td>${v.count.toLocaleString()}</td><td>${kpFmt(v.earn)}</td><td>${kpFmt(v.count?v.earn/v.count:0,4)}</td></tr>`).join(""):'<tr><td colspan="4" class="kp-muted">No ad-level data yet.</td></tr>';
+  target.innerHTML=levels.length?levels.map(([level,v])=>`<tr><td><span class="kp-ad-dot"></span>Level ${esc(level)}</td><td>${kpNumber(v.count)}</td><td>${kpFmt(v.earn)}</td><td>${kpFmt(v.count?v.earn/v.count:0,4)}</td></tr>`).join(""):'<tr><td colspan="4" class="kp-muted">No ad-level data yet.</td></tr>';
 }
 function renderKpTopFiles(files) {
   const target=$("kpTopFiles");
   const sorted=[...files].sort((a,b)=>Number(b.downloads||0)-Number(a.downloads||0)).slice(0,5);
-  target.innerHTML=sorted.length?sorted.map((f,i)=>`<tr><td>${i+1}</td><td><span class="kp-file-thumb">▤</span><span class="kp-file-name" title="${esc(f.file_name||"Unnamed file")}">${esc(f.file_name||"Unnamed file")}</span></td><td>${Number(f.downloads||0).toLocaleString()}</td><td>${kpFmt(f.earnings)}</td><td><span class="kp-level-pill">Level ${Number(f.ad_level||1)}</span></td><td><a class="kp-view-all" href="../edit-file.html?id=${encodeURIComponent(f.id)}" aria-label="Edit file">⋮</a></td></tr>`).join(""):'<tr><td colspan="6" class="kp-muted">Upload your first file to see performance.</td></tr>';
+  target.innerHTML=sorted.length?sorted.map((f,i)=>`<tr><td>${i+1}</td><td><span class="kp-file-thumb">▤</span><span class="kp-file-name" title="${esc(f.file_name||"Unnamed file")}">${esc(f.file_name||"Unnamed file")}</span></td><td>${kpNumber(f.downloads)}</td><td>${kpFmt(f.earnings)}</td><td><span class="kp-level-pill">Level ${Number(f.ad_level||1)}</span></td><td><a class="kp-view-all" href="../edit-file.html?id=${encodeURIComponent(f.id)}" aria-label="Edit file">⋮</a></td></tr>`).join(""):'<tr><td colspan="6" class="kp-muted">Upload your first file to see performance.</td></tr>';
 }
 function renderKpRecent(rows) {
   const target=$("kpRecentEarnings");
@@ -1426,7 +1435,7 @@ async function loadReferralProgram() {
     if (trackingError) throw trackingError;
 
     const referredCreators = rows || [];
-    $("kpReferralCount").textContent = referredCreators.length.toLocaleString();
+    $("kpReferralCount").textContent = kpNumber(referredCreators.length);
 
     // Read approved commissions for reporting only. The SQL trigger credits
     // profiles.balance; this dashboard must never credit the wallet again.
@@ -1545,7 +1554,7 @@ function money(value) {
   return (
     "$" +
     Number(value || 0)
-      .toFixed(2)
+      .toFixed(3)
   );
 
 }
