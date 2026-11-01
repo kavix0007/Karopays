@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KaroPays Ad Testing Lab</title>
+<style>
+:root{--p:#7654e8;--ink:#19172d;--muted:#73758b;--line:#e8e8f1}*{box-sizing:border-box}body{margin:0;background:#f5f6fc;color:var(--ink);font:15px/1.5 system-ui,Arial}header{background:#fff;padding:16px 5%;border-bottom:1px solid var(--line);font-weight:850;font-size:20px}header span{color:var(--p)}main{max-width:1150px;margin:28px auto;padding:0 18px}.muted{color:var(--muted)}h1{margin:0;font-size:30px}.grid{display:grid;grid-template-columns:1.4fr .8fr;gap:18px}.card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:19px;margin:16px 0}.card h2{font-size:17px;margin:0 0 14px}.levels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.level,button,select,input,textarea{font:inherit}.level{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer;text-align:left}.level.active{border:2px solid var(--p);background:#f6f3ff}.level b,.level small{display:block}.level small{color:var(--muted)}.btn{border:0;border-radius:9px;background:var(--p);color:#fff;padding:10px 14px;font-weight:700;cursor:pointer}.secondary{background:#efedfa;color:#5742b5}label{display:block;font-size:13px;font-weight:650;margin:12px 0 5px}input:not([type=checkbox]),select,textarea{width:100%;padding:10px;border:1px solid #ddddeb;border-radius:8px}textarea{min-height:85px}.slots{display:grid;gap:10px}.slot{min-height:90px;border:1.5px dashed #bcb5df;border-radius:10px;background:#faf9ff;display:grid;place-items:center;text-align:center;padding:12px;color:var(--muted)}.slot b{display:block;color:#51477c}.notice{background:#fff7e8;border:1px solid #f0dfba;color:#80551b;padding:11px;border-radius:9px;font-size:13px;margin-top:12px}.step{padding:10px;border-bottom:1px solid var(--line)}.step.done{color:#13835f}.log{background:#19172d;color:#ddd9f5;border-radius:9px;padding:12px;min-height:120px;white-space:pre-wrap;font:12px/1.6 monospace;overflow:auto}.stats{display:flex;gap:8px}.stats div{background:#f7f7fb;border-radius:9px;padding:10px;flex:1}.stats b{display:block;font-size:20px}@media(max-width:800px){.grid{grid-template-columns:1fr}.levels{grid-template-columns:repeat(2,1fr)}}
+</style></head><body>
+<header>Karo<span>Pays</span> / Ad Testing Lab</header><main>
+<h1>Ad Testing Lab</h1><p class="muted">Test ad layouts, compare four ad levels, configure network placeholders, and simulate the download journey.</p>
+<div class="grid"><section>
+<div class="card"><h2>1. Select ad level</h2><div class="levels">
+<button class="level active" data-level="1"><b>Level 1 · Low</b><small>Light layout</small></button>
+<button class="level" data-level="2"><b>Level 2 · Medium</b><small>Balanced layout</small></button>
+<button class="level" data-level="3"><b>Level 3 · High</b><small>More placements</small></button>
+<button class="level" data-level="4"><b>Level 4 · Ultra</b><small>Maximum preview</small></button></div>
+<div class="notice">Preview only. No real ad requests, clicks, downloads, or earnings are generated.</div></div>
+<div class="card"><h2>2. Ad placement preview</h2><p class="muted" id="levelName">Level 1 · Low</p><div class="slots" id="slots"></div><p><button class="btn secondary" id="refresh">Refresh preview</button></p></div>
+<div class="card"><h2>3. Network configuration</h2>
+<label>Ad network</label><select id="network"><option>Monetag</option><option>Adsterra</option><option>Custom</option></select>
+<label>Ad format</label><select id="format"><option>Banner</option><option>Native</option><option>Social bar / Push</option><option>Popunder</option><option>Smartlink</option><option>Direct link</option></select>
+<label>Placement name</label><input id="placement" value="download-page-banner">
+<label>Ad tag / script (optional)</label><textarea id="tag" placeholder="Paste tag for reference only. It will not execute here."></textarea>
+<p><button class="btn" id="save">Save test settings</button> <span class="muted" id="saved">Not saved</span></p>
+<div class="notice">Scripts pasted here are not executed. Add real tags to production only after checking your ad provider's policies and placement instructions.</div></div>
+</section><aside>
+<div class="card"><h2>4. Download flow simulator</h2>
+<div id="steps"><div class="step">1. File page opened</div><div class="step">2. Ad placements displayed</div><div class="step">3. User chooses Continue</div><div class="step">4. Download completion simulated</div></div>
+<p><button class="btn" id="next">Start test</button> <button class="btn secondary" id="reset">Reset</button></p><p class="muted" id="flowmsg">Simulation only; no actual file is downloaded.</p></div>
+<div class="card"><h2>5. Test summary</h2><div class="stats"><div><small>Level</small><b id="slevel">1</b></div><div><small>Ad slots</small><b id="scount">1</b></div><div><small>Status</small><b id="status" style="font-size:14px">Idle</b></div></div>
+<label>Event log</label><div class="log" id="log">[ready] Test lab opened.</div><p><button class="btn secondary" id="clear">Clear log</button> <button class="btn" id="export">Export log</button></p></div>
+<div class="card"><h2>6. QA checklist</h2>
+<label><input type="checkbox"> Ad is clearly labelled</label><label><input type="checkbox"> Content is not covered</label><label><input type="checkbox"> Continue / close controls work</label><label><input type="checkbox"> Mobile layout is readable</label><label><input type="checkbox"> No forced or accidental clicks</label></div>
+</aside></div></main>
+<script>
+(()=>{const $=id=>document.getElementById(id);let level=1,step=-1;
+const layouts={1:[["Banner · 728×90","Top of content"]],2:[["Banner · 728×90","Top of content"],["Native ad","Between details and download"]],3:[["Banner · 728×90","Top of content"],["Native ad","Between details and download"],["Banner · 300×250","Below download information"]],4:[["Banner · 728×90","Top of content"],["Native ad","Between details and download"],["Banner · 300×250","Below download information"],["Social bar / push","Non-blocking placeholder"]]};
+const names=["Low","Medium","High","Ultra"],flow=["File page opened","Ad placements displayed","Continue action selected","Download completion simulated — no file downloaded"];
+function log(t){$("log").textContent+="\\n["+new Date().toLocaleTimeString()+"] "+t}
+function draw(){document.querySelectorAll(".level").forEach(b=>b.classList.toggle("active",+b.dataset.level===level));$("levelName").textContent=`Level ${level} · ${names[level-1]}`;$("slevel").textContent=level;$("scount").textContent=layouts[level].length;$("slots").innerHTML=layouts[level].map(x=>`<div class="slot"><div><b>${x[0]}</b>${x[1]}<br><small>Demo ad placeholder</small></div></div>`).join("")}
+document.querySelectorAll(".level").forEach(b=>b.onclick=()=>{level=+b.dataset.level;draw();log("Selected Level "+level+" · "+names[level-1])});
+$("refresh").onclick=()=>{draw();log("Preview refreshed")};
+$("save").onclick=()=>{$("saved").textContent="Saved for this session";log("Settings noted: "+$("network").value+" / "+$("format").value+" / "+$("placement").value+"; script not executed")};
+$("next").onclick=()=>{step=Math.min(step+1,3);document.querySelectorAll(".step").forEach((x,i)=>x.classList.toggle("done",i<=step));$("flowmsg").textContent=flow[step];$("status").textContent=step===3?"Complete":"Step "+(step+1);$("next").textContent=step===3?"Complete":"Next step";$("next").disabled=step===3;log(flow[step])};
+$("reset").onclick=()=>{step=-1;document.querySelectorAll(".step").forEach(x=>x.classList.remove("done"));$("flowmsg").textContent="Simulation only; no actual file is downloaded.";$("status").textContent="Idle";$("next").textContent="Start test";$("next").disabled=false;log("Flow reset")};
+$("clear").onclick=()=>{$("log").textContent="[ready] Log cleared."};
+$("export").onclick=()=>{const a=document.createElement("a"),u=URL.createObjectURL(new Blob([$("log").textContent],{type:"text/plain"}));a.href=u;a.download="karopays-ad-test-log.txt";a.click();URL.revokeObjectURL(u)};
+draw()})();
+</script></body></html>
