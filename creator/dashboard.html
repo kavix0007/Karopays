@@ -756,7 +756,7 @@ function render(files) {
 
           <a
             class="btn small"
-            href="../file.html?id=${encodeURIComponent(file.id)}"
+            href="../download.html?id=${encodeURIComponent(file.id)}"
           >
             View
           </a>
@@ -1006,7 +1006,7 @@ async function share(id) {
 
   const url =
     new URL(
-      "../file.html?id=" +
+      "../download.html?id=" +
       encodeURIComponent(id),
       location.href
     ).href;
