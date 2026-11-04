@@ -62,6 +62,7 @@ a{text-decoration:none;color:inherit}.hidden{display:none!important}
   <button class="navbtn" data-section="payouts">Payouts</button>
   <button class="navbtn" data-section="files">Files</button>
   <button class="navbtn" data-section="earnings">Download earnings</button>
+  <button class="navbtn" data-section="downloadAds">Download Ad Pages</button>
 </aside>
 
 <main class="content">
@@ -98,6 +99,35 @@ a{text-decoration:none;color:inherit}.hidden{display:none!important}
   <div class="panel">
     <div class="toolbar"><input id="earningsSearch" placeholder="Search file ID or creator ID"></div>
     <div class="scroll"><table><thead><tr><th>Date</th><th>File ID</th><th>Creator ID</th><th>Country</th><th>Ad level</th><th>Rate / 1000</th><th>Earned</th></tr></thead><tbody id="earningRows"></tbody></table></div>
+  </div>
+</section>
+
+<section id="downloadAds" class="section hidden">
+  <div class="page-head"><div><div class="label">DOWNLOAD MONETIZATION</div><h1>Download Ad Pages</h1><p class="muted">Configure the two optional ad pages shown before the existing file page.</p></div></div>
+  <div id="downloadAdsMessage"></div>
+  <div class="panel" style="padding:20px">
+    <label style="display:flex;align-items:center;gap:10px;font-weight:800;margin-bottom:18px"><input id="downloadAdsEnabled" type="checkbox" style="width:18px;height:18px"> Enable the two additional download pages</label>
+    <p class="muted small">When disabled, creator links go directly to the existing file page. When enabled, visitors see each enabled ad page before file.html.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:20px">
+      <div style="border:1px solid #e5eaf3;border-radius:12px;padding:16px">
+        <h2 style="margin:0 0 12px">Ad Page 1</h2>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:12px"><input id="downloadPage1Enabled" type="checkbox"> Enable Page 1</label>
+        <label class="small" for="downloadPage1Ad1">Placement 1 — HTML / ad-network code</label>
+        <textarea id="downloadPage1Ad1" rows="7" style="width:100%;box-sizing:border-box;margin:6px 0 14px;padding:10px;border:1px solid #d5ddea;border-radius:8px;font:12px/1.5 monospace"></textarea>
+        <label class="small" for="downloadPage1Ad2">Placement 2 — HTML / ad-network code</label>
+        <textarea id="downloadPage1Ad2" rows="7" style="width:100%;box-sizing:border-box;margin-top:6px;padding:10px;border:1px solid #d5ddea;border-radius:8px;font:12px/1.5 monospace"></textarea>
+      </div>
+      <div style="border:1px solid #e5eaf3;border-radius:12px;padding:16px">
+        <h2 style="margin:0 0 12px">Ad Page 2</h2>
+        <label style="display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:12px"><input id="downloadPage2Enabled" type="checkbox"> Enable Page 2</label>
+        <label class="small" for="downloadPage2Ad1">Placement 1 — HTML / ad-network code</label>
+        <textarea id="downloadPage2Ad1" rows="7" style="width:100%;box-sizing:border-box;margin:6px 0 14px;padding:10px;border:1px solid #d5ddea;border-radius:8px;font:12px/1.5 monospace"></textarea>
+        <label class="small" for="downloadPage2Ad2">Placement 2 — HTML / ad-network code</label>
+        <textarea id="downloadPage2Ad2" rows="7" style="width:100%;box-sizing:border-box;margin-top:6px;padding:10px;border:1px solid #d5ddea;border-radius:8px;font:12px/1.5 monospace"></textarea>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px"><button class="primary" id="saveDownloadAds" type="button" style="width:auto">Save download ad settings</button><button class="secondary" id="reloadDownloadAds" type="button">Reload settings</button></div>
+    <p class="muted small" style="margin-top:14px">Ad code is displayed inside isolated sandboxed frames. Only paste code from advertising providers you trust. Never paste passwords, API secrets or service-role keys.</p>
   </div>
 </section>
 </main>
@@ -222,6 +252,34 @@ window.updatePayout=async(id,status)=>{
 function openModal(title,body){$("modalTitle").textContent=title;$("modalBody").innerHTML=body;$("modal").classList.add("open")}
 $("closeModal").onclick=()=>$("modal").classList.remove("open");$("modal").addEventListener("click",e=>{if(e.target===$("modal"))$("modal").classList.remove("open")});
 $("payoutSearch").addEventListener("input",renderPayouts);$("payoutFilter").addEventListener("change",renderPayouts);$("fileSearch").addEventListener("input",renderFiles);$("fileFilter").addEventListener("change",renderFiles);$("earningsSearch").addEventListener("input",renderEarnings);$("refreshAll").addEventListener("click",refreshAll);
+
+const DOWNLOAD_AD_DEFAULTS={id:true,enabled:false,page1_enabled:true,page2_enabled:true,page1_ad_1_html:"",page1_ad_2_html:"",page2_ad_1_html:"",page2_ad_2_html:""};
+function showDownloadAdsMessage(message,isError=false){const el=$("downloadAdsMessage");el.innerHTML='<div class="'+(isError?'error':'notice')+'">'+esc(message)+'</div>';}
+async function loadDownloadAdSettings(){
+  const {data,error}=await supabaseClient.from("download_page_settings").select("id,enabled,page1_enabled,page2_enabled,page1_ad_1_html,page1_ad_2_html,page2_ad_1_html,page2_ad_2_html").eq("id",true).maybeSingle();
+  if(error){showDownloadAdsMessage("Could not load settings. Apply the supplied SQL migration first. Details: "+error.message,true);return;}
+  const s=data||DOWNLOAD_AD_DEFAULTS;
+  $("downloadAdsEnabled").checked=!!s.enabled;
+  $("downloadPage1Enabled").checked=!!s.page1_enabled;
+  $("downloadPage2Enabled").checked=!!s.page2_enabled;
+  $("downloadPage1Ad1").value=s.page1_ad_1_html||"";
+  $("downloadPage1Ad2").value=s.page1_ad_2_html||"";
+  $("downloadPage2Ad1").value=s.page2_ad_1_html||"";
+  $("downloadPage2Ad2").value=s.page2_ad_2_html||"";
+  showDownloadAdsMessage(data?"Download ad settings loaded.":"Settings row not found. Apply the SQL migration to initialize it.");
+}
+async function saveDownloadAdSettings(){
+  const btn=$("saveDownloadAds");btn.disabled=true;btn.textContent="Saving...";
+  const payload={enabled:$("downloadAdsEnabled").checked,page1_enabled:$("downloadPage1Enabled").checked,page2_enabled:$("downloadPage2Enabled").checked,page1_ad_1_html:$("downloadPage1Ad1").value,page1_ad_2_html:$("downloadPage1Ad2").value,page2_ad_1_html:$("downloadPage2Ad1").value,page2_ad_2_html:$("downloadPage2Ad2").value,updated_at:new Date().toISOString()};
+  const {error}=await supabaseClient.from("download_page_settings").update(payload).eq("id",true);
+  btn.disabled=false;btn.textContent="Save download ad settings";
+  if(error){showDownloadAdsMessage("Settings were not saved. Apply the SQL migration and verify admin RLS. Details: "+error.message,true);return;}
+  showDownloadAdsMessage("Download ad settings saved successfully.");
+}
+$("saveDownloadAds").addEventListener("click",saveDownloadAdSettings);
+$("reloadDownloadAds").addEventListener("click",loadDownloadAdSettings);
+const originalStart=start;
+start=async function(){await originalStart();if(!$("adminPage").classList.contains("hidden"))await loadDownloadAdSettings();};
 start();
 </script>
 </body>
