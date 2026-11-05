@@ -696,6 +696,11 @@ $("share").onclick =
         navigator.share
       ) {
 
+        const shareUrl =
+          new URL("download.html", window.location.href).origin +
+          "/download.html?id=" +
+          encodeURIComponent(file?.id || new URLSearchParams(window.location.search).get("id") || "");
+
         await navigator.share({
 
           title:
@@ -703,14 +708,19 @@ $("share").onclick =
             "KaroPays file",
 
           url:
-            window.location.href
+            shareUrl
 
         });
 
       } else {
 
+        const shareUrl =
+          new URL("download.html", window.location.href).origin +
+          "/download.html?id=" +
+          encodeURIComponent(file?.id || new URLSearchParams(window.location.search).get("id") || "");
+
         await navigator.clipboard.writeText(
-          window.location.href
+          shareUrl
         );
 
 
