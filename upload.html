@@ -33,8 +33,12 @@
       <input
         id="file"
         type="file"
+        accept="*/*"
         required
       >
+      <small id="fileTypeNote" style="display:block;margin-top:8px;color:var(--muted,#64748b);line-height:1.5">
+        Common file formats are supported, including ZIP, RAR, PDF, documents, images, audio, video, gaming files and software resources. Executable and script formats are restricted for safety. Maximum size: 100 MB.
+      </small>
     </label>
 
     <label>
@@ -147,8 +151,14 @@ const uploadProgress =
   } catch (e) { console.error(e); }
 })();
 
-/* Client-side guard only (UX). Program rules forbid malware; enforce again server-side. */
-const BLOCKED_EXT = ["exe","msi","bat","cmd","scr","pif","vbs","vbe","wsf","hta","cpl"];
+/* Client-side safety guard (UX only). Enforce file safety again server-side.
+   Broad file-format support is enabled; executable/script formats remain restricted. */
+const BLOCKED_EXT = [
+  "exe","msi","msp","com","scr","pif","cpl",
+  "bat","cmd","ps1","psm1","psd1","vbs","vbe","vba",
+  "js","jse","wsf","wsh","hta","sh","bash","zsh",
+  "reg","lnk","url","jar"
+];
 
 async function handleUpload(event) {
 
