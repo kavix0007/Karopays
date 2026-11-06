@@ -37,8 +37,7 @@
         required
       >
       <small style="display:block;margin-top:8px;color:var(--muted,#64748b);line-height:1.5">
-        All file formats can be selected, including archives, documents, images, audio, video, fonts, project files and other resources. Maximum upload size: 50 MB for some limited time
-        . Only upload files you have the right to distribute.
+        All file formats can be selected, including archives, documents, images, audio, video, fonts, project files and other resources. Maximum upload size: 50 MB for some limited time . Only upload files you have the right to distribute.
       </small>
     </label>
 
@@ -49,7 +48,7 @@
         id="fileName"
         type="text"
         maxlength="150"
-        placeholder="Example: your file name"
+        placeholder="Example: Valorant Presets Pack"
         required
       >
     </label>
@@ -69,10 +68,10 @@
       Category
 
       <select id="category">
-        <option value="Presets">gaming</option>
+        <option value="Presets">Presets</option>
         <option value="Templates">Templates</option>
         <option value="Wallpapers">Wallpapers</option>
-        <option value="Resources">Editing</option>
+        <option value="Resources">Resources</option>
         <option value="Other">Other</option>
       </select>
     </label>
@@ -231,11 +230,8 @@ async function handleUpload(event) {
    * depending on your Supabase plan.
    */
 
-  const ext = (selectedFile.name.split(".").pop() || "").toLowerCase();
-  if (BLOCKED_EXT.includes(ext)) {
-    uploadMessage.textContent = "." + ext + " files are not allowed. See the Program Rules.";
-    return;
-  }
+  // No client-side extension blocklist: allow any file format.
+  // The storage bucket's MIME-type and size settings still apply.
 
   const MAX_FILE_SIZE =
     100 * 1024 * 1024;
@@ -441,4 +437,3 @@ uploadForm.addEventListener("submit", async (event) => {
 
 </body>
 </html>
-
