@@ -76,8 +76,8 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 
 <main class="legal-page">
 <section class="file-hero">
-<div class="section-label">KAROPAYS DOWNLOAD · PAGE 1 OF 2</div>
-<h1>One more step to your download</h1>
+<div class="section-label">KAROPAYS DOWNLOAD · PAGE 2 OF 2</div>
+<h1>Your download is almost ready</h1>
 <p class="lead">Your file is getting ready. Sponsored placements help support the creator. You can continue after the short timer; clicking ads is never required.</p>
 </section>
 
@@ -96,7 +96,7 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 <p>Start the 14-second timer. When it finishes, the Continue button will become available.</p>
 <div class="actions">
 <button class="primary" id="start-unlock" type="button">Start 14-Second Timer</button>
-<button class="secondary" id="continue" type="button" hidden>Continue to next page →</button>
+<button class="secondary" id="continue" type="button" hidden>Continue to file download →</button>
 </div>
 <p id="unlock-timer" class="timer-text" aria-live="polite" hidden></p>
 </section>
@@ -112,13 +112,23 @@ body{margin:0;background:var(--kp-bg);color:var(--kp-ink);font-family:Inter,ui-s
 <script>
 'use strict';
 
-const id = new URLSearchParams(location.search).get('id');
+const params = new URLSearchParams(location.search);
+const id = params.get('id');
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
+/* Page 2 should only open from Page 1's Continue button. */
+if (params.get('step') !== '2') {
+  if (id && uuid.test(id)) {
+    location.replace('download-ad-1.html?id=' + encodeURIComponent(id));
+  } else {
+    location.replace('index.html');
+  }
+}
+
 /* =====================================================
-   PAGE 1 AD CONFIGURATION
-   Change these settings for PAGE 1 ONLY.
-   PAGE 2 has a separate configuration in its own file.
+   PAGE 2 AD CONFIGURATION
+   Change these settings for PAGE 2 ONLY.
+   PAGE 1 has a separate configuration in its own file.
 ===================================================== */
 
 const PAGE_AD_CONFIG = {
@@ -155,7 +165,7 @@ const PAGE_AD_CONFIG = {
   ]
 };
 
-/* Render Page 1 advertisements */
+/* Render Page 2 advertisements */
 function renderAds() {
   const container = document.getElementById('kp-ad-slots');
 
@@ -246,14 +256,14 @@ start.addEventListener('click', () => {
   setTimeout(tick, 1000);
 });
 
-/* Go to Page 2 */
+/* Continue to original file page */
 next.addEventListener('click', () => {
   if (!id || !uuid.test(id)) {
     location.replace('index.html');
     return;
   }
 
-  location.href = 'download-ad-2.html?id=' + encodeURIComponent(id) + '&step=2';
+  location.href = 'file.html?id=' + encodeURIComponent(id);
 });
 
 loadAds();
